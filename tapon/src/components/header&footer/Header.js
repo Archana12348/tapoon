@@ -25,31 +25,31 @@ export default function Header() {
           <nav className="hidden items-center gap-6 md:flex">
             <a
               href="#home"
-              className="text-sm text-sky-900 transition-colors hover:text-sky-600"
+              className="text-lg text-sky-900 transition-colors hover:text-sky-600"
             >
               Home
             </a>
             <a
               href="#about"
-              className="text-sm text-sky-900 transition-colors hover:text-sky-600"
+              className="text-lg text-sky-900 transition-colors hover:text-sky-600"
             >
               About Us
             </a>
             <a
               href="#products"
-              className="text-sm text-sky-900 transition-colors hover:text-sky-600"
+              className="text-lg text-sky-900 transition-colors hover:text-sky-600"
             >
               Products
             </a>
             <a
               href="#testimonials"
-              className="text-sm text-sky-900 transition-colors hover:text-sky-600"
+              className="text-lg text-sky-900 transition-colors hover:text-sky-600"
             >
               Testimonials
             </a>
             <a
               href="#contact"
-              className="text-sm text-sky-900 transition-colors hover:text-sky-600"
+              className="text-lg text-sky-900 transition-colors hover:text-sky-600"
             >
               Contact Us
             </a>

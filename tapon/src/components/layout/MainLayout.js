@@ -1,6 +1,8 @@
 import { useLocation } from "react-router-dom";
 import Header from "../header&footer/Header";
 import { Footer } from "../header&footer/Footer";
+import { ProductsSection } from "../common/ourProduct/ProductSection";
+import HowItWorksSection from "../common/working/Working";
 
 export default function MainLayout({ children }) {
   const location = useLocation();
@@ -13,8 +15,9 @@ export default function MainLayout({ children }) {
 
       {isHomePage && (
         <>
-          {/* <FeatureSection />
-          <FeaturedProducts />
+          <ProductsSection />
+          <HowItWorksSection />
+          {/* <FeaturedProducts />
           <TopSellerCarousel />
           <BestSellerSection />
           <LatestNews /> */}
