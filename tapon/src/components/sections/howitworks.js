@@ -1,7 +1,7 @@
 import { Smartphone, Map as Tap, Share2, CheckCircle } from "lucide-react";
 import SectionIntro from "../common/sectionIntro";
 
-export function HowItWorksSection({ label, title, subtitle }) {
+export function HowItWorksSections({ label, title, subtitle }) {
   const steps = [
     {
       icon: Smartphone,
@@ -34,7 +34,7 @@ export function HowItWorksSection({ label, title, subtitle }) {
   ];
 
   return (
-    <section className="py-20 md:py-32">
+    <section className="py-10 md:py-16">
       <div className="container mx-auto px-4">
         <SectionIntro
           label={`${label}`}
@@ -68,3 +68,4 @@ export function HowItWorksSection({ label, title, subtitle }) {
     </section>
   );
 }
+export default HowItWorksSections;
