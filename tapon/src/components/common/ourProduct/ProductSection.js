@@ -147,7 +147,7 @@ export function ProductsSection() {
                       ))}
                     </ul>
 
-                    <Button className="w-full bg-cyan-600 text-white hover:bg-cyan-700">
+                    <Button className="w-full git add Home.jsx text-white ">
                       Add to Cart
                     </Button>
                   </div>
