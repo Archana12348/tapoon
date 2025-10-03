@@ -1,14 +1,18 @@
 import Slider from "../../components/common/slider/Slider";
 
+<<<<<<< HEAD
 // import Slider from "../components/Slider";
 import { HowItWorksSection } from "../components/sections/howitworks";
 import TestimonialsSection from "../components/sections/testimonialsSection";
 import { CTASection } from "../components/sections/cta";
 
+=======
+>>>>>>> archana
 export default function Home() {
   return (
     <>
       <Slider />
+<<<<<<< HEAD
 
       <TestimonialsSection
         label="Customer Stories"
@@ -25,6 +29,8 @@ export default function Home() {
       />
       <CTASection />
 
+=======
+>>>>>>> archana
       {/* Add more sections here */}
     </>
   );
