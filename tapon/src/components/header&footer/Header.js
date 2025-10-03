@@ -24,19 +24,19 @@ export default function Header() {
           {/* Desktop Menu */}
           <nav className="hidden items-center gap-6 md:flex">
             <a
-              href="#home"
+              href="/"
               className="text-lg text-sky-900 transition-colors hover:text-sky-600"
             >
               Home
             </a>
             <a
-              href="#about"
+              href="/aboutUs"
               className="text-lg text-sky-900 transition-colors hover:text-sky-600"
             >
               About Us
             </a>
             <a
-              href="#products"
+              href="/product"
               className="text-lg text-sky-900 transition-colors hover:text-sky-600"
             >
               Products
@@ -48,7 +48,7 @@ export default function Header() {
               Testimonials
             </a>
             <a
-              href="#contact"
+              href="/contactus"
               className="text-lg text-sky-900 transition-colors hover:text-sky-600"
             >
               Contact Us
@@ -75,7 +75,7 @@ export default function Header() {
           </Button>
 
           <Button className="hidden bg-sky-600 text-white hover:bg-sky-700 md:flex">
-            Get Started
+            SignUp / SignIn
           </Button>
 
           {/* Mobile Menu Toggle */}
@@ -94,17 +94,17 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="border-t border-sky-200 bg-gradient-to-r from-sky-100 to-white md:hidden">
           <nav className="container mx-auto flex flex-col gap-4 px-4 py-4">
-            <a href="#home" className="text-sm text-sky-900 hover:text-sky-600">
+            <a href="/" className="text-sm text-sky-900 hover:text-sky-600">
               Home
             </a>
             <a
-              href="#about"
+              href="/aboutUs"
               className="text-sm text-sky-900 hover:text-sky-600"
             >
               About Us
             </a>
             <a
-              href="#products"
+              href="/product"
               className="text-sm text-sky-900 hover:text-sky-600"
             >
               Products
@@ -116,13 +116,13 @@ export default function Header() {
               Testimonials
             </a>
             <a
-              href="#contact"
+              href="/contactus"
               className="text-sm text-sky-900 hover:text-sky-600"
             >
               Contact Us
             </a>
             <Button className="bg-sky-600 text-white hover:bg-sky-700">
-              Get Started
+              SignUp / SignIn
             </Button>
           </nav>
         </div>
