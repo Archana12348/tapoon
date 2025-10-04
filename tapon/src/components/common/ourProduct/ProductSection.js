@@ -66,7 +66,7 @@ export function ProductsSection() {
   ];
 
   return (
-    <section id="products" className="py-16 md:py-28">
+    <section id="products" className="pt-16 md:pt-20">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="mb-12 text-center">

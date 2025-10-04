@@ -155,7 +155,7 @@ const testimonials = [
 
 export function TestimonialsSection({ label, title, subtitle }) {
   return (
-    <section id="testimonials" className="py-20 md:py-32">
+    <section id="testimonials" className="pt-14 md:pt-14">
       <div className="container mx-auto px-4">
         <SectionIntro
           label={label ?? "Customer Stories"}

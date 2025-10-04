@@ -34,7 +34,7 @@ export function HowItWorksSections({ label, title, subtitle }) {
   ];
 
   return (
-    <section className="py-10 md:py-16">
+    <section className="pt-14 md:pt-14">
       <div className="container mx-auto px-4">
         <SectionIntro
           label={`${label}`}

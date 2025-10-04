@@ -137,7 +137,7 @@ export function HowItWorksSection() {
 
   return (
     <>
-      <section className="">
+      <section className="pt-4 md:pt-14">
         <div className="container mx-auto px-4">
           <div className="mb-16 text-center">
             <p className="mb-1 text-md uppercase tracking-wider text-cyan-400">
@@ -152,7 +152,7 @@ export function HowItWorksSection() {
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 mt-[-15px]">
             {steps.map((step, index) => {
               const Icon = step.icon;
               return (
