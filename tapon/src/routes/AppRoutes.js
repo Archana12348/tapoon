@@ -5,11 +5,6 @@ import MainLayout from "../components/layout/MainLayout";
 import ContactSection from "../components/common/contact/ContactUs";
 import AboutUs from "../components/common/aboutUs/AboutUs";
 import ProductPage from "../components/common/product/ProductPage";
-import BlogPageDummy from "../components/common/blog/AllBlogs";
-import BlogDetailDummy from "../components/common/blog/Blog";
-import ProductsSolutions from "../components/common/forCorporate/Corporate";
-import CartPage from "../components/common/cart/CartPage";
-import MultiStepForm from "../components/common/paymentprocess/MultiStepForm";
 
 export default function App() {
   return (
@@ -40,6 +35,51 @@ export default function App() {
           element={
             <MainLayout>
               <AboutUs />
+            </MainLayout>
+          }
+        />
+        {/* Faq */}
+        <Route
+          path="/frequently-asked-questions"
+          element={
+            <MainLayout>
+              <FaqSection />
+            </MainLayout>
+          }
+        />
+        {/* Faq */}
+        <Route
+          path="/terms-and-conditions"
+          element={
+            <MainLayout>
+              <TermsAndConditions />
+            </MainLayout>
+          }
+        />
+        {/* Privacy Policy */}
+        <Route
+          path="/privacy-policy"
+          element={
+            <MainLayout>
+              <PrivacyPolicy />
+            </MainLayout>
+          }
+        />
+        {/* Sign Up */}
+        <Route
+          path="/sign-up"
+          element={
+            <MainLayout>
+              <SignUp />
+            </MainLayout>
+          }
+        />
+        {/* Sign In */}
+        <Route
+          path="/sign-in"
+          element={
+            <MainLayout>
+              <SignIn />
             </MainLayout>
           }
         />
