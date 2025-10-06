@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ShoppingCart, Menu, Search } from "lucide-react";
 import Button from "../ui/Button";
 import logo from "../../assests/images/logo.jpeg";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -42,10 +43,10 @@ export default function Header() {
               Products
             </a>
             <a
-              href="#testimonials"
+              href="/corporate"
               className="text-lg text-sky-900 transition-colors hover:text-sky-600"
             >
-              Testimonials
+              For Corporate
             </a>
             <a
               href="/contactus"
@@ -65,7 +66,7 @@ export default function Header() {
           >
             <Search className="h-5 w-5" />
           </Button>
-
+          {/* <Link to="/information/form"> */}
           <Button
             variant="ghost"
             size="icon"
@@ -73,6 +74,7 @@ export default function Header() {
           >
             <ShoppingCart className="h-5 w-5" />
           </Button>
+          {/* </Link> */}
 
           <Button className="hidden bg-sky-600 text-white hover:bg-sky-700 md:flex">
             SignUp / SignIn

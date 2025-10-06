@@ -42,7 +42,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <footer className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md py-12">
+      <footer className="sticky top-0  w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md py-12">
         {/* Footer Section */}
         <div className="container mx-auto px-4 py-12 ">
           <div className="grid gap-14 sm:grid-cols-2 lg:grid-cols-4">
@@ -140,7 +140,7 @@ export function Footer() {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
                   <a
-                    href="#"
+                    href="/aboutUs"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     About Us
@@ -148,7 +148,7 @@ export function Footer() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/contactus"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     Contact
@@ -156,7 +156,7 @@ export function Footer() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/blog"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     Blog
@@ -170,14 +170,6 @@ export function Footer() {
                     FAQ
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-sky-900 transition-colors hover:text-sky-600"
-                  >
-                    Careers
-                  </a>
-                </li>
               </ul>
             </div>
 
@@ -187,7 +179,7 @@ export function Footer() {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
                   <a
-                    href="#"
+                    href="/contactus"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     Help Center
