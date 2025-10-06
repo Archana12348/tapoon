@@ -1,34 +1,38 @@
-import { Smartphone, Map as Tap, Share2, CheckCircle } from "lucide-react";
+import {
+  Smartphone,
+  Map as Tap,
+  Share2,
+  CheckCircle,
+  CheckCheck,
+  CreditCard,
+} from "lucide-react";
 import SectionIntro from "../common/sectionIntro";
 
 export function HowItWorksSections({ label, title, subtitle }) {
   const steps = [
     {
-      icon: Smartphone,
-      title: "Get Your Card",
+      icon: CheckCheck,
+      title: "100% Accuracy",
       description:
-        "Choose your design and customize your NFC card with your branding and style.",
-      step: "01",
+        "Our technology ensures every detail is captured perfectly, giving you reliable results every time.",
     },
     {
-      icon: Share2,
-      title: "Set Up Profile",
-      description:
-        "Add your contact info, social links, portfolio, and any digital content you want to share.",
-      step: "02",
+      icon: CreditCard,
+      title: "Flexible Payment",
+      description: "Pay with Multiple Credit Cards.",
     },
     {
       icon: Tap,
-      title: "Tap to Share",
+      title: "Seamless Experience",
       description:
-        "Simply tap your card on any smartphone to instantly share your digital profile.",
+        "Enjoy a smooth and intuitive interface that makes everything simple and fast.",
       step: "03",
     },
     {
       icon: CheckCircle,
-      title: "Connect & Grow",
+      title: "Trusted & Reliable",
       description:
-        "Track your connections, update your profile anytime, and grow your network effortlessly.",
+        "Our service is highly trusted and consistently delivers what you need without compromise.",
       step: "04",
     },
   ];
@@ -36,11 +40,7 @@ export function HowItWorksSections({ label, title, subtitle }) {
   return (
     <section className="pt-14 md:pt-14">
       <div className="container mx-auto px-4">
-        <SectionIntro
-          label={`${label}`}
-          title={`${title}`}
-          subtitle={`${subtitle}`}
-        />
+        <SectionIntro label={label} title={title} subtitle={subtitle} />
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {steps.map((step, index) => {
@@ -68,4 +68,5 @@ export function HowItWorksSections({ label, title, subtitle }) {
     </section>
   );
 }
+
 export default HowItWorksSections;

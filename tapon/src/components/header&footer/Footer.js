@@ -1,5 +1,6 @@
 import { Facebook, Twitter, Instagram, Linkedin, Mail } from "lucide-react";
 import logo from "../../assests/images/logo.jpeg";
+import { Link } from "react-router-dom";
 
 export function Footer() {
   return (
@@ -42,9 +43,10 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <footer className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md py-12">
-        {/* Footer Section */}
-        <div className="container mx-auto px-4 py-12 ">
+
+      {/* Footer Section */}
+      <footer className="sticky top-0 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md py-12">
+        <div className="container mx-auto px-4 py-12">
           <div className="grid gap-14 sm:grid-cols-2 lg:grid-cols-4">
             {/* Logo & About */}
             <div className="space-y-4">
@@ -68,28 +70,16 @@ export function Footer() {
               </p>
 
               <div className="flex gap-4 mt-2">
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-blue-400 transition-colors"
-                >
+                <a href="#" className="text-gray-400 hover:text-blue-400">
                   <Facebook className="h-5 w-5" />
                 </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-blue-400 transition-colors"
-                >
+                <a href="#" className="text-gray-400 hover:text-blue-400">
                   <Twitter className="h-5 w-5" />
                 </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-blue-400 transition-colors"
-                >
+                <a href="#" className="text-gray-400 hover:text-blue-400">
                   <Instagram className="h-5 w-5" />
                 </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-blue-400 transition-colors"
-                >
+                <a href="#" className="text-gray-400 hover:text-blue-400">
                   <Linkedin className="h-5 w-5" />
                 </a>
               </div>
@@ -139,28 +129,28 @@ export function Footer() {
               <h3 className="mb-4 font-semibold">Company</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/aboutUs"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     About Us
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/contactus"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     Contact
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/blog"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     Blog
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a
@@ -168,14 +158,6 @@ export function Footer() {
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     FAQ
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-sky-900 transition-colors hover:text-sky-600"
-                  >
-                    Careers
                   </a>
                 </li>
               </ul>
@@ -186,12 +168,12 @@ export function Footer() {
               <h3 className="mb-4 font-semibold">Support</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/contactus"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     Help Center
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a
@@ -214,7 +196,7 @@ export function Footer() {
           </div>
 
           {/* Footer Bottom Row */}
-          <div className="max-w-7xl mx-auto mt-8 pt-4 border-t  text-xs flex flex-col md:flex-row justify-between items-center">
+          <div className="max-w-7xl mx-auto mt-8 pt-4 border-t text-xs flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-4">
               <p>Copyright 2025 © TYKA Sports. All right reserved.</p>
               <img
@@ -234,9 +216,9 @@ export function Footer() {
                 Terms and Conditions
               </a>
               <span>|</span>
-              <a href="#" className="hover:underline">
+              <Link to="/delivery&return" className="hover:underline">
                 Delivery and Returns Policy
-              </a>
+              </Link>
             </div>
           </div>
         </div>

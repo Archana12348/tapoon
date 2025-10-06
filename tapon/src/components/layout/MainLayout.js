@@ -27,10 +27,9 @@ export default function MainLayout({ children }) {
             networking with our NFC cards."
           />
           <HowItWorksSeections
-            label="Simple Process"
-            title="How It Works"
-            subtitle="Get started with your NFC card in four simple steps and
-            revolutionize the way you network."
+            label="Our Advantages"
+            title="Why Choose Us?"
+            subtitle="Experience top-quality products with 100% accuracy, seamless usage, and trusted reliability."
           />
           <CTASection />
           {/* <FeaturedProducts />
