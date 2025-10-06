@@ -12,6 +12,11 @@ import CartPage from "../components/common/cart/CartPage";
 import MultiStepForm from "../components/common/paymentprocess/MultiStepForm";
 import DeliveryReturnPolicy from "../components/common/delivery/DeliveryReturnPolicy";
 import SingleProductPage from "../components/common/product/ProductDetail";
+import FaqSection from "../components/sections/Faq";
+import TermsAndConditions from "../components/sections/termandconditions";
+import PrivacyPolicy from "../components/sections/privacy-policy";
+import SignUp from "../pages/auth/SignUp";
+import SignIn from "../pages/auth/SignIn";
 
 export default function App() {
   return (

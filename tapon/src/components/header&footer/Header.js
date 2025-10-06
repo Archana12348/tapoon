@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { ShoppingCart, Menu, Search } from "lucide-react";
+import { ShoppingCart, Menu, Search, LogOut, User } from "lucide-react";
 import Button from "../ui/Button";
 import logo from "../../assests/images/logo.jpeg";
+import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md">
@@ -77,9 +80,51 @@ export default function Header() {
             </Button>
           </Link>
 
-          <Button className="hidden bg-sky-600 text-white hover:bg-sky-700 md:flex">
-            SignUp / SignIn
-          </Button>
+          {/* Auth / User Dropdown */}
+          {user ? (
+            <div className="relative">
+              <Button
+                className="hidden bg-sky-600 text-white hover:bg-sky-700 md:flex items-center gap-1"
+                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+              >
+                <User className="h-4 w-4" /> {user.name || "User"}
+              </Button>
+
+              {userDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white border border-sky-200 rounded-lg shadow-lg py-2 z-50">
+                  <Link
+                    to="/dashboard"
+                    className="block px-4 py-2 text-sm text-sky-900 hover:bg-sky-100"
+                    onClick={() => setUserDropdownOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    to="/orders"
+                    className="block px-4 py-2 text-sm text-sky-900 hover:bg-sky-100"
+                    onClick={() => setUserDropdownOpen(false)}
+                  >
+                    Orders
+                  </Link>
+                  <button
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100"
+                    onClick={() => {
+                      logout();
+                      setUserDropdownOpen(false);
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link to="/sign-in">
+              <Button className="hidden bg-sky-600 text-white hover:bg-sky-700 md:flex">
+                SignUp / SignIn
+              </Button>
+            </Link>
+          )}
 
           {/* Mobile Menu Toggle */}
           <Button
