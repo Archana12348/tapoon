@@ -2,162 +2,356 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { FaStar } from "react-icons/fa";
+import Button from "../../ui/Button";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../redux/cartSlice";
 
 export default function SingleProductPage() {
-  const { slug } = useParams(); // get slug from route params
+  const { slug } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedPack, setSelectedPack] = useState(null);
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
+  const [selectedType, setSelectedType] = useState(null);
+  const [selectedSmartCard, setSelectedSmartCard] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    axios
-      .get(`https://nfc.premierwebtechservices.com/api/nfc-products/${slug}`)
-      .then((res) => {
-        console.log("Product Data:", res.data.data);
-        setProduct(res.data.data);
-        setSelectedImage(res.data.data.card_image); // default main image
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("API Error:", err);
+    const fetchProduct = async () => {
+      try {
+        const res = await axios.get(
+          `https://nfc.premierwebtechservices.com/api/nfc-products/${slug}`
+        );
+        const prod = res.data.data;
+        setProduct(prod);
+        setSelectedImage(
+          prod.card_image || "https://via.placeholder.com/400x400"
+        );
+      } catch (err) {
+        console.error(err);
         setError("Failed to load product.");
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+    fetchProduct();
   }, [slug]);
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
-  if (!product) return null;
+  if (!product) return <p className="text-center mt-10">Product not found</p>;
 
-  // Calculate discounted price if applicable
+  const salePrice = Number(product.sale_price) || 0;
+  const discount = Number(product.discount) || 0;
   const discountedPrice =
-    product.discount > 0
-      ? product.sale_price - (product.sale_price * product.discount) / 100
-      : product.sale_price;
+    discount > 0 ? salePrice - (salePrice * discount) / 100 : salePrice;
+
+  const stock = product.quantity || 0;
+
+  const galleryImages = [
+    product.card_image,
+    product.card_back_image,
+    ...(product.additional_images?.map(
+      (img) => `https://nfc.premierwebtechservices.com/storage/${img}`
+    ) || []),
+  ];
+
+  const handleDecrease = () => {
+    if (quantity > 1) setQuantity(quantity - 1);
+  };
+
+  const handleIncrease = () => {
+    if (quantity < stock) setQuantity(quantity + 1);
+  };
+
+  const handleAdd = () => {
+    // product should have at least: id, name, price
+    dispatch(addToCart({ ...product, quantity: 1 }));
+    // optional: show toast/notification here
+  };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row gap-8">
-        {/* Left Side: Images */}
-        <div className="md:w-1/2 flex flex-col gap-4">
-          <img
-            src={selectedImage}
-            alt={product.name}
-            className="w-full h-[400px] object-cover rounded-lg border border-gray-200"
-          />
-
-          {/* Additional Images */}
-          <div className="flex gap-2 mt-4 overflow-x-auto">
-            {[
-              product.card_image,
-              product.card_back_image,
-              ...(product.product_galleries?.map((g) => g.image) || []),
-            ].map(
-              (img, index) =>
-                img && (
-                  <img
-                    key={index}
-                    src={img}
-                    alt={`${product.name} ${index}`}
-                    className="w-24 h-24 object-cover rounded cursor-pointer border border-gray-300"
-                    onClick={() => setSelectedImage(img)}
-                  />
-                )
-            )}
+    <div className="">
+      <div className="container mx-auto px-4 py-10 flex flex-col items-center ">
+        <div className="flex flex-col lg:flex-row gap-10 max-w-6xl w-full">
+          {/* Left Section - Image Gallery */}
+          <div className="lg:w-1/2">
+            <div className="border rounded-xl overflow-hidden shadow-sm">
+              <img
+                src={selectedImage}
+                alt={product.name}
+                className="w-full h-[450px] object-cover"
+              />
+            </div>
+            <div className="flex gap-2 mt-4 overflow-x-auto">
+              {galleryImages.map(
+                (img, idx) =>
+                  img && (
+                    <img
+                      key={idx}
+                      src={img}
+                      alt={`${product.name}-${idx}`}
+                      onClick={() => setSelectedImage(img)}
+                      className={`w-24 h-24 object-cover rounded-lg cursor-pointer border-2 ${
+                        selectedImage === img
+                          ? "border-black"
+                          : "border-gray-300 hover:border-black"
+                      }`}
+                    />
+                  )
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Right Side: Product Info */}
-        <div className="md:w-1/2 flex flex-col gap-4">
-          <h1 className="text-3xl font-bold">{product.name}</h1>
+          {/* Right Section - Product Details */}
+          <div className="lg:w-1/2 space-y-4">
+            <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
 
-          <div className="flex items-center gap-4 mt-2">
-            <span className="text-2xl font-bold text-red-600">
-              ₹{discountedPrice.toFixed(2)}
-            </span>
-            {product.discount > 0 && (
-              <span className="text-gray-500 line-through">
-                ₹{product.sale_price.toFixed(2)}
+            {/* Rating */}
+            <div className="flex items-center gap-1">
+              {Array.from({ length: 5 }).map((_, idx) => (
+                <FaStar
+                  key={idx}
+                  className={`${
+                    idx < Math.round(product?.average_rating || 0)
+                      ? "text-yellow-400"
+                      : "text-gray-300"
+                  }`}
+                />
+              ))}
+              <span className="text-gray-500 text-sm ml-1">
+                ({product.total_rating || 0} Reviews)
               </span>
-            )}
-            {product.discount > 0 && (
-              <span className="bg-red-100 text-red-600 px-2 py-1 rounded">
-                {product.discount}% Off
+            </div>
+
+            {/* Price */}
+            <div className="flex items-center gap-3 mt-2">
+              {discount > 0 && (
+                <span className="text-gray-400 text-lg line-through">
+                  ₹{salePrice.toFixed(2)}
+                </span>
+              )}
+              <span className="text-3xl font-semibold text-sky-600">
+                ₹{discountedPrice.toFixed(2)}
               </span>
+              {discount > 0 && (
+                <span className="bg-sky-100 text-sky-600 px-2 py-1 rounded">
+                  {discount}% OFF
+                </span>
+              )}
+            </div>
+
+            {/* Colors */}
+            {product.nfc_colors?.length > 0 && (
+              <div className="mt-3">
+                <h3 className="text-lg font-semibold mb-2">Available Colors</h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.nfc_colors.map((color, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedColor(color)}
+                      className={`border rounded-[40px] py-[10px] px-[20px] tracking-[1px] leading-[1] text-center cursor-pointer relative transition-[border] duration-150 ease-in-out mt-[7px] mr-[5px] mb-[2px] capitalize
+            ${
+              selectedColor === color
+                ? "bg-sky-600 border-sky-600 text-white"
+                : "bg-transparent border-[#04cefa] text-[#04cefa]"
+            }`}
+                    >
+                      {color}
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
-          </div>
 
-          <div className="mt-4 space-y-1">
-            <p>
-              <strong>SKU:</strong> {product.sku}
-            </p>
-            <p>
-              <strong>Stock:</strong> {product.in_stock}
-            </p>
-            <p>
-              <strong>Customizable:</strong> {product.is_customizable}
-            </p>
-            <p>
-              <strong>Average Rating:</strong> {product.average_rating} / 5 (
-              {product.total_rating} reviews)
-            </p>
-          </div>
+            {/* Packs */}
+            {product.packs?.length > 0 && (
+              <div className="mt-3">
+                <h3 className="text-lg font-semibold mb-2">Available Packs</h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.packs.map((pack, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedPack(pack)}
+                      className={`border rounded-[40px] py-[10px] px-[20px] tracking-[1px] leading-[1] text-center cursor-pointer relative transition-[border] duration-150 ease-in-out mt-[7px] mr-[5px] mb-[2px] capitalize
+            ${
+              selectedPack === pack
+                ? "bg-sky-600 border-sky-600 text-white"
+                : "bg-transparent border-[#04cefa] text-[#04cefa]"
+            }`}
+                    >
+                      {pack}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-          {/* Categories */}
-          {product.nfc_product_categories?.length > 0 && (
-            <div className="mt-4">
-              <h2 className="font-semibold mb-2">Categories:</h2>
-              <div className="flex gap-2 flex-wrap">
-                {product.nfc_product_categories.map((cat) => (
-                  <span
-                    key={cat.id}
-                    className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm"
+            {/* Material */}
+            {product.card_material?.length > 0 && (
+              <div className="mt-3">
+                <h3 className="text-lg font-semibold mb-2">Material</h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.card_material.map((mat, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedMaterial(mat)}
+                      className={`border rounded-[40px] py-[10px] px-[20px] tracking-[1px] leading-[1] text-center cursor-pointer relative transition-[border] duration-150 ease-in-out mt-[7px] mr-[5px] mb-[2px] capitalize
+          ${
+            selectedMaterial === mat
+              ? "bg-sky-600 border-sky-600 text-white"
+              : "bg-transparent border-[#04cefa] text-[#04cefa]"
+          }`}
+                    >
+                      {mat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Type */}
+            {product.type?.length > 0 && (
+              <div className="mt-3">
+                <h3 className="text-lg font-semibold mb-2">Type</h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.type.map((t, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedType(t)}
+                      className={`border rounded-[40px] py-[10px] px-[20px] tracking-[1px] leading-[1] text-center cursor-pointer relative transition-[border] duration-150 ease-in-out mt-[7px] mr-[5px] mb-[2px] capitalize
+          ${
+            selectedType === t
+              ? "bg-sky-600 border-sky-600 text-white"
+              : "bg-transparent border-[#04cefa] text-[#04cefa]"
+          }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Smart Cards */}
+            {product.smart_cards?.length > 0 && (
+              <div className="mt-3">
+                <h3 className="text-lg font-semibold mb-2">Smart Cards</h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.smart_cards.map((card, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedSmartCard(card)}
+                      className={`border rounded-[40px] py-[10px] px-[20px] tracking-[1px] leading-[1] text-center cursor-pointer relative transition-[border] duration-150 ease-in-out mt-[7px] mr-[5px] mb-[2px] capitalize
+          ${
+            selectedSmartCard === card
+              ? "bg-sky-600 border-sky-600 text-white"
+              : "bg-transparent border-[#04cefa] text-[#04cefa]"
+          }`}
+                    >
+                      {card}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {/* Quantity & Add to Cart Row */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-6">
+              <div className="flex items-center gap-3">
+                <span className="font-semibold text-gray-700">Quantity:</span>
+                <div className="flex items-center border rounded-lg">
+                  <button
+                    onClick={handleDecrease}
+                    className="px-3 py-1 text-lg border-r hover:bg-gray-100"
                   >
-                    {cat.name}
-                  </span>
-                ))}
+                    -
+                  </button>
+                  <input
+                    type="text"
+                    value={quantity}
+                    readOnly
+                    className="w-12 text-center text-lg font-medium"
+                  />
+                  <button
+                    onClick={handleIncrease}
+                    className={`px-3 py-1 text-lg border-l ${
+                      quantity >= stock
+                        ? "text-gray-400 cursor-not-allowed"
+                        : "hover:bg-gray-100"
+                    }`}
+                    disabled={quantity >= stock}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
 
-          {/* Tech Specs */}
-          {product.tech_speces?.length > 0 && (
-            <div className="mt-4">
-              <h2 className="font-semibold mb-2">Technical Specifications:</h2>
-              <ul className="list-disc list-inside text-sm">
-                {product.tech_speces.map((spec) => (
-                  <li key={spec.id}>
-                    Chip: {spec.chip}, Memory: {spec.memory}, Scan Range:{" "}
-                    {spec.scan_range}, Compatible: {spec.compatible_with}
-                  </li>
-                ))}
-              </ul>
+              <Button
+                className="text-white px-8 py-3 rounded-full text-lg transition w-full sm:w-auto"
+                onClick={handleAdd}
+              >
+                Add To Cart
+              </Button>
             </div>
-          )}
 
-          {/* Offers */}
-          {product.offers?.length > 0 && (
-            <div className="mt-4">
-              <h2 className="font-semibold mb-2">Offers:</h2>
-              <div className="flex flex-col gap-2">
-                {product.offers.map((offer) => (
-                  <div key={offer.id} className="border p-2 rounded text-sm">
-                    <p className="font-semibold">{offer.title}</p>
-                    <p
-                      dangerouslySetInnerHTML={{ __html: offer.description }}
-                    ></p>
-                  </div>
-                ))}
-              </div>
+            {/* Product Details */}
+            <div className="mt-6 space-y-2 text-gray-700 text-sm">
+              <p>
+                <strong>SKU:</strong> {product.sku || "-"}
+              </p>
+              {product.nfc_product_categories?.length > 0 && (
+                <p>
+                  <strong>Category:</strong>{" "}
+                  {product.nfc_product_categories
+                    .map((cat) => cat.name)
+                    .join(", ")}
+                </p>
+              )}
+
+              <p>
+                <strong>Brand:</strong> {product.brand?.brand_name || "-"}
+              </p>
+              {product.offers?.length > 0 && (
+                <p>
+                  <strong>Offer:</strong>{" "}
+                  {product.offers.map((offer) => offer.title).join(", ")}
+                </p>
+              )}
+              {(!product.offers || product.offers.length === 0) && (
+                <p>
+                  <strong>Offer:</strong> -
+                </p>
+              )}
+
+              <p>
+                <strong>Customizable:</strong> {product.is_customizable || "-"}
+              </p>
             </div>
-          )}
-
-          {/* Add to Cart Button */}
-          <button className="mt-6 bg-red-600 text-white px-6 py-3 rounded hover:bg-red-700 transition">
-            Add to Cart
-          </button>
+          </div>
         </div>
+
+        {/* Description Section */}
+        {product.description && (
+          <div className="mt-12 border-t pt-8 max-w-6xl w-full">
+            <h2 className="text-2xl font-bold mb-4 text-gray-900">
+              Description
+            </h2>
+            <div
+              className="text-gray-700 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: product.description }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

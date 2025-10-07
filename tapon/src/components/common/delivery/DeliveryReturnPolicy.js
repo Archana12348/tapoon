@@ -2,7 +2,7 @@ import React from "react";
 
 const DeliveryReturnPolicy = () => {
   return (
-    <section className="bg-white text-slate-900 py-12 md:py-20 px-4 md:px-8">
+    <section className="py-20 md:py-32 bg-gradient-to-b from-sky-400 via-white/70 to-sky-200 text-slate-800">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-4xl md:text-4xl font-bold mb-6 text-center">
           Delivery & Return Policy

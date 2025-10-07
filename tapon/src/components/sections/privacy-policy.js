@@ -4,12 +4,12 @@ export default function PrivacyPolicy() {
   return (
     <section className="py-20 md:py-32 bg-gradient-to-b from-sky-400 via-white/70 to-sky-200 text-slate-800">
       <div className="container mx-auto px-6 max-w-6xl">
-        <h1 className="text-4xl md:text-5xl font-bold text-sky-900 mb-8 text-center">
+        <h1 className="text-4xl md:text-4xl font-bold mb-6 text-center">
           Privacy Policy
         </h1>
 
         <div className="space-y-6 text-sky-800 leading-relaxed">
-          <p>
+          <p className="text-slate-700 text-base md:text-lg leading-relaxed mb-6 text-justify">
             At <strong>Your Company</strong>, we value your privacy and are
             committed to protecting your personal information. This Privacy
             Policy explains how we collect, use, and safeguard your data when
@@ -28,7 +28,7 @@ export default function PrivacyPolicy() {
           <h2 className="text-2xl font-semibold text-sky-900 mt-8">
             2. How We Use Your Information
           </h2>
-          <p>
+          <p className="text-slate-700 text-base md:text-lg leading-relaxed mb-6 text-justify">
             Your information helps us improve our services, personalize your
             experience, and communicate important updates or offers. We never
             sell or share your data with third parties without your consent.
@@ -37,7 +37,7 @@ export default function PrivacyPolicy() {
           <h2 className="text-2xl font-semibold text-sky-900 mt-8">
             3. Data Security
           </h2>
-          <p>
+          <p className="text-slate-700 text-base md:text-lg leading-relaxed mb-6 text-justify">
             We use industry-standard encryption and secure servers to protect
             your data from unauthorized access, disclosure, or misuse.
           </p>
@@ -45,7 +45,7 @@ export default function PrivacyPolicy() {
           <h2 className="text-2xl font-semibold text-sky-900 mt-8">
             4. Cookies and Tracking
           </h2>
-          <p>
+          <p className="text-slate-700 text-base md:text-lg leading-relaxed mb-6 text-justify">
             Our website may use cookies to enhance your browsing experience and
             analyze traffic. You can disable cookies anytime in your browser
             settings.
@@ -54,7 +54,7 @@ export default function PrivacyPolicy() {
           <h2 className="text-2xl font-semibold text-sky-900 mt-8">
             5. Your Rights
           </h2>
-          <p>
+          <p className="text-slate-700 text-base md:text-lg leading-relaxed mb-6 text-justify">
             You may request access, correction, or deletion of your personal
             information at any time by contacting us at{" "}
             <a
@@ -66,7 +66,7 @@ export default function PrivacyPolicy() {
             .
           </p>
 
-          <p className="mt-10 text-sm text-sky-600">
+          <p className="text-slate-700 text-base md:text-lg leading-relaxed mb-6 text-justify">
             For any questions about this Privacy Policy, please contact us.
           </p>
         </div>
