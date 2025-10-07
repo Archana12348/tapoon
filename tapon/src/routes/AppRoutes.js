@@ -102,7 +102,7 @@ export default function App() {
         />
         {/* Product Page */}
         <Route
-          path="/products"
+          path="/products/:slug"
           element={
             <MainLayout>
               <ProductPage />
@@ -177,7 +177,7 @@ export default function App() {
 
         {/* Single Product */}
         <Route
-          path="/product/:slug"
+          path="/:slug"
           element={
             <MainLayout>
               <SingleProductPage />

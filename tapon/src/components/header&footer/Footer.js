@@ -154,7 +154,7 @@ export function Footer() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/frequently-asked-questions"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     FAQ
@@ -177,7 +177,7 @@ export function Footer() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/privacy-policy"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     Privacy Policy
@@ -185,7 +185,7 @@ export function Footer() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/terms-and-conditions"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     Terms of Service
@@ -208,11 +208,11 @@ export function Footer() {
               <img src="/icons/wallet.svg" alt="Wallet" className="h-5" />
             </div>
             <div className="flex items-center space-x-2 mt-2 md:mt-0">
-              <a href="#" className="hover:underline">
+              <a href="/privacy-policy" className="hover:underline">
                 Privacy Policy
               </a>
               <span>|</span>
-              <a href="#" className="hover:underline">
+              <a href="/terms-and-conditions" className="hover:underline">
                 Terms and Conditions
               </a>
               <span>|</span>

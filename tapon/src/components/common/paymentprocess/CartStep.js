@@ -1,35 +1,61 @@
+// src/pages/CartStep.jsx
 import React from "react";
-import { Trash2 } from "lucide-react"; // trash icon
+import { useSelector, useDispatch } from "react-redux";
+import {
+  updateQuantity,
+  removeFromCart,
+  clearCart,
+} from "../../../redux/cartSlice";
+import { Trash2 } from "lucide-react";
 
-export default function CartStep({ cart, updateQty, removeItem }) {
-  const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+export default function CartStep() {
+  const dispatch = useDispatch();
+  const { items, totalPrice } = useSelector((state) => state.cart);
+
+  const handleDecrease = (item) => {
+    const newQty = Math.max(item.quantity - 1, 0);
+    dispatch(updateQuantity({ id: item.id, quantity: newQty }));
+  };
+
+  const handleIncrease = (item) => {
+    dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }));
+  };
+
+  const handleRemove = (id) => {
+    dispatch(removeFromCart(id));
+  };
+
+  const formatCurrency = (num) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(num || 0);
 
   return (
-    <div>
+    <div className="p-4">
       <h2 className="text-lg font-semibold mb-4">Your Cart</h2>
-      {cart.length === 0 ? (
+
+      {items.length === 0 ? (
         <p className="text-gray-500">Cart is empty</p>
       ) : (
         <div className="space-y-4">
-          {cart.map((item) => (
+          {items.map((item) => (
             <div
               key={item.id}
               className="flex justify-between items-center border p-3 rounded-lg"
             >
               {/* Left side: Image + Info */}
               <div className="flex items-center gap-3">
-                {/* Product Image */}
                 <img
                   src={item.image}
                   alt={item.name}
                   className="w-16 h-16 object-cover rounded-md border"
                 />
 
-                {/* Product Info */}
                 <div>
                   <p className="font-medium">{item.name}</p>
                   <p className="text-gray-500 text-sm">
-                    ${item.price.toFixed(2)}
+                    {formatCurrency(item.price)}
                   </p>
                 </div>
               </div>
@@ -39,16 +65,14 @@ export default function CartStep({ cart, updateQty, removeItem }) {
                 {/* Quantity Control */}
                 <div className="flex items-center border rounded-lg">
                   <button
-                    onClick={() =>
-                      updateQty(item.id, Math.max(item.qty - 1, 0))
-                    }
+                    onClick={() => handleDecrease(item)}
                     className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-l-lg"
                   >
                     -
                   </button>
-                  <span className="px-3 py-1">{item.qty}</span>
+                  <span className="px-3 py-1">{item.quantity}</span>
                   <button
-                    onClick={() => updateQty(item.id, item.qty + 1)}
+                    onClick={() => handleIncrease(item)}
                     className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-r-lg"
                   >
                     +
@@ -57,7 +81,7 @@ export default function CartStep({ cart, updateQty, removeItem }) {
 
                 {/* Remove Button */}
                 <button
-                  onClick={() => removeItem(item.id)}
+                  onClick={() => handleRemove(item.id)}
                   className="text-red-500 hover:text-red-700"
                 >
                   <Trash2 size={18} />
@@ -65,8 +89,18 @@ export default function CartStep({ cart, updateQty, removeItem }) {
               </div>
             </div>
           ))}
-          <div className="text-right font-semibold">
-            Total: ${total.toFixed(2)}
+
+          {/* Total & Clear Button */}
+          <div className="flex justify-between items-center mt-4">
+            <button
+              onClick={() => dispatch(clearCart())}
+              className="text-sm text-red-600 hover:underline"
+            >
+              Clear Cart
+            </button>
+            <div className="font-semibold text-right">
+              Total: {formatCurrency(totalPrice)}
+            </div>
           </div>
         </div>
       )}
