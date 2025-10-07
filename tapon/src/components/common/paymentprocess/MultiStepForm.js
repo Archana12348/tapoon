@@ -4,13 +4,13 @@ import CartStep from "./CartStep";
 import DetailsStep from "./DetailsStep";
 import ReviewStep from "./ReviewStep";
 import StepNavigation from "./StepNavigation";
+import { fetchUserCart } from "../../../services/Auth/cart";
 
 export default function MultiStepForm() {
   const [step, setStep] = useState(1);
 
   const [cart, setCart] = useState([
     { id: 1, name: "React Handbook", price: 29.99, qty: 1 },
-    { id: 2, name: "Pro Subscription", price: 9.99, qty: 2 },
   ]);
 
   const [details, setDetails] = useState({
@@ -74,8 +74,37 @@ export default function MultiStepForm() {
 
   const handlePrev = () => setStep((s) => Math.max(1, s - 1));
 
-  const handlePay = () => {
-    alert("Payment Successful (mock)");
+  const handlePay = async () => {
+    try {
+      const subtotal = cart.reduce(
+        (sum, item) => sum + item.price * item.qty,
+        0
+      );
+
+      const payload = {
+        amount: subtotal,
+        currency: "inr",
+        nfc_cards: cart.map((item) => ({
+          nfc_card_id: item.id,
+          quantity: item.qty,
+        })),
+      };
+
+      // Create Stripe session
+      const data = await fetchUserCart(payload);
+      console.log("Full API Response:", data);
+
+      if (data?.session_url) {
+        console.log("➡️ Redirecting to Stripe Checkout:", data.session_url);
+        window.location.href = data.session_url; // user leaves your site
+        return;
+      }
+
+      alert("⚠️ Could not start Stripe checkout session.");
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert(error.message || "Payment failed.");
+    }
   };
 
   return (

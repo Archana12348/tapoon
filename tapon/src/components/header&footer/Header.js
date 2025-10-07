@@ -93,11 +93,11 @@ export default function Header() {
               {userDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white border border-sky-200 rounded-lg shadow-lg py-2 z-50">
                   <Link
-                    to="/dashboard"
+                    to={`/profile/${user.name}`}
                     className="block px-4 py-2 text-sm text-sky-900 hover:bg-sky-100"
                     onClick={() => setUserDropdownOpen(false)}
                   >
-                    Dashboard
+                    Profile
                   </Link>
                   <Link
                     to="/orders"
