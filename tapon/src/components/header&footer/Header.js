@@ -4,8 +4,6 @@ import Button from "../ui/Button";
 import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import CartDrawer from "../common/cart/CartDrawer"; // ✅ Import your CartDrawer component
-
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -16,9 +14,6 @@ export default function Header() {
   const hoverTimeoutRef = useRef(null);
   const [open, setOpen] = useState(false);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity || 0);
-
-  // ✅ State for Cart Drawer
-  const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
     const fetchMenuData = async () => {
@@ -55,8 +50,8 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+    <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md ">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 ">
         {/* Logo Section */}
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2">
@@ -139,13 +134,11 @@ export default function Header() {
             <Search className="h-5 w-5" />
           </Button>
 
-          {/* 🛒 Shopping Cart Button */}
-          <div className="relative">
+          <Link to="/information/form" className="relative">
             <Button
               variant="ghost"
               size="icon"
               className="text-sky-900 hover:text-sky-600 dark:text-white"
-              onClick={() => setIsCartOpen(true)} // ✅ open drawer
             >
               <ShoppingCart className="h-5 w-5" />
             </Button>
@@ -284,9 +277,6 @@ export default function Header() {
           </nav>
         </div>
       )}
-
-      {/* 🛒 Cart Drawer Integration */}
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 }
