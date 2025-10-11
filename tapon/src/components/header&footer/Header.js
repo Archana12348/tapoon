@@ -5,6 +5,8 @@ import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react"; // dropdown icon
 import { useSelector } from "react-redux";
+import CartDrawer from "../common/cart/CartDrawer";
+
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -15,6 +17,7 @@ export default function Header() {
   const hoverTimeoutRef = useRef(null);
   const [open, setOpen] = useState(false); // toggle state
   const totalQuantity = useSelector((state) => state.cart.totalQuantity || 0);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
     const fetchMenuData = async () => {
@@ -53,8 +56,8 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+    <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md ">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 ">
         {/* Logo Section */}
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2">
@@ -137,11 +140,12 @@ export default function Header() {
             <Search className="h-5 w-5" />
           </Button>
 
-          <Link to="/information/form" className="relative">
+          <div className="relative">
             <Button
               variant="ghost"
               size="icon"
               className="text-sky-900 hover:text-sky-600 dark:text-white"
+              onClick={() => setIsCartOpen(true)}
             >
               <ShoppingCart className="h-5 w-5" />
             </Button>
@@ -152,7 +156,7 @@ export default function Header() {
                 {totalQuantity}
               </span>
             )}
-          </Link>
+          </div>
 
           {/* Auth / User Dropdown */}
           {user ? (
@@ -283,6 +287,8 @@ export default function Header() {
           </nav>
         </div>
       )}
+
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 }
