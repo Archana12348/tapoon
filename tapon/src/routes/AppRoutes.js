@@ -8,7 +8,6 @@ import ProductPage from "../components/common/product/ProductPage";
 import BlogPageDummy from "../components/common/blog/AllBlogs";
 import BlogDetailDummy from "../components/common/blog/Blog";
 import ProductsSolutions from "../components/common/forCorporate/Corporate";
-import CartPage from "../components/common/cart/CartPage";
 import MultiStepForm from "../components/common/paymentprocess/MultiStepForm";
 import DeliveryReturnPolicy from "../components/common/delivery/DeliveryReturnPolicy";
 import SingleProductPage from "../components/common/product/ProductDetail";
@@ -21,6 +20,7 @@ import Orders from "../pages/users/orders";
 import Dashboard from "../pages/users/dashboards";
 import SuccessPage from "../components/common/paymentprocess/SuccessPage";
 import CancelPage from "../components/common/paymentprocess/CancelPage";
+import MultiStepProfileForm from "../features/profile/MultiStepProfileForm";
 
 export default function App() {
   return (
@@ -199,6 +199,31 @@ export default function App() {
           element={
             <MainLayout>
               <Dashboard />
+            </MainLayout>
+          }
+        />
+        {/* Profile */}
+        <Route
+          path="/profile/add"
+          element={
+            <MainLayout>
+              <MultiStepProfileForm />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/profile/create"
+          element={
+            <MainLayout>
+              <MultiStepProfileForm />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/profile/edit/:id"
+          element={
+            <MainLayout>
+              <MultiStepProfileForm />
             </MainLayout>
           }
         />

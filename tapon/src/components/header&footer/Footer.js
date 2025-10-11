@@ -38,7 +38,7 @@ export function Footer() {
             style={{ marginLeft: "20%" }}
           >
             <h3 className="text-xl font-semibold">Need help?</h3>
-            <p className="text-lg font-medium my-2">(+91) 96546 95247</p>
+            <p className="text-lg font-medium my-2">971581770786</p>
             <p className="text-sm">We are available 10:00 am – 6:00 pm</p>
           </div>
         </div>

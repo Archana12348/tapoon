@@ -303,40 +303,6 @@ export default function SingleProductPage() {
                 Add To Cart
               </Button>
             </div>
-
-            {/* Product Details */}
-            <div className="mt-6 space-y-2 text-gray-700 text-sm">
-              <p>
-                <strong>SKU:</strong> {product.sku || "-"}
-              </p>
-              {product.nfc_product_categories?.length > 0 && (
-                <p>
-                  <strong>Category:</strong>{" "}
-                  {product.nfc_product_categories
-                    .map((cat) => cat.name)
-                    .join(", ")}
-                </p>
-              )}
-
-              <p>
-                <strong>Brand:</strong> {product.brand?.brand_name || "-"}
-              </p>
-              {product.offers?.length > 0 && (
-                <p>
-                  <strong>Offer:</strong>{" "}
-                  {product.offers.map((offer) => offer.title).join(", ")}
-                </p>
-              )}
-              {(!product.offers || product.offers.length === 0) && (
-                <p>
-                  <strong>Offer:</strong> -
-                </p>
-              )}
-
-              <p>
-                <strong>Customizable:</strong> {product.is_customizable || "-"}
-              </p>
-            </div>
           </div>
         </div>
 
@@ -352,6 +318,37 @@ export default function SingleProductPage() {
             />
           </div>
         )}
+        {/* Product Details */}
+        <div className="mt-6 space-y-2 text-gray-700 text-sm">
+          <p>
+            <strong>SKU:</strong> {product.sku || "-"}
+          </p>
+          {product.nfc_product_categories?.length > 0 && (
+            <p>
+              <strong>Category:</strong>{" "}
+              {product.nfc_product_categories.map((cat) => cat.name).join(", ")}
+            </p>
+          )}
+
+          <p>
+            <strong>Brand:</strong> {product.brand?.brand_name || "-"}
+          </p>
+          {product.offers?.length > 0 && (
+            <p>
+              <strong>Offer:</strong>{" "}
+              {product.offers.map((offer) => offer.title).join(", ")}
+            </p>
+          )}
+          {(!product.offers || product.offers.length === 0) && (
+            <p>
+              <strong>Offer:</strong> -
+            </p>
+          )}
+
+          <p>
+            <strong>Customizable:</strong> {product.is_customizable || "-"}
+          </p>
+        </div>
       </div>
     </div>
   );

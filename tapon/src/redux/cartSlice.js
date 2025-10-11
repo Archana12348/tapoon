@@ -11,7 +11,7 @@ const initialState = {
 const calcTotals = (items) => {
   const totalQuantity = items.length; // unique product count only
   const totalPrice = items.reduce(
-    (s, i) => s + (i.quantity || 0) * (Number(i.price) || 0),
+    (s, i) => s + (i.quantity || 0) * (Number(i.sale_price) || 0),
     0
   );
   return { totalQuantity, totalPrice };
@@ -22,17 +22,37 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart(state, action) {
-      const product = action.payload; // expect { id, name, price, ... , quantity? }
+      const product = action.payload; // expected: { id, name, price, ..., quantity? }
+
+      console.log("--- ADD TO CART ---");
+      console.log("Incoming product:", product);
+      console.log("Cart before:", JSON.stringify(state.items));
+
+      debugger; // Open browser dev tools to pause execution here
+
       const qtyToAdd = product.quantity ?? 1;
+
       const existing = state.items.find((i) => i.id === product.id);
+
       if (existing) {
+        console.log(`Product exists. Increasing quantity by ${qtyToAdd}`);
         existing.quantity += qtyToAdd;
       } else {
+        console.log("New product. Adding to cart.");
         state.items.push({ ...product, quantity: qtyToAdd });
       }
+
+      // Recalculate totals from all items
       const totals = calcTotals(state.items);
+
       state.totalQuantity = totals.totalQuantity;
       state.totalPrice = totals.totalPrice;
+
+      console.log("Cart after:", JSON.stringify(state.items));
+      console.log("Total Quantity:", state.totalQuantity);
+      console.log("Total Price:", state.totalPrice);
+      console.log("Total Price:", totals);
+      console.log("-------------------");
     },
     removeFromCart(state, action) {
       const id = action.payload;

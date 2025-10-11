@@ -1,106 +1,46 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import Stepper from "./Stepper";
 import CartStep from "./CartStep";
-import DetailsStep from "./DetailsStep";
 import ReviewStep from "./ReviewStep";
 import StepNavigation from "./StepNavigation";
 import { fetchUserCart } from "../../../services/Auth/cart";
 
 export default function MultiStepForm() {
   const [step, setStep] = useState(1);
-
-  const [cart, setCart] = useState([
-    { id: 1, name: "React Handbook", price: 29.99, qty: 1 },
-  ]);
-
-  const [details, setDetails] = useState({
-    fullName: "",
-    email: "",
-    confirmEmail: "",
-    address: "",
-    phone: "",
-  });
-
-  const [errors, setErrors] = useState({});
-
-  // cart helpers
-  const updateQty = (id, qty) => {
-    setCart((prev) =>
-      prev
-        .map((i) => (i.id === id ? { ...i, qty: Math.max(0, Number(qty)) } : i))
-        .filter((i) => i.qty > 0)
-    );
-  };
-
-  const removeItem = (id) => setCart((prev) => prev.filter((i) => i.id !== id));
-
-  // details helpers
-  const handleDetailsChange = (field, value) => {
-    setDetails((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      const copy = { ...errors };
-      delete copy[field];
-      setErrors(copy);
-    }
-  };
-
-  const validateStep2 = () => {
-    const e = {};
-    if (!details.fullName.trim()) e.fullName = "Full name required";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(details.email))
-      e.email = "Valid email required";
-    if (details.email !== details.confirmEmail)
-      e.confirmEmail = "Emails do not match";
-    if (!details.address.trim()) e.address = "Address required";
-    return e;
-  };
+  const { items: cart, totalPrice } = useSelector((state) => state.cart);
 
   const handleNext = () => {
-    if (step === 1) {
-      if (cart.length === 0) {
-        alert("Cart is empty!");
-        return;
-      }
-      setStep(2);
-    } else if (step === 2) {
-      const e = validateStep2();
-      if (Object.keys(e).length) {
-        setErrors(e);
-        return;
-      }
-      setStep(3);
+    if (step === 1 && cart.length === 0) {
+      alert("Your cart is empty!");
+      return;
     }
+    setStep(step + 1);
   };
 
-  const handlePrev = () => setStep((s) => Math.max(1, s - 1));
+  const handlePrev = () => setStep(Math.max(1, step - 1));
 
   const handlePay = async () => {
     try {
-      const subtotal = cart.reduce(
-        (sum, item) => sum + item.price * item.qty,
-        0
-      );
-
       const payload = {
-        amount: subtotal,
+        amount: Number(totalPrice ?? 0),
         currency: "inr",
         nfc_cards: cart.map((item) => ({
           nfc_card_id: item.id,
-          quantity: item.qty,
+          quantity: Number(item.quantity ?? 1),
         })),
       };
 
-      // Create Stripe session
+      console.log("Checkout payload:", payload);
+      debugger;
+
       const data = await fetchUserCart(payload);
-      console.log("Full API Response:", data);
 
       if (data?.session_url) {
-        console.log("➡️ Redirecting to Stripe Checkout:", data.session_url);
-        window.location.href = data.session_url; // user leaves your site
-        return;
+        window.location.href = data.session_url;
+      } else {
+        alert("⚠️ Could not start Stripe checkout session.");
       }
-
-      alert("⚠️ Could not start Stripe checkout session.");
     } catch (error) {
       console.error("Checkout error:", error);
       alert(error.message || "Payment failed.");
@@ -113,25 +53,12 @@ export default function MultiStepForm() {
         <Stepper step={step} />
 
         <div className="my-6">
-          {step === 1 && (
-            <CartStep
-              cart={cart}
-              updateQty={updateQty}
-              removeItem={removeItem}
-            />
-          )}
-          {step === 2 && (
-            <DetailsStep
-              details={details}
-              onChange={handleDetailsChange}
-              errors={errors}
-            />
-          )}
-          {step === 3 && <ReviewStep cart={cart} details={details} />}
+          {step === 1 && <CartStep />}
+          {step === 2 && <ReviewStep cart={cart} />}
         </div>
 
         <div className="flex justify-between pt-4 border-t">
-          {step === 3 ? (
+          {step === 2 ? (
             <>
               <button
                 onClick={handlePrev}
@@ -141,7 +68,12 @@ export default function MultiStepForm() {
               </button>
               <button
                 onClick={handlePay}
-                className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                disabled={cart.length === 0}
+                className={`px-4 py-2 rounded-lg text-white ${
+                  cart.length
+                    ? "bg-blue-600 hover:bg-blue-700"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
               >
                 Pay Now
               </button>
@@ -154,139 +86,19 @@ export default function MultiStepForm() {
             />
           )}
         </div>
+
+        {/* Optional total summary */}
+        {cart.length > 0 && (
+          <div className="mt-6 text-right border-t pt-3">
+            <span className="text-gray-600 text-sm mr-2">
+              {cart.reduce((sum, i) => sum + Number(i.quantity ?? 1), 0)} items
+            </span>
+            <span className="font-semibold text-lg text-blue-600">
+              ₹{Number(totalPrice ?? 0).toFixed(2)}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
-// import React, { useState } from "react";
-// import Stepper from "./Stepper";
-// import CartStep from "./CartStep";
-// import DetailsStep from "./DetailsStep";
-// import ReviewStep from "./ReviewStep";
-// import StepNavigation from "./StepNavigation";
-
-// export default function MultiStepForm() {
-//   const [step, setStep] = useState(1);
-
-//   const [cart, setCart] = useState([
-//     { id: 1, name: "React Handbook", price: 29.99, qty: 1 },
-//     { id: 2, name: "Pro Subscription", price: 9.99, qty: 2 },
-//   ]);
-
-//   const [details, setDetails] = useState({
-//     fullName: "",
-//     email: "",
-//     confirmEmail: "",
-//     address: "",
-//     phone: "",
-//   });
-
-//   const [errors, setErrors] = useState({});
-
-//   // cart helpers
-//   const updateQty = (id, qty) => {
-//     setCart((prev) =>
-//       prev
-//         .map((i) => (i.id === id ? { ...i, qty: Math.max(0, Number(qty)) } : i))
-//         .filter((i) => i.qty > 0)
-//     );
-//   };
-
-//   const removeItem = (id) => setCart((prev) => prev.filter((i) => i.id !== id));
-
-//   // details helpers
-//   const handleDetailsChange = (field, value) => {
-//     setDetails((prev) => ({ ...prev, [field]: value }));
-//     if (errors[field]) {
-//       const copy = { ...errors };
-//       delete copy[field];
-//       setErrors(copy);
-//     }
-//   };
-
-//   const validateStep2 = () => {
-//     const e = {};
-//     if (!details.fullName.trim()) e.fullName = "Full name required";
-//     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(details.email))
-//       e.email = "Valid email required";
-//     if (details.email !== details.confirmEmail)
-//       e.confirmEmail = "Emails do not match";
-//     if (!details.address.trim()) e.address = "Address required";
-//     return e;
-//   };
-
-//   const handleNext = () => {
-//     if (step === 1) {
-//       if (cart.length === 0) {
-//         alert("Cart is empty!");
-//         return;
-//       }
-//       setStep(2);
-//     } else if (step === 2) {
-//       const e = validateStep2();
-//       if (Object.keys(e).length) {
-//         setErrors(e);
-//         return;
-//       }
-//       setStep(3);
-//     }
-//   };
-
-//   const handlePrev = () => setStep((s) => Math.max(1, s - 1));
-
-//   const handlePay = () => {
-//     alert("Payment Successful (mock)");
-//   };
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center  p-6">
-//       <div className="border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md rounded-xl w-full max-w-3xl p-6">
-//         <Stepper step={step} />
-
-//         <div className="my-6">
-//           {step === 1 && (
-//             <CartStep
-//               cart={cart}
-//               updateQty={updateQty}
-//               removeItem={removeItem}
-//             />
-//           )}
-//           {step === 2 && (
-//             <DetailsStep
-//               details={details}
-//               onChange={handleDetailsChange}
-//               errors={errors}
-//             />
-//           )}
-//           {step === 3 && <ReviewStep cart={cart} details={details} />}
-//         </div>
-
-//         <div className="flex justify-between pt-4 border-t">
-//           {step === 3 ? (
-//             <>
-//               <button
-//                 onClick={handlePrev}
-//                 className="px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 hover:bg-gray-200"
-//               >
-//                 Previous
-//               </button>
-//               <button
-//                 onClick={handlePay}
-//                 className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
-//               >
-//                 Pay Now
-//               </button>
-//             </>
-//           ) : (
-//             <StepNavigation
-//               step={step}
-//               onPrev={handlePrev}
-//               onNext={handleNext}
-//             />
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }

@@ -12,8 +12,6 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async () => {
     try {
       const res = await getUser();
-      console.log("Fetched user:", res);
-      debugger;
       if (res.success) setUser(res.data);
       else setUser(null);
     } catch {

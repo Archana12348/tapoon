@@ -1,82 +1,76 @@
-import React, { useState } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { X } from "lucide-react";
 import { FaTrashAlt } from "react-icons/fa";
-
-import Pr1 from "../../../assests/images/card/card1.webp";
-import Pr2 from "../../../assests/images/card/card3.jpg";
-import Pr3 from "../../../assests/images/card/card3.jpg";
-import Pr4 from "../../../assests/images/card/card3.jpg";
-import Pr5 from "../../../assests/images/card/card3.jpg";
+import { removeFromCart, updateQuantity } from "../../../redux/cartSlice";
 import Button from "../../ui/Button";
 
 const CartDrawer = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      product: { name: "Business Card A", default_image: Pr1 },
-      price: 200,
-      quantity: 1,
-      size: { name: "Small" },
-      color: { name: "Red" },
-    },
-    {
-      id: 2,
-      product: { name: "Business Card B", default_image: Pr2 },
-      price: 350,
-      quantity: 2,
-      size: { name: "Medium" },
-      color: { name: "Blue" },
-    },
-    {
-      id: 3,
-      product: { name: "Business Card C", default_image: Pr3 },
-      price: 500,
-      quantity: 1,
-      size: { name: "Large" },
-      color: { name: "Green" },
-    },
-  ]);
+  const dispatch = useDispatch();
 
-  const handleIncrease = (id) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
+  const cartItems = useSelector((state) => state.cart.items);
 
-  const handleDecrease = (id) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-  };
+  // 🧮 Get total quantity from Redux state
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 
-  const handleRemoveItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
+  // 🧮 Calculate total price
+  const totalPrice = cartItems.reduce(
+    (acc, item) => acc + item.sale_price * item.quantity,
     0
+  );
+
+  // ✅ Close on ESC key
+  useEffect(() => {
+    const handleEsc = (e) => e.key === "Escape" && onClose();
+    if (isOpen) document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [isOpen, onClose]);
+
+  // ✅ Disable body scroll when drawer open
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+  }, [isOpen]);
+
+  const handleIncrease = useCallback(
+    (id) => {
+      const item = cartItems.find((i) => i.id === id);
+      if (item) dispatch(updateQuantity({ id, quantity: item.quantity + 1 }));
+    },
+    [cartItems, dispatch]
+  );
+
+  const handleDecrease = useCallback(
+    (id) => {
+      const item = cartItems.find((i) => i.id === id);
+      if (item) {
+        if (item.quantity > 1) {
+          dispatch(updateQuantity({ id, quantity: item.quantity - 1 }));
+        } else {
+          dispatch(removeFromCart(id));
+        }
+      }
+    },
+    [cartItems, dispatch]
+  );
+
+  const handleRemoveItem = useCallback(
+    (id) => dispatch(removeFromCart(id)),
+    [dispatch]
   );
 
   return (
     <>
-      {/* Fullscreen Overlay */}
+      {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-auto"
+          className="fixed inset-0 bg-black bg-opacity-40 z-40"
           onClick={onClose}
-        ></div>
+        />
       )}
 
-      {/* Cart Drawer */}
+      {/* Drawer */}
       <div
         className={`fixed top-0 right-0 h-[80vh] w-[430px] bg-white z-50 shadow-lg transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "translate-x-full"
@@ -86,7 +80,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b">
             <h2 className="font-bold text-sm uppercase">
-              Shopping cart ({cartItems.length})
+              Shopping Cart ({totalQuantity})
             </h2>
             <button onClick={onClose}>
               <X className="w-5 h-5" />
@@ -94,11 +88,14 @@ const CartDrawer = ({ isOpen, onClose }) => {
           </div>
 
           {/* Cart Items */}
-          <div className="p-4 space-y-4">
+          <div className="p-4 space-y-4 flex-1 overflow-y-auto">
             {cartItems.length > 0 ? (
               cartItems.map((item) => {
-                const productName = item.product?.name || "Unnamed Product";
-                const productImage = item.product?.default_image || "#";
+                const productName = item?.name || "Unnamed Product";
+                const productImage = item?.card_image || "/placeholder.png";
+                const size = item?.size?.name;
+                const color = item?.color?.name;
+                const quantity = item?.quantity;
 
                 return (
                   <div key={item.id} className="flex gap-4 border-b pb-3">
@@ -110,26 +107,14 @@ const CartDrawer = ({ isOpen, onClose }) => {
                     <div className="flex-1 text-sm">
                       <h4 className="font-semibold">{productName}</h4>
 
-                      {item.size && (
-                        <p className="text-gray-500">Size: {item.size.name}</p>
-                      )}
-                      {item.color && (
-                        <p className="text-gray-500">
-                          Color: {item.color.name}
-                        </p>
-                      )}
+                      {size && <p className="text-gray-500">Size: {size}</p>}
+                      {color && <p className="text-gray-500">Color: {color}</p>}
 
                       <div className="flex justify-between items-center mt-2">
-                        <span
-                          className="font-semibold"
-                          style={{ fontSize: "18.5px" }}
-                        >
-                          ₹{(item.price * item.quantity).toFixed(2)}
+                        <span className="font-semibold text-lg">
+                          ₹{(item.sale_price * item.quantity).toFixed(2)}
                         </span>
-                        <div
-                          className="flex items-center gap-2 border rounded-2xl px-2 py-1 bg-gray-200"
-                          style={{ marginRight: "-30px" }}
-                        >
+                        <div className="flex items-center gap-2 border rounded-2xl px-2 py-1 bg-gray-100">
                           <button
                             className="text-lg px-2"
                             onClick={() => handleDecrease(item.id)}
@@ -147,7 +132,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
                       </div>
                     </div>
                     <button
-                      style={{ marginBottom: "90px" }}
+                      className="self-start mt-2"
                       onClick={() => handleRemoveItem(item.id)}
                     >
                       <FaTrashAlt className="text-red-600 hover:text-red-800" />
@@ -156,34 +141,35 @@ const CartDrawer = ({ isOpen, onClose }) => {
                 );
               })
             ) : (
-              <p className="text-center text-gray-500">Your cart is empty</p>
+              <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                <p>Your cart is empty</p>
+              </div>
             )}
           </div>
 
           {/* Summary & Actions */}
-          <div className="p-4 border-t text-sm pb-6 mt-auto">
-            <div className="flex justify-between mb-4">
-              <span>{cartItems.length} items</span>
-              <span className="font-bold text-red-600">
-                ₹{subtotal.toFixed(2)}
-              </span>
-            </div>
+          {cartItems.length > 0 && (
+            <div className="p-4 border-t text-sm pb-6 mt-auto">
+              <div className="flex justify-between mb-4">
+                <span>{totalQuantity} items</span>
+                <span className="font-bold text-red-600">
+                  ₹{totalPrice.toFixed(2)}
+                </span>
+              </div>
 
-            <div className="flex gap-3">
-              <Button
-                className="w-1/2  text-white py-2 rounded font-semibold "
-                onClick={() => navigate("/cart")}
-              >
-                VIEW CART
-              </Button>
-              <button
-                className="w-1/2 border border-black py-2 rounded font-semibold hover:bg-gray-100"
-                onClick={() => navigate("/payment")}
-              >
-                CHECKOUT
-              </button>
+              <div className="flex gap-3">
+                <Button
+                  className="w-full text-white py-2 rounded font-semibold"
+                  onClick={() => {
+                    onClose();
+                    navigate("/information/form");
+                  }}
+                >
+                  VIEW CART
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>
