@@ -78,7 +78,7 @@ export default function ContactSection() {
                   <div>
                     <h4 className="mb-1 font-bold text-sky-900">Office</h4>
                     <p className="text-gray-700">
-                      123 Tech Street, San Francisco, CA 94105
+                      Block B - B49 - 189 - Dubai - United Arab Emirates
                     </p>
                   </div>
                 </div>

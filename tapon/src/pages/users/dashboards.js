@@ -97,7 +97,7 @@ export default function UserProfilePage() {
             <div className="flex justify-end">
               <button
                 onClick={() =>
-                  (window.location.href = `/profile/edit/${profile.id}`)
+                  (window.location.href = `/profile/edit/${profile.slug}`)
                 }
                 className="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-full shadow-md hover:bg-indigo-700 transition duration-200"
               >
@@ -114,33 +114,34 @@ export default function UserProfilePage() {
                   className="w-full h-80 object-cover"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-                <div className="absolute bottom-0 left-8 right-8 flex items-center space-x-6 pb-6">
-                  {" "}
-                  {/* Changed items-end to items-center */}
+
+                <div className="absolute bottom-0 left-0 right-0 flex flex-col md:flex-row items-center md:items-end md:space-x-6 p-4 md:pb-6">
+                  {/* Avatar */}
                   <img
                     src={profile.avatar}
                     alt="Avatar"
-                    className="w-36 h-36 rounded-full border-4 border-white object-cover shadow-2xl" // Removed transform translate-y-1/4
+                    className="w-24 h-24 md:w-36 md:h-36 rounded-full border-4 border-white object-cover shadow-2xl mb-4 md:mb-0"
                   />
-                  <div className="text-white pb-4">
-                    <h1 className="text-5xl font-extrabold tracking-tight">
+
+                  {/* Profile Info */}
+                  <div className="text-white text-center md:text-left">
+                    <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
                       {profile.name}
                     </h1>
-                    <p className="text-xl font-light opacity-80 mt-1">
+                    <p className="text-lg md:text-xl font-light opacity-80 mt-1">
                       @{profile.username}
                     </p>
-                    <p className="text-xl font-light opacity-80 mt-1">
+                    <p className="text-lg md:text-xl font-light opacity-80 mt-1">
                       {profile.area}
                     </p>
-                    <p className="text-lg opacity-70">
+                    <p className="text-md md:text-lg opacity-70">
                       {profile.city}, {profile.state}, {profile.country}
                     </p>
-                    {/* NFC Card ID and Views Count */}
-                    <p className="text-lg opacity-70 mt-2">
+                    <p className="text-md md:text-lg opacity-70 mt-2">
                       <strong className="font-semibold">NFC Card ID:</strong>{" "}
                       {profile.nfc_card_id}
                     </p>
-                    <p className="text-lg opacity-70 mt-1">
+                    <p className="text-md md:text-lg opacity-70 mt-1">
                       <strong className="font-semibold">Views Count:</strong>{" "}
                       {profile.views_count}
                     </p>
