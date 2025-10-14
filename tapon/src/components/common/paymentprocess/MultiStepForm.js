@@ -47,6 +47,13 @@ export default function MultiStepForm() {
     }
   };
 
+  const formatCurrency = (num) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 2,
+    }).format(Number(num ?? 0));
+
   return (
     <div className="min-h-screen flex items-center justify-center py-12 md:py-20 bg-gradient-to-b from-sky-400 via-white/70 to-sky-200 text-slate-800 p-6">
       <div className="bg-white shadow-lg rounded-xl w-full max-w-3xl p-6">
@@ -75,7 +82,7 @@ export default function MultiStepForm() {
                     : "bg-gray-400 cursor-not-allowed"
                 }`}
               >
-                Pay Now
+                {loading ? "Redirecting to payment..." : "Pay Now"}
               </button>
             </>
           ) : (

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "../pages/Home/Home";
-import ScrollToTop from "../components/common/scrolltop/ScrollToTop"; // ✅ Add this line
+import ScrollToTop from "../components/common/scrolltop/ScrollToTop";
 import MainLayout from "../components/layout/MainLayout";
 import ContactSection from "../components/common/contact/ContactUs";
 import AboutUs from "../components/common/aboutUs/AboutUs";
@@ -25,7 +25,7 @@ import MultiStepProfileForm from "../features/profile/MultiStepProfileForm";
 export default function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop /> {/* ✅ Add this line just inside BrowserRouter */}
+      <ScrollToTop />
       <Routes>
         {/* Home Page */}
         <Route
@@ -46,6 +46,7 @@ export default function App() {
             </MainLayout>
           }
         />
+
         {/* About Us */}
         <Route
           path="/aboutUs"
@@ -55,7 +56,8 @@ export default function App() {
             </MainLayout>
           }
         />
-        {/* Faq */}
+
+        {/* FAQ */}
         <Route
           path="/frequently-asked-questions"
           element={
@@ -64,7 +66,8 @@ export default function App() {
             </MainLayout>
           }
         />
-        {/* Faq */}
+
+        {/* Terms and Conditions */}
         <Route
           path="/terms-and-conditions"
           element={
@@ -73,6 +76,7 @@ export default function App() {
             </MainLayout>
           }
         />
+
         {/* Privacy Policy */}
         <Route
           path="/privacy-policy"
@@ -82,6 +86,7 @@ export default function App() {
             </MainLayout>
           }
         />
+
         {/* Sign Up */}
         <Route
           path="/sign-up"
@@ -91,6 +96,7 @@ export default function App() {
             </MainLayout>
           }
         />
+
         {/* Sign In */}
         <Route
           path="/sign-in"
@@ -100,6 +106,7 @@ export default function App() {
             </MainLayout>
           }
         />
+
         {/* Product Page */}
         <Route
           path="/products/:slug"
@@ -119,7 +126,8 @@ export default function App() {
             </MainLayout>
           }
         />
-        {/* Blog detail */}
+
+        {/* Blog Detail */}
         <Route
           path="/blogdetail"
           element={
@@ -128,7 +136,8 @@ export default function App() {
             </MainLayout>
           }
         />
-        {/* Corporate page */}
+
+        {/* Corporate Page */}
         <Route
           path="/corporate"
           element={
@@ -137,15 +146,17 @@ export default function App() {
             </MainLayout>
           }
         />
+
         {/* MultiStep Page */}
         <Route
-          path="/information/form"
+          path="/cart"
           element={
             <MainLayout>
               <MultiStepForm />
             </MainLayout>
           }
         />
+
         {/* Success Page */}
         <Route
           path="/success"
@@ -155,6 +166,7 @@ export default function App() {
             </MainLayout>
           }
         />
+
         {/* Cancel Page */}
         <Route
           path="/cancel"
@@ -165,7 +177,7 @@ export default function App() {
           }
         />
 
-        {/* Delivery and Return  */}
+        {/* Delivery and Return */}
         <Route
           path="/delivery&return"
           element={
@@ -184,7 +196,8 @@ export default function App() {
             </MainLayout>
           }
         />
-        {/* Order */}
+
+        {/* Orders */}
         <Route
           path="/orders"
           element={
@@ -193,6 +206,7 @@ export default function App() {
             </MainLayout>
           }
         />
+
         {/* Profile */}
         <Route
           path="/profile/:slug"

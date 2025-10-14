@@ -198,7 +198,7 @@ export function Footer() {
           {/* Footer Bottom Row */}
           <div className="max-w-7xl mx-auto mt-8 pt-4 border-t text-xs flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-4">
-              <p>Copyright 2025 © TYKA Sports. All right reserved.</p>
+              <p>Copyright 2025 © Taponn. All right reserved.</p>
               <img
                 src="/icons/mastercard.svg"
                 alt="MasterCard"

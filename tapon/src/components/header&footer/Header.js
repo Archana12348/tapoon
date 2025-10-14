@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Menu, Search, User, ChevronDown } from "lucide-react";
 import Button from "../ui/Button";
 import { useAuth } from "../../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, Links } from "react-router-dom";
 import { useSelector } from "react-redux";
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -50,8 +50,8 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md ">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 ">
+    <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo Section */}
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2">

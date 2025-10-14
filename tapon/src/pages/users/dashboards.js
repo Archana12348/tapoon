@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { fetchUserProfile } from "../../services/Auth/profile";
 import { useParams } from "react-router-dom";
 import SocialMediaLinks from "./socialmedia";
-import { format } from "date-fns";
+import format from "date-fns/format";
+
 import {
   Whatsapp,
   CheckCircle,

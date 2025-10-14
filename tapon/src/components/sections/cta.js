@@ -1,7 +1,10 @@
 import Button from "../ui/Button";
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export function CTASection() {
+  const navigate = useNavigate();
+
   return (
     <section className="py-16 md:py-14">
       <div className="container mx-auto px-4">
@@ -19,15 +22,9 @@ export function CTASection() {
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
               <Button
                 type="button"
-                variant="primary"
-                className="!bg-sky-600 !text-white hover:!bg-sky-700 focus:!ring-sky-500 flex items-center justify-center"
-              >
-                Shop Now <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button
-                type="button"
                 variant="outline"
                 className="!border-sky-700 !text-sky-600 hover:!bg-sky-600 hover:!text-white bg-transparent"
+                onClick={() => navigate("/contactus")}
               >
                 Contact Sales
               </Button>

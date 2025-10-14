@@ -6,6 +6,7 @@ import {
   clearCart,
 } from "../../../redux/cartSlice";
 import { Trash2 } from "lucide-react";
+import Swal from "sweetalert2";
 
 export default function CartStep() {
   const dispatch = useDispatch();
@@ -25,7 +26,44 @@ export default function CartStep() {
   };
 
   const handleRemove = (id) => {
-    dispatch(removeFromCart(id));
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to remove this item from your cart?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, remove it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(removeFromCart(id));
+        Swal.fire({
+          title: "Removed!",
+          text: "The item has been removed from your cart.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    });
+  };
+
+  const handleClearCart = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This will remove all items from your cart.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, clear it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(clearCart());
+        Swal.fire("Cleared!", "Your cart has been emptied.", "success");
+      }
+    });
   };
 
   const formatCurrency = (num) =>
@@ -95,7 +133,7 @@ export default function CartStep() {
           {/* Summary */}
           <div className="flex justify-between items-center mt-4 border-t pt-3">
             <button
-              onClick={() => dispatch(clearCart())}
+              onClick={handleClearCart}
               className="text-sm text-red-600 hover:underline"
             >
               Clear Cart
