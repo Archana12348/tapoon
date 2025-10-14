@@ -59,7 +59,7 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <h4 className="mb-1 font-bold text-sky-900">Email</h4>
-                    <p className="text-gray-700">support@nfcard.com</p>
+                    <p className="text-gray-700">taponnsolutions@gmail.com</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -68,7 +68,7 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <h4 className="mb-1 font-bold text-sky-900">Phone</h4>
-                    <p className="text-gray-700">+1 (555) 123-4567</p>
+                    <p className="text-gray-700">971581770786</p>
                   </div>
                 </div>
                 <div className="flex gap-4">

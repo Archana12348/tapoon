@@ -1,19 +1,20 @@
 import React from "react";
 import AppRoutes from "./routes/AppRoutes";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // ✅ important!
-import { AuthProvider } from "./context/AuthContext"; // ✅ wrap with AuthProvider
+import "react-toastify/dist/ReactToastify.css"; // Toastify styles
+import { AuthProvider } from "./context/AuthContext";
+import { Provider } from "react-redux";
+import store from "./app/store"; // Make sure path matches your project
 
 import "./styles/globals.css";
 
 function App() {
   return (
-    <React.StrictMode>
+    <Provider store={store}>
       <AuthProvider>
-        <div className="font-sans antialiased bg-white text-black">
+        <div className="font-sans antialiased bg-white text-black overflow-hidden">
           <AppRoutes />
 
-          {/* ✅ Toast notifications container */}
           <ToastContainer
             position="top-right"
             autoClose={3000}
@@ -28,7 +29,7 @@ function App() {
           />
         </div>
       </AuthProvider>
-    </React.StrictMode>
+    </Provider>
   );
 }
 

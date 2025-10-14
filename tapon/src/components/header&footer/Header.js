@@ -2,10 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Menu, Search, User, ChevronDown } from "lucide-react";
 import Button from "../ui/Button";
 import { useAuth } from "../../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, Links } from "react-router-dom";
 import { useSelector } from "react-redux";
-import CartDrawer from "../common/cart/CartDrawer"; // ✅ Import your CartDrawer component
-
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -16,9 +14,6 @@ export default function Header() {
   const hoverTimeoutRef = useRef(null);
   const [open, setOpen] = useState(false);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity || 0);
-
-  // ✅ State for Cart Drawer
-  const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
     const fetchMenuData = async () => {
@@ -131,13 +126,19 @@ export default function Header() {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
-          {/* 🛒 Shopping Cart Button */}
-          <div className="relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hidden text-sky-900 hover:text-sky-600 md:flex"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
+
+          <Link to="/information/form" className="relative">
             <Button
               variant="ghost"
               size="icon"
               className="text-sky-900 hover:text-sky-600 dark:text-white"
-              onClick={() => setIsCartOpen(true)} // ✅ open drawer
             >
               <ShoppingCart className="h-5 w-5" />
             </Button>
@@ -276,9 +277,6 @@ export default function Header() {
           </nav>
         </div>
       )}
-
-      {/* 🛒 Cart Drawer Integration */}
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 }

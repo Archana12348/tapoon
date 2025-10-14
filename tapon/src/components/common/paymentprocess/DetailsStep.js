@@ -88,9 +88,6 @@ export default function DetailsStep({ details, onChange, errors }) {
             placeholder="Your Address..."
             className="w-full rounded-lg border border-cyan-900/20 bg-slate-900/50 px-4 py-3 text-white placeholder-white focus:ring-2 focus:ring-cyan-700/50"
           />
-          {errors.address && (
-            <p className="text-red-500 text-sm">{errors.address}</p>
-          )}
         </div>
       </div>
     </div>

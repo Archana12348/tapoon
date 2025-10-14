@@ -10,18 +10,12 @@ import Swal from "sweetalert2";
 
 export default function CartStep() {
   const dispatch = useDispatch();
-  const { items, totalQuantity } = useSelector((state) => state.cart);
-
-  // 🧮 Total price calculation
-  const totalPrice = items.reduce((acc, item) => {
-    const regularPrice = Number(item.regular_price) || 0;
-    const salePrice = Number(item.sale_price) || 0;
-    const finalPrice = salePrice < regularPrice ? salePrice : regularPrice;
-    return acc + finalPrice * (item.quantity ?? 1);
-  }, 0);
+  const { items, totalPrice, totalQuantity } = useSelector(
+    (state) => state.cart
+  );
 
   const handleDecrease = (item) => {
-    const newQty = Math.max(Number(item.quantity ?? 1) - 1, 1);
+    const newQty = Math.max(Number(item.quantity ?? 1) - 1, 0);
     dispatch(updateQuantity({ id: item.id, quantity: newQty }));
   };
 
@@ -86,77 +80,55 @@ export default function CartStep() {
         <p className="text-gray-500">Cart is empty</p>
       ) : (
         <div className="space-y-4">
-          {items.map((item) => {
-            const regularPrice = Number(item.regular_price) || 0;
-            const salePrice = Number(item.sale_price) || 0;
-            const quantity = Number(item.quantity ?? 1);
-            const hasDiscount = salePrice < regularPrice;
-            const itemTotal =
-              (hasDiscount ? salePrice : regularPrice) * quantity;
-
-            return (
-              <div
-                key={item.id}
-                className="flex justify-between items-center border p-3 rounded-lg"
-              >
-                {/* Product Info */}
-                <div className="flex items-center gap-3">
-                  <img
-                    src={item.card_image ?? "/placeholder.png"}
-                    alt={item.name ?? "Product"}
-                    className="w-16 h-16 object-cover rounded-md border"
-                  />
-                  <div>
-                    <p className="font-medium">
-                      {item.name ?? "Unnamed Product"}
-                    </p>
-
-                    {/* ✅ Fixed Pricing Display */}
-                    {hasDiscount ? (
-                      <div className="flex flex-col">
-                        <span className="text-sky-600 font-semibold text-lg">
-                          ₹{(salePrice * quantity).toFixed(2)}
-                        </span>
-                        <span className="text-gray-400 line-through text-xs">
-                          ₹{(regularPrice * quantity).toFixed(2)}
-                        </span>
-                      </div>
-                    ) : (
-                      <span className="text-sky-600 font-semibold text-lg">
-                        ₹{(regularPrice * quantity).toFixed(2)}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center border rounded-lg">
-                    <button
-                      onClick={() => handleDecrease(item)}
-                      className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-l-lg"
-                    >
-                      −
-                    </button>
-                    <span className="px-3 py-1">{quantity}</span>
-                    <button
-                      onClick={() => handleIncrease(item)}
-                      className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-r-lg"
-                    >
-                      +
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={() => handleRemove(item.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+          {items.map((item) => (
+            <div
+              key={item.id}
+              className="flex justify-between items-center border p-3 rounded-lg"
+            >
+              {/* Product Info */}
+              <div className="flex items-center gap-3">
+                <img
+                  src={item.card_image ?? "/placeholder.png"}
+                  alt={item.name ?? "Product"}
+                  className="w-16 h-16 object-cover rounded-md border"
+                />
+                <div>
+                  <p className="font-medium">
+                    {item.name ?? "Unnamed Product"}
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    {formatCurrency(item.sale_price ?? item.price ?? 0)}
+                  </p>
                 </div>
               </div>
-            );
-          })}
+
+              {/* Actions */}
+              <div className="flex items-center gap-3">
+                <div className="flex items-center border rounded-lg">
+                  <button
+                    onClick={() => handleDecrease(item)}
+                    className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-l-lg"
+                  >
+                    −
+                  </button>
+                  <span className="px-3 py-1">{item.quantity ?? 1}</span>
+                  <button
+                    onClick={() => handleIncrease(item)}
+                    className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-r-lg"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => handleRemove(item.id)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
+            </div>
+          ))}
 
           {/* Summary */}
           <div className="flex justify-between items-center mt-4 border-t pt-3">
@@ -167,10 +139,7 @@ export default function CartStep() {
               Clear Cart
             </button>
             <div className="text-right">
-              <div className="text-sm text-gray-500">
-                {totalQuantity} {totalQuantity === 1 ? "Card" : "Cards"}
-              </div>
-
+              <div className="text-sm text-gray-500">{totalQuantity} items</div>
               <div className="font-semibold text-lg text-blue-600">
                 Total: {formatCurrency(totalPrice)}
               </div>
