@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateQuantity,
@@ -6,7 +6,6 @@ import {
   clearCart,
 } from "../../../redux/cartSlice";
 import { Trash2 } from "lucide-react";
-import Swal from "sweetalert2";
 
 export default function CartStep() {
   const dispatch = useDispatch();
@@ -14,55 +13,32 @@ export default function CartStep() {
     (state) => state.cart
   );
 
+  // Log cart data whenever it changes
+  useEffect(() => {
+    console.log("Cart Data:", { items, totalPrice, totalQuantity });
+  }, [items, totalPrice, totalQuantity]);
+
   const handleDecrease = (item) => {
     const newQty = Math.max(Number(item.quantity ?? 1) - 1, 0);
-    dispatch(updateQuantity({ id: item.id, quantity: newQty }));
+    dispatch(updateQuantity({ ...item, quantity: newQty }));
+    console.log("Decreased Item:", { ...item, quantity: newQty });
   };
 
   const handleIncrease = (item) => {
-    dispatch(
-      updateQuantity({ id: item.id, quantity: Number(item.quantity ?? 1) + 1 })
-    );
+    const newQty = Number(item.quantity ?? 1) + 1;
+    dispatch(updateQuantity({ ...item, quantity: newQty }));
+    console.log("Increased Item:", { ...item, quantity: newQty });
   };
 
-  const handleRemove = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you really want to remove this item from your cart?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, remove it!",
-      cancelButtonText: "Cancel",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(removeFromCart(id));
-        Swal.fire({
-          title: "Removed!",
-          text: "The item has been removed from your cart.",
-          icon: "success",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-      }
-    });
-  };
-
-  const handleClearCart = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "This will remove all items from your cart.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, clear it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(clearCart());
-        Swal.fire("Cleared!", "Your cart has been emptied.", "success");
-      }
+  const handleRemove = (item) => {
+    dispatch(removeFromCart(item.id));
+    console.log("Removed Item:", {
+      id: item.id,
+      color: item.color ?? null,
+      pack: item.pack ?? null,
+      material: item.material ?? null,
+      type: item.type ?? null,
+      smart_card: item.smart_card ?? null,
     });
   };
 
@@ -121,7 +97,7 @@ export default function CartStep() {
                 </div>
 
                 <button
-                  onClick={() => handleRemove(item.id)}
+                  onClick={() => handleRemove(item)}
                   className="text-red-500 hover:text-red-700"
                 >
                   <Trash2 size={18} />
@@ -133,7 +109,7 @@ export default function CartStep() {
           {/* Summary */}
           <div className="flex justify-between items-center mt-4 border-t pt-3">
             <button
-              onClick={handleClearCart}
+              onClick={() => dispatch(clearCart())}
               className="text-sm text-red-600 hover:underline"
             >
               Clear Cart
