@@ -29,8 +29,8 @@ export default function StepContact({
           <label className="block mb-1 font-medium">Phone Number</label>
           <input
             type="text"
-            name="phone_number"
-            value={data.phone_number || ""}
+            name="phone"
+            value={data.phone || ""}
             onChange={handleChange}
             placeholder="Enter your phone number"
             className="border p-2 rounded w-full"

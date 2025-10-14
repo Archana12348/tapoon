@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   nextStep,
@@ -21,22 +21,66 @@ import StepCompanyDetails from "./steps/StepCompany";
 
 export default function MultiStepProfileForm() {
   const dispatch = useDispatch();
-  const { id } = useParams(); // If present, edit mode
+  const { id } = useParams();
   const isEditMode = Boolean(id);
 
   const profile = useSelector((state) => state.profile);
   const { step, data, status, error } = profile;
 
+  const [submitted, setSubmitted] = useState(false);
+
+  // Fetch existing profile if editing
   useEffect(() => {
     if (isEditMode) {
-      console.log("Fetching profile for edit, ID:", id);
       dispatch(fetchProfile(id));
     }
   }, [dispatch, id, isEditMode]);
 
-  const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    dispatch(updateField({ [name]: type === "file" ? files[0] : value }));
+  // Safe error rendering function
+  const renderError = (err) => {
+    if (!err) return null;
+
+    if (typeof err === "string") return err;
+
+    if (err.message) return err.message;
+
+    if (err.errors) {
+      if (typeof err.errors === "string") return err.errors;
+      if (Array.isArray(err.errors)) return err.errors.join(", ");
+      if (typeof err.errors === "object")
+        return Object.values(err.errors).flat().join(", ");
+    }
+
+    // If it's an object with status/success/message
+    if (err.status && err.success !== undefined && err.message)
+      return err.message;
+
+    return "An unexpected error occurred";
+  };
+
+  const handleChange = (eOrName, maybeValue) => {
+    let name, value;
+
+    // Case 1: called from normal <input onChange={handleChange}>
+    if (typeof eOrName === "object" && eOrName.target) {
+      const { target } = eOrName;
+      const { type, checked, files } = target;
+
+      name = target.name;
+      value =
+        type === "file"
+          ? files?.[0]
+          : type === "checkbox"
+          ? checked
+          : target.value;
+    }
+    // Case 2: called manually, e.g. handleChange("avatar", file)
+    else {
+      name = eOrName;
+      value = maybeValue;
+    }
+
+    dispatch(updateField({ [name]: value }));
   };
 
   const handleFileChange = (name, files) => {
@@ -48,8 +92,24 @@ export default function MultiStepProfileForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSubmitted(true);
+
     if (isEditMode) {
-      dispatch(updateProfile({ id, profileData: data }));
+      // Ensure the ID from URL or fetched data is included
+      const profileId = data?.id;
+      console.log(
+        "Submitting updated profile with ID:",
+        profileId,
+        "and data:",
+        data
+      );
+
+      dispatch(
+        updateProfile({
+          id: profileId,
+          profileData: { ...data, id: profileId },
+        })
+      );
     } else {
       dispatch(submitProfile(data));
     }
@@ -144,17 +204,26 @@ export default function MultiStepProfileForm() {
 
       <form onSubmit={handleSubmit}>{renderStep()}</form>
 
+      {/* Status */}
       {status === "loading" && (
         <p className="text-blue-500 text-center mt-2">Processing...</p>
       )}
-      {status === "succeeded" && (
+
+      {/* Success */}
+      {submitted && status === "succeeded" && (
         <p className="text-green-600 text-center mt-2">
           {isEditMode
             ? "Profile updated successfully!"
             : "Profile created successfully!"}
         </p>
       )}
-      {error && <p className="text-red-500 text-center mt-2">Error: {error}</p>}
+
+      {/* Error */}
+      {submitted && error && (
+        <p className="text-red-500 text-center mt-2">
+          Error: {renderError(error)}
+        </p>
+      )}
     </div>
   );
 }

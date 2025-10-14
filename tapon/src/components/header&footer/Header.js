@@ -126,13 +126,13 @@ export default function Header() {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             className="hidden text-sky-900 hover:text-sky-600 md:flex"
           >
             <Search className="h-5 w-5" />
-          </Button>
+          </Button> */}
 
           <Link to="/information/form" className="relative">
             <Button

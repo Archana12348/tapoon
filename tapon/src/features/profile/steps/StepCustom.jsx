@@ -1,23 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function StepCustom({ data, handleBack, handleNext }) {
-  const [customSettings, setCustomSettings] = useState({
-    nfc_card_id: "",
-    is_public: true,
-    allow_contact_form: true,
-    dark_mode_enabled: true,
-    custom_theme_color: "#333333",
-    qr_code_url: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setCustomSettings((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
+function StepCustom({ data, handleBack, handleNext, handleChange }) {
   return (
     <>
       <div>
@@ -29,7 +12,7 @@ function StepCustom({ data, handleBack, handleNext }) {
             <input
               type="text"
               name="nfc_card_id"
-              value={customSettings.nfc_card_id}
+              value={data.nfc_card_id}
               onChange={handleChange}
               className="border border-gray-300 px-3 py-2 rounded"
               placeholder="Enter NFC Card ID"
@@ -42,19 +25,20 @@ function StepCustom({ data, handleBack, handleNext }) {
             <input
               type="url"
               name="qr_code_url"
-              value={customSettings.qr_code_url}
+              value={data.qr_code_url}
               onChange={handleChange}
               className="border border-gray-300 px-3 py-2 rounded"
               placeholder="Enter QR Code URL"
             />
           </div>
-          {/*  VCard ID */}
+
+          {/* VCard ID */}
           <div className="flex flex-col">
             <label className="text-sm font-medium mb-1">VCard ID</label>
             <input
               type="text"
-              name="vcard_url"
-              value={customSettings.vcard_id}
+              name="vcard_id"
+              value={data.vcard_id}
               onChange={handleChange}
               className="border border-gray-300 px-3 py-2 rounded"
               placeholder="Enter VCard ID"
@@ -67,7 +51,7 @@ function StepCustom({ data, handleBack, handleNext }) {
             <input
               type="url"
               name="pdf_resume_url"
-              value={customSettings.pdf_resume_url}
+              value={data.pdf_resume_url}
               onChange={handleChange}
               className="border border-gray-300 px-3 py-2 rounded"
               placeholder="Enter PDF Resume URL"
@@ -75,87 +59,36 @@ function StepCustom({ data, handleBack, handleNext }) {
           </div>
 
           {/* Is Public */}
-          <div className="flex items-center gap-4 mt-6">
-            <label className="text-xl font-medium">Profile is Public</label>
-            <div className="flex items-center space-x-2">
-              <label className="relative inline-flex items-center gap-0 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="is_public"
-                  checked={customSettings.is_public}
-                  onChange={handleChange}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
-                <div className="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform peer-checked:translate-x-full"></div>
-              </label>
-              <span className="text-xl">
-                {customSettings.is_public ? "On" : "Off"}
-              </span>
-            </div>
-          </div>
+          <ToggleField
+            label="Profile is Public"
+            name="is_public"
+            checked={data.is_public}
+            onChange={handleChange}
+          />
 
           {/* Allow Contact Form */}
-          <div className="flex items-center gap-4 mt-6">
-            <label className="text-xl font-medium">Allow Contact Form</label>
-            <div className="flex items-center space-x-4">
-              <label className="relative inline-flex items-center gap-1 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="allow_contact_form"
-                  checked={customSettings.allow_contact_form}
-                  onChange={handleChange}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
-                <div className="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform peer-checked:translate-x-full"></div>
-              </label>
-              <span className="text-xl">
-                {customSettings.allow_contact_form ? "On" : "Off"}
-              </span>
-            </div>
-          </div>
+          <ToggleField
+            label="Allow Contact Form"
+            name="allow_contact_form"
+            checked={data.allow_contact_form}
+            onChange={handleChange}
+          />
 
-          {/* Status Mode Enabled */}
-          <div className="flex items-center gap-4 mt-6">
-            <label className="text-xl font-medium">Status Mode Enabled</label>
-            <div className="flex items-center space-x-2">
-              <label className="relative inline-flex items-center gap-1 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="status"
-                  checked={data.status}
-                  onChange={handleChange}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
-                <div className="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform peer-checked:translate-x-full"></div>
-              </label>
-              <span className="text-xl">
-                {customSettings.dark_mode_enabled ? "On" : "Off"}
-              </span>
-            </div>
-          </div>
+          {/* Status Enabled */}
+          <ToggleField
+            label="Status Enabled"
+            name="status"
+            checked={data.status}
+            onChange={handleChange}
+          />
+
           {/* Dark Mode Enabled */}
-          <div className="flex items-center gap-4 mt-6">
-            <label className="text-xl font-medium">Enable Dark Mode</label>
-            <div className="flex items-center space-x-2">
-              <label className="relative inline-flex items-center gap-1 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="dark_mode_enabled"
-                  checked={customSettings.dark_mode_enabled}
-                  onChange={handleChange}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
-                <div className="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform peer-checked:translate-x-full"></div>
-              </label>
-              <span className="text-xl">
-                {customSettings.dark_mode_enabled ? "On" : "Off"}
-              </span>
-            </div>
-          </div>
+          <ToggleField
+            label="Enable Dark Mode"
+            name="dark_mode_enabled"
+            checked={data.dark_mode_enabled}
+            onChange={handleChange}
+          />
 
           {/* Custom Theme Color */}
           <div className="flex items-center space-x-4">
@@ -163,7 +96,7 @@ function StepCustom({ data, handleBack, handleNext }) {
             <input
               type="color"
               name="custom_theme_color"
-              value={customSettings.custom_theme_color}
+              value={data.custom_theme_color}
               onChange={handleChange}
               className="w-24 h-16 p-1 border border-gray-300 rounded"
             />
@@ -182,13 +115,36 @@ function StepCustom({ data, handleBack, handleNext }) {
         </button>
         <button
           type="button"
-          onClick={() => handleNext(customSettings)}
+          onClick={handleNext}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
         >
           Next
         </button>
       </div>
     </>
+  );
+}
+
+// Reusable toggle component
+function ToggleField({ label, name, checked, onChange }) {
+  return (
+    <div className="flex items-center gap-4 mt-6">
+      <label className="text-xl font-medium">{label}</label>
+      <div className="flex items-center space-x-2">
+        <label className="relative inline-flex items-center gap-1 cursor-pointer">
+          <input
+            type="checkbox"
+            name={name}
+            checked={checked}
+            onChange={onChange}
+            className="sr-only peer"
+          />
+          <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
+          <div className="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform peer-checked:translate-x-full"></div>
+        </label>
+        <span className="text-xl">{checked ? "On" : "Off"}</span>
+      </div>
+    </div>
   );
 }
 
