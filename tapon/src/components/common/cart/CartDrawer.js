@@ -1,84 +1,85 @@
-import React, { useState } from "react";
+"use client";
+
+import { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { X } from "lucide-react";
 import { FaTrashAlt } from "react-icons/fa";
-
-import Pr1 from "../../../assests/images/card/card1.webp";
-import Pr2 from "../../../assests/images/card/card3.jpg";
-import Pr3 from "../../../assests/images/card/card3.jpg";
-import Pr4 from "../../../assests/images/card/card3.jpg";
-import Pr5 from "../../../assests/images/card/card3.jpg";
+import { removeFromCart, updateQuantity } from "../../../redux/cartSlice";
 import Button from "../../ui/Button";
+import { createPortal } from "react-dom";
 
 const CartDrawer = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      product: { name: "Business Card A", default_image: Pr1 },
-      price: 200,
-      quantity: 1,
-      size: { name: "Small" },
-      color: { name: "Red" },
+  const dispatch = useDispatch();
+
+  const cartItems = useSelector((state) => state.cart.items);
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+
+  // 🧮 Calculate total price
+  const totalPrice = cartItems.reduce((acc, item) => {
+    const regularPrice = Number(item.regular_price) || 0;
+    const salePrice = Number(item.sale_price) || 0;
+    const finalPrice = salePrice < regularPrice ? salePrice : regularPrice;
+    return acc + finalPrice * item.quantity;
+  }, 0);
+
+  // ✅ Close on ESC key
+  useEffect(() => {
+    const handleEsc = (e) => e.key === "Escape" && onClose();
+    if (isOpen) document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [isOpen, onClose]);
+
+  // ✅ Disable body scroll when drawer open
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+  }, [isOpen]);
+
+  const handleIncrease = useCallback(
+    (id) => {
+      const item = cartItems.find((i) => i.id === id);
+      if (item) dispatch(updateQuantity({ id, quantity: item.quantity + 1 }));
     },
-    {
-      id: 2,
-      product: { name: "Business Card B", default_image: Pr2 },
-      price: 350,
-      quantity: 2,
-      size: { name: "Medium" },
-      color: { name: "Blue" },
-    },
-    {
-      id: 3,
-      product: { name: "Business Card C", default_image: Pr3 },
-      price: 500,
-      quantity: 1,
-      size: { name: "Large" },
-      color: { name: "Green" },
-    },
-  ]);
-
-  const handleIncrease = (id) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
-
-  const handleDecrease = (id) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-  };
-
-  const handleRemoveItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
+    [cartItems, dispatch]
   );
 
-  return (
+  const handleDecrease = useCallback(
+    (id) => {
+      const item = cartItems.find((i) => i.id === id);
+      if (item) {
+        if (item.quantity > 1) {
+          dispatch(updateQuantity({ id, quantity: item.quantity - 1 }));
+        } else {
+          dispatch(removeFromCart(id));
+        }
+      }
+    },
+    [cartItems, dispatch]
+  );
+
+  const handleRemoveItem = useCallback(
+    (id) => dispatch(removeFromCart(id)),
+    [dispatch]
+  );
+
+  return createPortal(
     <>
-      {/* Fullscreen Overlay */}
+      {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-auto"
+          className="fixed inset-0 bg-black/50 z-[1000]"
           onClick={onClose}
-        ></div>
+          role="presentation"
+          aria-hidden="true"
+        />
       )}
 
-      {/* Cart Drawer */}
+      {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-[80vh] w-[430px] bg-white z-50 shadow-lg transition-transform duration-300 ${
+        role="dialog"
+        aria-modal="true"
+        className={`fixed top-0 right-0 h-screen w-[430px] bg-white z-[1001] shadow-lg transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -86,7 +87,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b">
             <h2 className="font-bold text-sm uppercase">
-              Shopping cart ({cartItems.length})
+              Shopping Cart ({totalQuantity})
             </h2>
             <button onClick={onClose}>
               <X className="w-5 h-5" />
@@ -94,11 +95,15 @@ const CartDrawer = ({ isOpen, onClose }) => {
           </div>
 
           {/* Cart Items */}
-          <div className="p-4 space-y-4">
+          <div className="p-4 space-y-4 flex-1 overflow-y-auto">
             {cartItems.length > 0 ? (
               cartItems.map((item) => {
-                const productName = item.product?.name || "Unnamed Product";
-                const productImage = item.product?.default_image || "#";
+                const productName = item?.name || "Unnamed Product";
+                const productImage = item?.card_image || "/placeholder.png";
+                const quantity = item?.quantity;
+                const regularPrice = Number(item.regular_price) || 0;
+                const salePrice = Number(item.sale_price) || 0;
+                const hasDiscount = salePrice < regularPrice;
 
                 return (
                   <div key={item.id} className="flex gap-4 border-b pb-3">
@@ -107,36 +112,54 @@ const CartDrawer = ({ isOpen, onClose }) => {
                       alt={productName}
                       className="w-[80px] h-[100px] object-cover rounded"
                     />
+
                     <div className="flex-1 text-sm">
+                      {/* Product Name */}
                       <h4 className="font-semibold">{productName}</h4>
 
-                      {item.size && (
-                        <p className="text-gray-500">Size: {item.size.name}</p>
+                      {/* Color and Material */}
+                      {item.selectedColor && (
+                        <p className="text-gray-500 capitalize">
+                          Color: {item.selectedColor}
+                        </p>
                       )}
-                      {item.color && (
-                        <p className="text-gray-500">
-                          Color: {item.color.name}
+                      {item.selectedMaterial && (
+                        <p className="text-gray-500 capitalize">
+                          Material: {item.selectedMaterial}
                         </p>
                       )}
 
+                      {/* ✅ Price Section */}
                       <div className="flex justify-between items-center mt-2">
-                        <span
-                          className="font-semibold"
-                          style={{ fontSize: "18.5px" }}
-                        >
-                          ₹{(item.price * item.quantity).toFixed(2)}
-                        </span>
-                        <div
-                          className="flex items-center gap-2 border rounded-2xl px-2 py-1 bg-gray-200"
-                          style={{ marginRight: "-30px" }}
-                        >
+                        <div>
+                          {hasDiscount ? (
+                            <div className="flex flex-col">
+                              {/* Sale Price */}
+                              <span className="text-sky-600 font-semibold text-lg">
+                                ₹{(salePrice * quantity).toFixed(2)}
+                              </span>
+
+                              {/* Regular Price (struck out) */}
+                              <span className="text-gray-400 line-through text-xs">
+                                ₹{(regularPrice * quantity).toFixed(2)}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="font-semibold text-lg">
+                              ₹{(regularPrice * quantity).toFixed(2)}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Quantity Controls */}
+                        <div className="flex items-center gap-2 border rounded-2xl px-2 py-1 bg-gray-100">
                           <button
                             className="text-lg px-2"
                             onClick={() => handleDecrease(item.id)}
                           >
                             −
                           </button>
-                          <span>{item.quantity}</span>
+                          <span>{quantity}</span>
                           <button
                             className="text-lg px-2"
                             onClick={() => handleIncrease(item.id)}
@@ -146,8 +169,10 @@ const CartDrawer = ({ isOpen, onClose }) => {
                         </div>
                       </div>
                     </div>
+
+                    {/* Remove Item */}
                     <button
-                      style={{ marginBottom: "90px" }}
+                      className="self-start mt-2"
                       onClick={() => handleRemoveItem(item.id)}
                     >
                       <FaTrashAlt className="text-red-600 hover:text-red-800" />
@@ -156,37 +181,39 @@ const CartDrawer = ({ isOpen, onClose }) => {
                 );
               })
             ) : (
-              <p className="text-center text-gray-500">Your cart is empty</p>
+              <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                <p>Your cart is empty</p>
+              </div>
             )}
           </div>
 
           {/* Summary & Actions */}
-          <div className="p-4 border-t text-sm pb-6 mt-auto">
-            <div className="flex justify-between mb-4">
-              <span>{cartItems.length} items</span>
-              <span className="font-bold text-red-600">
-                ₹{subtotal.toFixed(2)}
-              </span>
-            </div>
+          {cartItems.length > 0 && (
+            <div className="p-4 border-t text-sm pb-6 mt-auto">
+              <div className="flex justify-between mb-4">
+                <span>{totalQuantity} items</span>
+                <span className="font-bold text-sky-600">
+                  ₹{totalPrice.toFixed(2)}
+                </span>
+              </div>
 
-            <div className="flex gap-3">
-              <Button
-                className="w-1/2  text-white py-2 rounded font-semibold "
-                onClick={() => navigate("/cart")}
-              >
-                VIEW CART
-              </Button>
-              <button
-                className="w-1/2 border border-black py-2 rounded font-semibold hover:bg-gray-100"
-                onClick={() => navigate("/payment")}
-              >
-                CHECKOUT
-              </button>
+              <div className="flex gap-3">
+                <Button
+                  className="w-full text-white py-2 rounded font-semibold"
+                  onClick={() => {
+                    onClose();
+                    navigate("/cart");
+                  }}
+                >
+                  VIEW CART
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 };
 

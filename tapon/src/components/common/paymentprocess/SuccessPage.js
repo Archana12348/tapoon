@@ -11,9 +11,7 @@ export default function SuccessPage() {
   useEffect(() => {
     if (!sessionId) return;
 
-    fetch(
-      `https://nfc.premierwebtechservices.com/api/checkout-success?session_id=${sessionId}`
-    )
+    fetch(`http://localhost:3000/checkout-success`)
       .then((res) => res.json())
       .then((data) => setResponse(data))
       .catch((err) => console.error("Error:", err))

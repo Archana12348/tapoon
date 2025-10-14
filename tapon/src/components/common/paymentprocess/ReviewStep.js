@@ -1,40 +1,59 @@
 import React from "react";
 
-export default function ReviewStep({ cart, details }) {
-  const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+export default function ReviewStep({ cart }) {
+  console.log("ReviewStep cart:", cart);
+
+  const formatCurrency = (num) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 2,
+    }).format(Number(num ?? 0));
+
+  // ✅ Same logic as CartStep
+  const subtotal = cart.reduce((acc, item) => {
+    const regularPrice = Number(item.regular_price) || 0;
+    const salePrice = Number(item.sale_price) || 0;
+    const finalPrice = salePrice < regularPrice ? salePrice : regularPrice;
+    return acc + finalPrice * (item.quantity ?? 1);
+  }, 0);
 
   return (
     <div>
-      <h2 className="text-lg font-semibold mb-4">Review & Confirm</h2>
-      <div className="grid md:grid-cols-2 gap-4 ">
-        <div className="border rounded p-3 bg-sky-200">
-          <h3 className="font-semibold mb-2">Cart Summary</h3>
-          {cart.map((i) => (
-            <div key={i.id} className="flex justify-between text-sm mb-1">
-              <span>
-                {i.name} x {i.qty}
-              </span>
-              <span>${(i.price * i.qty).toFixed(2)}</span>
-            </div>
-          ))}
-          <div className="text-right font-bold">Total: ${total.toFixed(2)}</div>
-        </div>
+      <h2 className="text-lg font-semibold mb-4">Review Your Order</h2>
 
-        <div className="border rounded p-3 bg-sky-200">
-          <h3 className="font-semibold mb-2">Your Details</h3>
-          <p>
-            <strong>Name:</strong> {details.fullName}
-          </p>
-          <p>
-            <strong>Email:</strong> {details.email}
-          </p>
-          <p>
-            <strong>Address:</strong> {details.address}
-          </p>
-          <p>
-            <strong>Phone:</strong> {details.phone}
-          </p>
-        </div>
+      <div className="space-y-3">
+        {cart.map((item) => {
+          const regularPrice = Number(item.regular_price) || 0;
+          const salePrice = Number(item.sale_price) || 0;
+          const quantity = Number(item.quantity ?? 1);
+          const hasDiscount = salePrice < regularPrice;
+
+          const itemTotal = (hasDiscount ? salePrice : regularPrice) * quantity;
+
+          return (
+            <div
+              key={item.id}
+              className="flex justify-between items-start  pb-2"
+            >
+              <div>
+                <span className="font-medium">{item.name}</span>
+                <span className="text-gray-500 text-sm ml-1">× {quantity}</span>
+              </div>
+
+              {/* ✅ Item Total */}
+              <span className="font-semibold text-gray-800">
+                {formatCurrency(itemTotal)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ✅ Grand Total */}
+      <div className="mt-4 border-t pt-4 flex justify-between font-semibold text-sky-600 text-lg">
+        <span>Total:</span>
+        <span>{formatCurrency(subtotal)}</span>
       </div>
     </div>
   );

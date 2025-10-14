@@ -1,4 +1,3 @@
-// src/pages/CartStep.jsx
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -7,29 +6,77 @@ import {
   clearCart,
 } from "../../../redux/cartSlice";
 import { Trash2 } from "lucide-react";
+import Swal from "sweetalert2";
 
 export default function CartStep() {
   const dispatch = useDispatch();
-  const { items, totalPrice } = useSelector((state) => state.cart);
+  const { items, totalQuantity } = useSelector((state) => state.cart);
+
+  // 🧮 Total price calculation
+  const totalPrice = items.reduce((acc, item) => {
+    const regularPrice = Number(item.regular_price) || 0;
+    const salePrice = Number(item.sale_price) || 0;
+    const finalPrice = salePrice < regularPrice ? salePrice : regularPrice;
+    return acc + finalPrice * (item.quantity ?? 1);
+  }, 0);
 
   const handleDecrease = (item) => {
-    const newQty = Math.max(item.quantity - 1, 0);
+    const newQty = Math.max(Number(item.quantity ?? 1) - 1, 1);
     dispatch(updateQuantity({ id: item.id, quantity: newQty }));
   };
 
   const handleIncrease = (item) => {
-    dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }));
+    dispatch(
+      updateQuantity({ id: item.id, quantity: Number(item.quantity ?? 1) + 1 })
+    );
   };
 
   const handleRemove = (id) => {
-    dispatch(removeFromCart(id));
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to remove this item from your cart?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, remove it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(removeFromCart(id));
+        Swal.fire({
+          title: "Removed!",
+          text: "The item has been removed from your cart.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    });
+  };
+
+  const handleClearCart = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This will remove all items from your cart.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, clear it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(clearCart());
+        Swal.fire("Cleared!", "Your cart has been emptied.", "success");
+      }
+    });
   };
 
   const formatCurrency = (num) =>
     new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
-    }).format(num || 0);
+    }).format(Number(num ?? 0));
 
   return (
     <div className="p-4">
@@ -39,67 +86,94 @@ export default function CartStep() {
         <p className="text-gray-500">Cart is empty</p>
       ) : (
         <div className="space-y-4">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="flex justify-between items-center border p-3 rounded-lg"
-            >
-              {/* Left side: Image + Info */}
-              <div className="flex items-center gap-3">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-16 h-16 object-cover rounded-md border"
-                />
+          {items.map((item) => {
+            const regularPrice = Number(item.regular_price) || 0;
+            const salePrice = Number(item.sale_price) || 0;
+            const quantity = Number(item.quantity ?? 1);
+            const hasDiscount = salePrice < regularPrice;
+            const itemTotal =
+              (hasDiscount ? salePrice : regularPrice) * quantity;
 
-                <div>
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-gray-500 text-sm">
-                    {formatCurrency(item.price)}
-                  </p>
+            return (
+              <div
+                key={item.id}
+                className="flex justify-between items-center border p-3 rounded-lg"
+              >
+                {/* Product Info */}
+                <div className="flex items-center gap-3">
+                  <img
+                    src={item.card_image ?? "/placeholder.png"}
+                    alt={item.name ?? "Product"}
+                    className="w-16 h-16 object-cover rounded-md border"
+                  />
+                  <div>
+                    <p className="font-medium">
+                      {item.name ?? "Unnamed Product"}
+                    </p>
+
+                    {/* ✅ Fixed Pricing Display */}
+                    {hasDiscount ? (
+                      <div className="flex flex-col">
+                        <span className="text-sky-600 font-semibold text-lg">
+                          ₹{(salePrice * quantity).toFixed(2)}
+                        </span>
+                        <span className="text-gray-400 line-through text-xs">
+                          ₹{(regularPrice * quantity).toFixed(2)}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-sky-600 font-semibold text-lg">
+                        ₹{(regularPrice * quantity).toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center border rounded-lg">
+                    <button
+                      onClick={() => handleDecrease(item)}
+                      className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-l-lg"
+                    >
+                      −
+                    </button>
+                    <span className="px-3 py-1">{quantity}</span>
+                    <button
+                      onClick={() => handleIncrease(item)}
+                      className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-r-lg"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => handleRemove(item.id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <Trash2 size={18} />
+                  </button>
                 </div>
               </div>
+            );
+          })}
 
-              {/* Right side: Actions */}
-              <div className="flex items-center gap-3">
-                {/* Quantity Control */}
-                <div className="flex items-center border rounded-lg">
-                  <button
-                    onClick={() => handleDecrease(item)}
-                    className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-l-lg"
-                  >
-                    -
-                  </button>
-                  <span className="px-3 py-1">{item.quantity}</span>
-                  <button
-                    onClick={() => handleIncrease(item)}
-                    className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-r-lg"
-                  >
-                    +
-                  </button>
-                </div>
-
-                {/* Remove Button */}
-                <button
-                  onClick={() => handleRemove(item.id)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
-            </div>
-          ))}
-
-          {/* Total & Clear Button */}
-          <div className="flex justify-between items-center mt-4">
+          {/* Summary */}
+          <div className="flex justify-between items-center mt-4 border-t pt-3">
             <button
-              onClick={() => dispatch(clearCart())}
+              onClick={handleClearCart}
               className="text-sm text-red-600 hover:underline"
             >
               Clear Cart
             </button>
-            <div className="font-semibold text-right">
-              Total: {formatCurrency(totalPrice)}
+            <div className="text-right">
+              <div className="text-sm text-gray-500">
+                {totalQuantity} {totalQuantity === 1 ? "Card" : "Cards"}
+              </div>
+
+              <div className="font-semibold text-lg text-blue-600">
+                Total: {formatCurrency(totalPrice)}
+              </div>
             </div>
           </div>
         </div>

@@ -19,6 +19,7 @@ export default function SingleProductPage() {
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
   const [selectedSmartCard, setSelectedSmartCard] = useState(null);
+  const [loadingAdd, setLoadingAdd] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -69,10 +70,31 @@ export default function SingleProductPage() {
     if (quantity < stock) setQuantity(quantity + 1);
   };
 
-  const handleAdd = () => {
-    // product should have at least: id, name, price
-    dispatch(addToCart({ ...product, quantity: 1 }));
-    // optional: show toast/notification here
+  // ✅ UPDATED handleAdd: includes selected options and quantity
+  const handleAdd = async () => {
+    setLoadingAdd(true);
+
+    const itemToAdd = {
+      ...product,
+      quantity,
+      selectedColor,
+      selectedPack,
+      selectedMaterial,
+      selectedType,
+      selectedSmartCard,
+    };
+
+    try {
+      dispatch(addToCart(itemToAdd));
+
+      // Simulate short delay for UX feedback
+      setTimeout(() => {
+        setLoadingAdd(false);
+      }, 800);
+    } catch (err) {
+      console.error("Error adding to cart:", err);
+      setLoadingAdd(false);
+    }
   };
 
   return (
@@ -88,7 +110,8 @@ export default function SingleProductPage() {
                 className="w-full h-[450px] object-cover"
               />
             </div>
-            <div className="flex gap-2 mt-4 overflow-x-auto">
+            {/* ✅ Fixed mobile horizontal scroll by enforcing inline scroll behavior */}
+            <div className="flex gap-2 mt-4 w-full sm:w-auto overflow-x-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 snap-x snap-mandatory pb-2">
               {galleryImages.map(
                 (img, idx) =>
                   img && (
@@ -97,7 +120,7 @@ export default function SingleProductPage() {
                       src={img}
                       alt={`${product.name}-${idx}`}
                       onClick={() => setSelectedImage(img)}
-                      className={`w-24 h-24 object-cover rounded-lg cursor-pointer border-2 ${
+                      className={`min-w-[90px] h-24 object-cover rounded-lg cursor-pointer border-2 snap-start ${
                         selectedImage === img
                           ? "border-black"
                           : "border-gray-300 hover:border-black"
@@ -131,17 +154,22 @@ export default function SingleProductPage() {
 
             {/* Price */}
             <div className="flex items-center gap-3 mt-2">
-              {discount > 0 && (
+              {product.regular_price > product.sale_price && (
                 <span className="text-gray-400 text-lg line-through">
-                  ₹{salePrice.toFixed(2)}
+                  ₹{Number(product.regular_price).toFixed(2)}
                 </span>
               )}
               <span className="text-3xl font-semibold text-sky-600">
-                ₹{discountedPrice.toFixed(2)}
+                ₹{Number(product.sale_price).toFixed(2)}
               </span>
-              {discount > 0 && (
-                <span className="bg-sky-100 text-sky-600 px-2 py-1 rounded">
-                  {discount}% OFF
+              {product.regular_price > product.sale_price && (
+                <span className="bg-sky-100 text-sky-600 px-2 py-1 rounded text-sm font-medium">
+                  {Math.round(
+                    ((product.regular_price - product.sale_price) /
+                      product.regular_price) *
+                      100
+                  )}
+                  % OFF
                 </span>
               )}
             </div>
@@ -265,6 +293,7 @@ export default function SingleProductPage() {
                 </div>
               </div>
             )}
+
             {/* Quantity & Add to Cart Row */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-6">
               <div className="flex items-center gap-3">
@@ -297,45 +326,38 @@ export default function SingleProductPage() {
               </div>
 
               <Button
-                className="text-white px-8 py-3 rounded-full text-lg transition w-full sm:w-auto"
+                className="text-white px-8 py-3 rounded-full text-lg transition w-full sm:w-auto flex items-center justify-center"
                 onClick={handleAdd}
+                disabled={loadingAdd}
               >
-                Add To Cart
+                {loadingAdd ? (
+                  <span className="flex items-center gap-2">
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 01-8 8z"
+                      ></path>
+                    </svg>
+                    Adding...
+                  </span>
+                ) : (
+                  "Add To Cart"
+                )}
               </Button>
-            </div>
-
-            {/* Product Details */}
-            <div className="mt-6 space-y-2 text-gray-700 text-sm">
-              <p>
-                <strong>SKU:</strong> {product.sku || "-"}
-              </p>
-              {product.nfc_product_categories?.length > 0 && (
-                <p>
-                  <strong>Category:</strong>{" "}
-                  {product.nfc_product_categories
-                    .map((cat) => cat.name)
-                    .join(", ")}
-                </p>
-              )}
-
-              <p>
-                <strong>Brand:</strong> {product.brand?.brand_name || "-"}
-              </p>
-              {product.offers?.length > 0 && (
-                <p>
-                  <strong>Offer:</strong>{" "}
-                  {product.offers.map((offer) => offer.title).join(", ")}
-                </p>
-              )}
-              {(!product.offers || product.offers.length === 0) && (
-                <p>
-                  <strong>Offer:</strong> -
-                </p>
-              )}
-
-              <p>
-                <strong>Customizable:</strong> {product.is_customizable || "-"}
-              </p>
             </div>
           </div>
         </div>
@@ -352,6 +374,37 @@ export default function SingleProductPage() {
             />
           </div>
         )}
+        {/* Product Details */}
+        <div className="mt-6 space-y-2 text-gray-700 text-sm">
+          <p>
+            <strong>SKU:</strong> {product.sku || "-"}
+          </p>
+          {product.nfc_product_categories?.length > 0 && (
+            <p>
+              <strong>Category:</strong>{" "}
+              {product.nfc_product_categories.map((cat) => cat.name).join(", ")}
+            </p>
+          )}
+
+          <p>
+            <strong>Brand:</strong> {product.brand?.brand_name || "-"}
+          </p>
+          {product.offers?.length > 0 && (
+            <p>
+              <strong>Offer:</strong>{" "}
+              {product.offers.map((offer) => offer.title).join(", ")}
+            </p>
+          )}
+          {(!product.offers || product.offers.length === 0) && (
+            <p>
+              <strong>Offer:</strong> -
+            </p>
+          )}
+
+          <p>
+            <strong>Customizable:</strong> {product.is_customizable || "-"}
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -24,11 +24,7 @@ export default function Stepper({ step }) {
       <div
         className={`flex-1 h-1 mx-2 ${step > 1 ? "bg-sky-600" : "bg-gray-300"}`}
       />
-      <Step num={2} label="Details" active={step === 2} done={step > 2} />
-      <div
-        className={`flex-1 h-1 mx-2 ${step > 2 ? "bg-sky-600" : "bg-gray-300"}`}
-      />
-      <Step num={3} label="Review" active={step === 3} done={false} />
+      <Step num={2} label="Review" active={step === 2} done={false} />
     </div>
   );
 }

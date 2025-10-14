@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { ShoppingCart, Menu, Search, User } from "lucide-react";
+import { ShoppingCart, Menu, Search, User, ChevronDown } from "lucide-react";
 import Button from "../ui/Button";
 import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
-import { ChevronDown } from "lucide-react"; // dropdown icon
 import { useSelector } from "react-redux";
-import CartDrawer from "../common/cart/CartDrawer";
+import CartDrawer from "../common/cart/CartDrawer"; // ✅ Import your CartDrawer component
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -15,8 +14,10 @@ export default function Header() {
   const [siteLogo, setSiteLogo] = useState("");
   const [showProductsMenu, setShowProductsMenu] = useState(false);
   const hoverTimeoutRef = useRef(null);
-  const [open, setOpen] = useState(false); // toggle state
+  const [open, setOpen] = useState(false);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity || 0);
+
+  // ✅ State for Cart Drawer
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
@@ -26,8 +27,6 @@ export default function Header() {
           "https://nfc.premierwebtechservices.com/api/menu"
         );
         const result = await res.json();
-        debugger;
-        console.log("API Response:", result);
 
         if (result.status && result.data) {
           setCategories(result.data);
@@ -47,17 +46,17 @@ export default function Header() {
   // Handle delayed hover for Products dropdown
   const handleMouseEnter = () => {
     clearTimeout(hoverTimeoutRef.current);
-    hoverTimeoutRef.current = setTimeout(() => setShowProductsMenu(true), 300); // ⏳ 300ms delay
+    hoverTimeoutRef.current = setTimeout(() => setShowProductsMenu(true), 300);
   };
 
   const handleMouseLeave = () => {
     clearTimeout(hoverTimeoutRef.current);
-    hoverTimeoutRef.current = setTimeout(() => setShowProductsMenu(false), 400); // ⏳ 400ms delay to close
+    hoverTimeoutRef.current = setTimeout(() => setShowProductsMenu(false), 400);
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md ">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 ">
+    <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo Section */}
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2">
@@ -85,7 +84,7 @@ export default function Header() {
               About Us
             </Link>
 
-            {/* ✅ Dynamic Product Categories with Hover Delay */}
+            {/* ✅ Products Dropdown */}
             <div
               className="relative"
               onMouseEnter={handleMouseEnter}
@@ -132,25 +131,17 @@ export default function Header() {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hidden text-sky-900 hover:text-sky-600 md:flex"
-          >
-            <Search className="h-5 w-5" />
-          </Button>
-
+          {/* 🛒 Shopping Cart Button */}
           <div className="relative">
             <Button
               variant="ghost"
               size="icon"
               className="text-sky-900 hover:text-sky-600 dark:text-white"
-              onClick={() => setIsCartOpen(true)}
+              onClick={() => setIsCartOpen(true)} // ✅ open drawer
             >
               <ShoppingCart className="h-5 w-5" />
             </Button>
 
-            {/* 🔴 Cart Count Badge */}
             {totalQuantity > 0 && (
               <span className="absolute -top-0 -right-0 bg-red-600 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
                 {totalQuantity}
@@ -232,7 +223,6 @@ export default function Header() {
 
             {/* ✅ Dynamic Products in Mobile */}
             <div className="flex flex-col gap-1">
-              {/* Header with dropdown icon */}
               <div
                 className="flex items-center gap-2 cursor-pointer select-none"
                 onClick={() => setOpen(!open)}
@@ -247,7 +237,6 @@ export default function Header() {
                 />
               </div>
 
-              {/* Category List (only visible when open) */}
               {open && (
                 <div className="flex flex-col gap-1 mt-1 overflow-hidden animate-fadeIn">
                   {categories.length > 0 ? (
@@ -288,6 +277,7 @@ export default function Header() {
         </div>
       )}
 
+      {/* 🛒 Cart Drawer Integration */}
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
