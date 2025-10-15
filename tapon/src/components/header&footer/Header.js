@@ -4,6 +4,7 @@ import Button from "../ui/Button";
 import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import CartDrawer from "../common/cart/CartDrawer"; // ✅ Import your CartDrawer component
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -17,7 +18,9 @@ export default function Header() {
 
   const totalQuantity = useSelector((state) => state.cart.totalQuantity || 0);
 
-  // ✅ Fetch menu + logo
+  // ✅ State for Cart Drawer
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
   useEffect(() => {
     const fetchMenuData = async () => {
       try {
@@ -126,17 +129,17 @@ export default function Header() {
 
         {/* ---------- Actions (Cart + User) ---------- */}
         <div className="flex items-center gap-4">
-          {/* 🛒 Cart Button */}
+          {/* 🛒 Shopping Cart Button */}
           <div className="relative">
-            <Link to="/information/form">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-sky-900 hover:text-sky-600 dark:text-white"
-              >
-                <ShoppingCart className="h-5 w-5" />
-              </Button>
-            </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-sky-900 hover:text-sky-600 dark:text-white"
+              onClick={() => setIsCartOpen(true)} // ✅ open drawer
+            >
+              <ShoppingCart className="h-5 w-5" />
+            </Button>
+
             {totalQuantity > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
                 {totalQuantity}
@@ -272,6 +275,9 @@ export default function Header() {
           </nav>
         </div>
       )}
+
+      {/* 🛒 Cart Drawer Integration */}
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 }
