@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function ReviewStep({ cart }) {
-  console.log("ReviewStep cart:", cart[0].sale_price, cart[0].quantity);
-  debugger;
+  // Log full cart data including color, pack, material, type, smart_card
+  useEffect(() => {
+    cart.forEach((item) => {
+      console.log("Review Item:", {
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        sale_price: item.sale_price,
+        color: item.color ?? null,
+        pack: item.pack ?? null,
+        material: item.material ?? null,
+        type: item.type ?? null,
+        smart_card: item.smart_card ?? null,
+      });
+    });
+  }, [cart]);
+
+  // Subtotal calculation
   const subtotal = cart.reduce(
-    (sum, item) => sum + item.sale_price * item.quantity,
+    (sum, item) => sum + (item.sale_price ?? 0) * (item.quantity ?? 1),
     0
   );
 
@@ -18,7 +34,9 @@ export default function ReviewStep({ cart }) {
             <span>
               {item.name} × {item.quantity}
             </span>
-            <span>₹{(item.sale_price * item.quantity).toFixed(2)}</span>
+            <span>
+              ₹{((item.sale_price ?? 0) * (item.quantity ?? 1)).toFixed(2)}
+            </span>
           </div>
         ))}
       </div>
