@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 export default function StepBasicInfo({
   data,
@@ -7,33 +7,26 @@ export default function StepBasicInfo({
   loading,
 }) {
   console.log("StepBasicInfo data:", data);
-  const [avatarPreview, setAvatarPreview] = useState(null);
-  const [coverPreview, setCoverPreview] = useState(null);
-
-  // ✅ When editing: show existing image previews (if available)
+  // Auto-generate slug when username changes
   useEffect(() => {
-    if (data.profile_picture && typeof data.profile_picture === "string") {
-      setAvatarPreview(data.profile_picture);
-    }
-    if (data.cover_photo && typeof data.cover_photo === "string") {
-      setCoverPreview(data.cover_photo);
-    }
-  }, [data.profile_picture, data.cover_photo]);
+    if (data.username) {
+      const slug = data.username
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-") // Replace spaces with hyphens
+        .replace(/[^a-z0-9-]/g, ""); // Remove invalid characters
 
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    if (files && files[0]) {
-      const file = files[0];
-      const previewUrl = URL.createObjectURL(file);
-      if (name === "profile_picture") setAvatarPreview(previewUrl);
-      if (name === "cover_photo") setCoverPreview(previewUrl);
-      handleChange(e);
+      if (slug !== data.slug) {
+        handleChange({ target: { name: "slug", value: slug } });
+      }
     }
-  };
+  }, [data.username]);
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Basic Information</h3>
+      <h3 className="text-lg font-semibold text-sky-900 border-b border-sky-200 pb-2">
+        Basic Information
+      </h3>
 
       <div className="space-y-3">
         {/* Full Name */}
@@ -64,17 +57,17 @@ export default function StepBasicInfo({
           />
         </div>
 
-        {/* Slug */}
+        {/* Slug (auto-generated) */}
         <div>
-          <label className="block mb-1 font-medium">Slug</label>
+          <label className="block mb-1 font-medium">
+            Slug (auto-generated)
+          </label>
           <input
             type="text"
             name="slug"
             value={data.slug || ""}
-            onChange={handleChange}
-            placeholder="Enter slug"
-            className="border p-2 rounded w-full"
-            disabled={loading}
+            readOnly
+            className="border p-2 rounded w-full bg-gray-100 text-gray-600"
           />
         </div>
 
@@ -116,46 +109,6 @@ export default function StepBasicInfo({
             placeholder="Enter your bio"
             className="border p-2 rounded w-full resize-none"
             rows={3}
-            disabled={loading}
-          />
-        </div>
-
-        {/* Profile Picture */}
-        <div>
-          <label className="block mb-1 font-medium">Profile Picture</label>
-          {avatarPreview && (
-            <img
-              src={avatarPreview}
-              alt="Profile Preview"
-              className="h-24 w-24 rounded-full object-cover mb-2 border"
-            />
-          )}
-          <input
-            type="file"
-            name="profile_picture"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="border p-2 rounded w-full"
-            disabled={loading}
-          />
-        </div>
-
-        {/* Cover Photo */}
-        <div>
-          <label className="block mb-1 font-medium">Cover Photo</label>
-          {coverPreview && (
-            <img
-              src={coverPreview}
-              alt="Cover Preview"
-              className="h-24 w-full object-cover mb-2 border rounded"
-            />
-          )}
-          <input
-            type="file"
-            name="cover_photo"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="border p-2 rounded w-full"
             disabled={loading}
           />
         </div>

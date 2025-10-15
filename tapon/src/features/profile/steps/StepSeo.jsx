@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 
-function StepSeo({ handleBack, handleNext }) {
-  const [seoData, setSeoData] = useState({
-    seo_title: "",
-    seo_description: "",
-  });
+function StepSeo({ data, handleBack, handleNext, handleChange }) {
+  // const [seoData, setSeoData] = useState({
+  //   seo_title: "",
+  //   seo_description: "",
+  // });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setSeoData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setSeoData((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // };
 
   return (
     <>
@@ -25,7 +25,7 @@ function StepSeo({ handleBack, handleNext }) {
             <input
               type="text"
               name="seo_title"
-              value={seoData.seo_title}
+              value={data.seo_title}
               onChange={handleChange}
               className="border border-gray-300 px-3 py-2 rounded"
               placeholder="Enter SEO Title"
@@ -37,7 +37,7 @@ function StepSeo({ handleBack, handleNext }) {
             <label className="text-sm font-medium mb-1">SEO Description</label>
             <textarea
               name="seo_description"
-              value={seoData.seo_description}
+              value={data.seo_description}
               onChange={handleChange}
               className="border border-gray-300 px-3 py-2 rounded resize-none"
               placeholder="Enter SEO Description"
@@ -58,7 +58,7 @@ function StepSeo({ handleBack, handleNext }) {
         </button>
         <button
           type="button"
-          onClick={() => handleNext(seoData)}
+          onClick={handleNext}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
         >
           Next

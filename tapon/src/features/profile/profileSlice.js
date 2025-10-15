@@ -1,7 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// ✅ Create new profile
+// Helper: convert File to base64
+const fileToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
 export const submitProfile = createAsyncThunk(
   "profile/submitProfile",
   async (profileData, { rejectWithValue }) => {
@@ -13,21 +21,70 @@ export const submitProfile = createAsyncThunk(
 
         if (["skillInput", "serviceInput"].includes(key)) continue;
 
-        if (value instanceof File) {
-          formData.append(`${key}[0]`, value);
-        } else if (Array.isArray(value)) {
+        // ✅ avatar & avatar_original: array of base64 strings
+        if (
+          (key === "avatar" || key === "avatar_original") &&
+          Array.isArray(value)
+        ) {
+          for (const item of value) {
+            if (item instanceof File) {
+              const base64 = await fileToBase64(item);
+              formData.append(`${key}[]`, [base64]);
+            } else if (
+              typeof item === "string" &&
+              item.startsWith("data:image")
+            ) {
+              formData.append(`${key}[]`, [item]); // already base64 string
+            }
+          }
+          continue;
+        }
+
+        // ✅ Gallery array (files or URLs)
+        if (key === "gallery" && Array.isArray(value)) {
           value
             .filter((v) => v !== null && v !== "")
-            .forEach((item, index) => {
-              formData.append(`${key}[${index}]`, item);
+            .forEach((item) => {
+              if (item instanceof File) {
+                formData.append(`${key}[]`, item);
+              } else {
+                formData.append(`gallery_urls[]`, item);
+              }
             });
-        } else if (typeof value === "boolean") {
-          formData.append(`${key}[0]`, value ? 1 : 0);
-        } else if (value !== null && value !== "") {
-          formData.append(`${key}[0]`, value);
+          continue;
+        }
+
+        // ✅ Boolean values
+        if (typeof value === "boolean") {
+          formData.append(`${key}[]`, value ? 1 : 0);
+          continue;
+        }
+
+        // ✅ Objects or arrays (JSON stringified)
+        if (typeof value === "object" && value !== null) {
+          formData.append(`${key}[]`, JSON.stringify(value));
+          continue;
+        }
+
+        // ✅ Primitive values
+        if (value !== null && value !== "") {
+          formData.append(`${key}[]`, value);
         }
       }
 
+      console.log("profile data", profileData);
+
+      console.log("FormData contents before submission:");
+      for (const pair of formData.entries()) {
+        console.log(`${pair[0]}:`, pair[1]);
+      }
+      // Debug
+      console.log("FormData being sent:");
+      for (const [k, v] of formData.entries()) {
+        console.log(`${k}:`, v);
+      }
+
+      debugger;
       const response = await axios.post(
         "https://nfc.premierwebtechservices.com/api/user-profiles",
         formData,
@@ -39,6 +96,10 @@ export const submitProfile = createAsyncThunk(
 
       return response.data;
     } catch (err) {
+      console.error(
+        "Profile submission error:",
+        err.response?.data || err.message
+      );
       return rejectWithValue(err.response?.data || err.message);
     }
   }
@@ -49,8 +110,9 @@ export const fetchProfile = createAsyncThunk(
   "profile/fetchProfile",
   async (id, { rejectWithValue }) => {
     try {
+      console.log("Fetching profile with id:", id);
       const response = await axios.get(
-        `https://nfc.premierwebtechservices.com/api/user-profiles/srk`,
+        `https://nfc.premierwebtechservices.com/api/user-profiles/${id}`,
         { withCredentials: true }
       );
       console.log("Fetched profile data:", response.data);
@@ -69,16 +131,43 @@ export const updateProfile = createAsyncThunk(
       const formData = new FormData();
 
       for (const key in profileData) {
-        const value = profileData[key];
+        let value = profileData[key];
 
-        if (value instanceof File) {
-          formData.append(key, value); // ✅ Correct
-        } else if (Array.isArray(value)) {
+        // Handle base64 images
+        if ((key === "avatar" || key === "avatar_original") && value) {
+          if (typeof value === "string" && value.startsWith("data:image")) {
+            formData.append(key, value);
+          } else if (value instanceof File) {
+            value = await fileToBase64(value);
+            formData.append(key, value);
+          }
+          continue;
+        }
+
+        // Handle boolean fields
+        if (
+          [
+            "status",
+            "is_public",
+            "allow_contact_form",
+            "dark_mode_enabled",
+          ].includes(key)
+        ) {
+          formData.append(key, value ? 1 : 0);
+          continue;
+        }
+
+        // Handle arrays
+        if (Array.isArray(value)) {
           value.forEach((item, index) => {
-            formData.append(`${key}[${index}]`, item); // ✅ works for multiple files or arrays
+            formData.append(`${key}[${index}]`, item);
           });
-        } else if (value !== null && value !== "") {
-          formData.append(key, value); // ✅ Correct
+          continue;
+        }
+
+        // Normal fields
+        if (value !== null && value !== "") {
+          formData.append(key, value);
         }
       }
 
@@ -87,7 +176,9 @@ export const updateProfile = createAsyncThunk(
         formData,
         {
           withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
 
@@ -114,8 +205,8 @@ const initialState = {
     country: "",
     state: "",
     area: "",
-    profile_picture: null,
-    cover_photo: null,
+    avatar: null,
+    avatar_original: null,
     gallery: [],
     headline: "",
     company_name: "",
@@ -132,6 +223,8 @@ const initialState = {
     pinterest_url: "",
     nfc_card_id: "",
     qr_code_url: "",
+    vcard_id: "",
+    pdf_resume_url: "",
     profile_type: "",
     is_public: true,
     status: true,

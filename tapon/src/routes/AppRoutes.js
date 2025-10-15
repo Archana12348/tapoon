@@ -21,7 +21,7 @@ import Dashboard from "../pages/users/dashboards";
 import SuccessPage from "../components/common/paymentprocess/SuccessPage";
 import CancelPage from "../components/common/paymentprocess/CancelPage";
 import MultiStepProfileForm from "../features/profile/MultiStepProfileForm";
-import PaymentSuccess from "../components/common/paymentprocess/PaymentSuccess";
+import Template from "../pages/users/dashboarddummp";
 import FailurePage from "../components/common/paymentprocess/CancelPage";
 
 export default function App() {
@@ -213,6 +213,16 @@ export default function App() {
             </MainLayout>
           }
         />
+        {/* Profile */}
+        <Route
+          path="/profile/template/:slug"
+          element={
+            <MainLayout>
+              <Template />
+            </MainLayout>
+          }
+        />
+
         <Route
           path="/profile/create"
           element={
