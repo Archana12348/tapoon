@@ -157,7 +157,13 @@ export const updateProfile = createAsyncThunk(
           continue;
         }
 
-        // Handle arrays
+        // Handle custom_links as string
+        if (key === "custom_links" && Array.isArray(value)) {
+          formData.append(key, JSON.stringify(value));
+          continue;
+        }
+
+        // Handle other arrays
         if (Array.isArray(value)) {
           value.forEach((item, index) => {
             formData.append(`${key}[${index}]`, item);

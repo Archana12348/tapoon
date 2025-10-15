@@ -160,7 +160,7 @@ export default function App() {
 
         {/* Success Page */}
         <Route
-          path="/success"
+          path="/checkout-success"
           element={
             <MainLayout>
               <SuccessPage />
@@ -170,7 +170,7 @@ export default function App() {
 
         {/* Cancel Page */}
         <Route
-          path="/cancel"
+          path="/checkout-cancel"
           element={
             <MainLayout>
               <CancelPage />
@@ -227,14 +227,16 @@ export default function App() {
           }
         />
         {/* Profile */}
-        <Route
+        {/* <Route
           path="/profile/template/:slug"
           element={
             <MainLayout>
               <Template />
             </MainLayout>
           }
-        />
+        /> */}
+        {/* Profile */}
+        <Route path="/profile/template/:id" element={<Template />} />
 
         <Route
           path="/profile/create"

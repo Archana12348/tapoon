@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { ShoppingCart, Menu, Search, User, ChevronDown } from "lucide-react";
+import { ShoppingCart, Menu, User, ChevronDown } from "lucide-react";
 import Button from "../ui/Button";
 import { useAuth } from "../../context/AuthContext";
-import { Link, Links } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -13,8 +14,10 @@ export default function Header() {
   const [showProductsMenu, setShowProductsMenu] = useState(false);
   const hoverTimeoutRef = useRef(null);
   const [open, setOpen] = useState(false);
+
   const totalQuantity = useSelector((state) => state.cart.totalQuantity || 0);
 
+  // ✅ Fetch menu + logo
   useEffect(() => {
     const fetchMenuData = async () => {
       try {
@@ -23,22 +26,16 @@ export default function Header() {
         );
         const result = await res.json();
 
-        if (result.status && result.data) {
-          setCategories(result.data);
-        }
-
-        if (result.settings && result.settings.logo) {
-          setSiteLogo(result.settings.logo);
-        }
+        if (result.status && result.data) setCategories(result.data);
+        if (result.settings?.logo) setSiteLogo(result.settings.logo);
       } catch (error) {
         console.error("Error fetching menu data:", error);
       }
     };
-
     fetchMenuData();
   }, []);
 
-  // Handle delayed hover for Products dropdown
+  // ✅ Hover delay for desktop Products dropdown
   const handleMouseEnter = () => {
     clearTimeout(hoverTimeoutRef.current);
     hoverTimeoutRef.current = setTimeout(() => setShowProductsMenu(true), 300);
@@ -52,7 +49,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo Section */}
+        {/* ---------- Logo Section ---------- */}
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2">
             <div className="flex items-center mr-4 md:mr-10">
@@ -64,7 +61,7 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Desktop Menu */}
+          {/* ---------- Desktop Menu ---------- */}
           <nav className="hidden items-center gap-6 md:flex">
             <Link
               to="/"
@@ -72,6 +69,7 @@ export default function Header() {
             >
               Home
             </Link>
+
             <Link
               to="/aboutUs"
               className="text-lg text-sky-900 transition-colors hover:text-sky-600"
@@ -88,6 +86,7 @@ export default function Header() {
               <span className="text-lg text-sky-900 hover:text-sky-600 cursor-pointer">
                 Products
               </span>
+
               {showProductsMenu && (
                 <div className="absolute bg-white border border-sky-200 rounded-md shadow-lg mt-4 z-50 min-w-[250px] transition-opacity duration-300 ease-in-out">
                   {categories.length > 0 ? (
@@ -115,6 +114,7 @@ export default function Header() {
             >
               For Corporate
             </Link>
+
             <Link
               to="/contactus"
               className="text-lg text-sky-900 transition-colors hover:text-sky-600"
@@ -124,33 +124,27 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Action Buttons */}
+        {/* ---------- Actions (Cart + User) ---------- */}
         <div className="flex items-center gap-4">
-          {/* <Button
-            variant="ghost"
-            size="icon"
-            className="hidden text-sky-900 hover:text-sky-600 md:flex"
-          >
-            <Search className="h-5 w-5" />
-          </Button> */}
-
-          <Link to="/information/form" className="relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-sky-900 hover:text-sky-600 dark:text-white"
-            >
-              <ShoppingCart className="h-5 w-5" />
-            </Button>
-
+          {/* 🛒 Cart Button */}
+          <div className="relative">
+            <Link to="/information/form">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-sky-900 hover:text-sky-600 dark:text-white"
+              >
+                <ShoppingCart className="h-5 w-5" />
+              </Button>
+            </Link>
             {totalQuantity > 0 && (
-              <span className="absolute -top-0 -right-0 bg-red-600 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
                 {totalQuantity}
               </span>
             )}
           </div>
 
-          {/* Auth / User Dropdown */}
+          {/* 👤 User Section */}
           {user ? (
             <div className="relative">
               <Button
@@ -196,7 +190,7 @@ export default function Header() {
             </Link>
           )}
 
-          {/* Mobile Menu Toggle */}
+          {/* 📱 Mobile Menu Toggle */}
           <Button
             variant="ghost"
             size="icon"
@@ -208,7 +202,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* ---------- Mobile Menu ---------- */}
       {mobileMenuOpen && (
         <div className="border-t border-sky-200 bg-gradient-to-r from-sky-100 to-white md:hidden">
           <nav className="container mx-auto flex flex-col gap-4 px-4 py-4">
@@ -271,6 +265,7 @@ export default function Header() {
             >
               Contact Us
             </Link>
+
             <Button className="bg-sky-600 text-white hover:bg-sky-700">
               SignUp / SignIn
             </Button>

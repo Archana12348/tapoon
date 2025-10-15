@@ -12,21 +12,22 @@ import {
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa"; // Importing WhatsApp icon from react-icons
 import TemplateOne from "../../features/profiletemplate/profileone";
-import TemplateTwo from "../../features/profiletemplate/profiletwo";
-import TemplateThree from "../../features/profiletemplate/profilethree";
-import TemplateFour from "../../features/profiletemplate/profilefour";
+import TemplateTwo from "../../features/profiletemplate/Profiletwo";
+import TemplateThree from "../../features/profiletemplate/Profilethree";
+import TemplateFour from "../../features/profiletemplate/Profilefour";
 
 export default function UserProfilePage() {
-  const { slug } = useParams(); // Route: /user/srk
+  // const { slug } = useParams(); // Route: /user/srk
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { id } = useParams(); // 👈 gets '1', '2', etc. from the route
 
   useEffect(() => {
     const getProfile = async () => {
       try {
-        console.log("Fetching user profile...", slug);
-        const res = await fetchUserProfile(slug);
+        // console.log("Fetching user profile...", slug);
+        const res = await fetchUserProfile("srk");
         console.log("User Profile Data:", res.data);
         setProfile(res.data);
       } catch (err) {
@@ -38,7 +39,7 @@ export default function UserProfilePage() {
       }
     };
     getProfile();
-  }, [slug]);
+  }, [id]);
 
   // Loading/Error States
   if (loading)
@@ -78,6 +79,18 @@ export default function UserProfilePage() {
   const emailVerifiedDate = profile?.email_verified_at
     ? format(new Date(profile.email_verified_at), "MMM dd, yyyy HH:mm")
     : null;
+
+  const templates = {
+    1: TemplateOne,
+    2: TemplateTwo,
+    3: TemplateThree,
+    4: TemplateFour,
+  };
+
+  // Convert to number and pick the component
+  const SelectedTemplate = templates[Number(id)] || TemplateOne;
+
+  return <SelectedTemplate profile={profile} loading={loading} error={error} />;
 
   return (
     <>

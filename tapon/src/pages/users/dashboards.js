@@ -178,14 +178,34 @@ export default function UserProfilePage() {
                   {profile.skills && profile.skills.length > 0 && (
                     <SectionCard title="Skills">
                       <div className="flex flex-wrap gap-3">
-                        {profile.skills.map((skill, index) => (
-                          <span
-                            key={index}
-                            className="bg-indigo-50 text-indigo-700 font-medium py-2 px-5 rounded-full text-sm shadow-md transition duration-200 hover:bg-indigo-100"
-                          >
-                            {skill}
-                          </span>
-                        ))}
+                        {profile.skills
+                          .filter((skill) => skill.trim() !== "") // ignore empty strings or whitespace
+                          .map((skill, index) => (
+                            <span
+                              key={index}
+                              className="bg-indigo-50 text-indigo-700 font-medium py-2 px-5 rounded-full text-sm shadow-md transition duration-200 hover:bg-indigo-100"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                      </div>
+                    </SectionCard>
+                  )}
+
+                  {/* Services Section */}
+                  {profile.services && profile.services.length > 0 && (
+                    <SectionCard title="Services">
+                      <div className="flex flex-wrap gap-3">
+                        {profile.services
+                          .filter((service) => service.trim() !== "")
+                          .map((service, index) => (
+                            <span
+                              key={index}
+                              className="bg-indigo-50 text-indigo-700 font-medium py-2 px-5 rounded-full text-sm shadow-md transition duration-200 hover:bg-indigo-100"
+                            >
+                              {service}
+                            </span>
+                          ))}
                       </div>
                     </SectionCard>
                   )}

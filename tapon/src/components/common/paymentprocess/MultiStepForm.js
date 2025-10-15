@@ -8,8 +8,11 @@ import { fetchUserCart } from "../../../services/Auth/cart";
 
 export default function MultiStepForm() {
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+
   const { items: cart, totalPrice } = useSelector((state) => state.cart);
 
+  // ✅ Go to next step
   const handleNext = () => {
     if (step === 1 && cart.length === 0) {
       alert("Your cart is empty!");
@@ -18,13 +21,22 @@ export default function MultiStepForm() {
     setStep(step + 1);
   };
 
+  // ✅ Go to previous step
   const handlePrev = () => setStep(Math.max(1, step - 1));
 
+  // ✅ Handle Stripe payment checkout
   const handlePay = async () => {
     try {
+      if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+
+      setLoading(true);
+
       const payload = {
         amount: Number(totalPrice ?? 0),
-        currency: "inr",
+        currency: "aed", // 🇦🇪 Dubai Dirham
         nfc_cards: cart.map((item) => ({
           nfc_card_id: item.id,
           quantity: Number(item.quantity ?? 1),
@@ -32,7 +44,6 @@ export default function MultiStepForm() {
       };
 
       console.log("Checkout payload:", payload);
-      debugger;
 
       const data = await fetchUserCart(payload);
 
@@ -43,27 +54,33 @@ export default function MultiStepForm() {
       }
     } catch (error) {
       console.error("Checkout error:", error);
-      alert(error.message || "Payment failed.");
+      alert(error.message || "Payment failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // ✅ Currency Formatter for AED
   const formatCurrency = (num) =>
-    new Intl.NumberFormat("en-IN", {
+    new Intl.NumberFormat("en-AE", {
       style: "currency",
-      currency: "INR",
+      currency: "AED",
       minimumFractionDigits: 2,
     }).format(Number(num ?? 0));
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 md:py-20 bg-gradient-to-b from-sky-400 via-white/70 to-sky-200 text-slate-800 p-6">
       <div className="bg-white shadow-lg rounded-xl w-full max-w-3xl p-6">
+        {/* Stepper Header */}
         <Stepper step={step} />
 
+        {/* Step Content */}
         <div className="my-6">
           {step === 1 && <CartStep />}
           {step === 2 && <ReviewStep cart={cart} />}
         </div>
 
+        {/* Step Navigation */}
         <div className="flex justify-between pt-4 border-t">
           {step === 2 ? (
             <>
@@ -75,14 +92,14 @@ export default function MultiStepForm() {
               </button>
               <button
                 onClick={handlePay}
-                disabled={cart.length === 0}
+                disabled={cart.length === 0 || loading}
                 className={`px-4 py-2 rounded-lg text-white ${
-                  cart.length
+                  cart.length && !loading
                     ? "bg-blue-600 hover:bg-blue-700"
                     : "bg-gray-400 cursor-not-allowed"
                 }`}
               >
-                {loading ? "Redirecting to payment..." : "Pay Now"}
+                {loading ? "Redirecting..." : "Pay Now"}
               </button>
             </>
           ) : (
@@ -94,14 +111,14 @@ export default function MultiStepForm() {
           )}
         </div>
 
-        {/* Optional total summary */}
+        {/* Total Summary */}
         {cart.length > 0 && (
           <div className="mt-6 text-right border-t pt-3">
             <span className="text-gray-600 text-sm mr-2">
               {cart.reduce((sum, i) => sum + Number(i.quantity ?? 1), 0)} items
             </span>
             <span className="font-semibold text-lg text-blue-600">
-              ₹{Number(totalPrice ?? 0).toFixed(2)}
+              {formatCurrency(totalPrice)}
             </span>
           </div>
         )}

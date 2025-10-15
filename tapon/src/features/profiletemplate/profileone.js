@@ -8,6 +8,7 @@ import {
   Link, // Using the lucide-react Link icon for custom links now
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa"; // Importing WhatsApp icon from react-icons
+import VCardDownloadButton from "./VcardButton";
 
 function ProfileOne({ profile, loading, error }) {
   // Loading/Error States
@@ -51,10 +52,7 @@ function ProfileOne({ profile, loading, error }) {
 
   return (
     <div className="bg-gray-50 min-h-screen  sm:p-0 lg:p-0">
-      {/* Profile Header */}
-      <div className="relative w-full h-96">
-        {" "}
-        {/* Full width cover */}
+      <div className="relative w-full h-96 md:h-[28rem]">
         {/* Cover Image */}
         <img
           src={profile.avatar_original}
@@ -63,35 +61,52 @@ function ProfileOne({ profile, loading, error }) {
         />
         {/* Overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        {/* Avatar + Profile Info */}
-        <div className="absolute bottom-0 left-0 right-0 flex flex-col md:flex-row items-center md:items-end md:space-x-6 p-4 md:pb-6 max-w-screen-xl mx-auto">
+
+        {/* Desktop View (overlayed) */}
+        <div className="hidden md:flex absolute bottom-0 left-0 right-0 items-end space-x-6 p-4 md:pb-6 max-w-screen-xl mx-auto">
           {/* Avatar */}
           <img
             src={profile.avatar}
             alt="Avatar"
-            className="w-32 h-32 md:w-44 md:h-44 rounded-full border-4 border-white object-cover shadow-2xl mb-4 md:mb-0"
+            className="w-44 h-44 rounded-full border-4 border-white object-cover shadow-2xl z-20 relative"
           />
           {/* Profile Info */}
-          <div className="text-white text-center font-semibold md:text-left space-y-1">
-            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
+          <div className="text-white text-left space-y-1 z-10 relative">
+            <h1 className="text-5xl font-extrabold tracking-tight">
               {profile.name}
             </h1>
-            <p className="text-lg md:text-xl font-semibold mt-1">
-              @{profile.username}
-            </p>
-            <p className="text-lg md:text-xl font-semibold mt-1">
-              {profile.area}
-            </p>
-            <p className="text-md font-semibold md:text-lg">
+            <p className="text-xl font-semibold">@{profile.username}</p>
+            <p className="text-xl font-semibold">{profile.area}</p>
+            <p className="text-lg font-semibold">
               {profile.city}, {profile.state}, {profile.country}
             </p>
-            <p className="text-md md:text-lg mt-2">
-              <strong className="font-semibold">NFC Card ID:</strong>{" "}
-              {profile.nfc_card_id}
+            <p className="text-lg mt-2">
+              <strong>NFC Card ID:</strong> {profile.nfc_card_id}
             </p>
           </div>
         </div>
       </div>
+
+      {/* Mobile Layout */}
+      <div className="flex flex-col items-center text-center p-4 space-y-3 md:hidden">
+        <img
+          src={profile.avatar}
+          alt="Avatar"
+          className="w-32 h-32 rounded-full border-4 border-white object-cover shadow-2xl -mt-16 z-20 relative"
+        />
+        <div className="text-gray-900 font-semibold space-y-1">
+          <h1 className="text-3xl font-extrabold">{profile.name}</h1>
+          <p className="text-lg">@{profile.username}</p>
+          <p className="text-lg">{profile.area}</p>
+          <p className="text-md">
+            {profile.city}, {profile.state}, {profile.country}
+          </p>
+          <p className="text-md">
+            <strong>NFC Card ID:</strong> {profile.nfc_card_id}
+          </p>
+        </div>
+      </div>
+
       <div className="max-w-screen-xl mx-auto space-y-10">
         <div className="max-w-screen-xl mx-auto space-y-10">
           {/* Content Sections */}
@@ -122,14 +137,34 @@ function ProfileOne({ profile, loading, error }) {
               {profile.skills && profile.skills.length > 0 && (
                 <SectionCard title="Skills">
                   <div className="flex flex-wrap gap-3">
-                    {profile.skills.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="bg-indigo-50 text-indigo-700 font-medium py-2 px-5 rounded-full text-sm shadow-md transition duration-200 hover:bg-indigo-100"
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                    {profile.skills
+                      .filter((skill) => skill.trim() !== "") // ignore empty strings or whitespace
+                      .map((skill, index) => (
+                        <span
+                          key={index}
+                          className="bg-indigo-50 text-indigo-700 font-medium py-2 px-5 rounded-full text-sm shadow-md transition duration-200 hover:bg-indigo-100"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                  </div>
+                </SectionCard>
+              )}
+
+              {/* Services Section */}
+              {profile.services && profile.services.length > 0 && (
+                <SectionCard title="Services">
+                  <div className="flex flex-wrap gap-3">
+                    {profile.services
+                      .filter((service) => service.trim() !== "")
+                      .map((service, index) => (
+                        <span
+                          key={index}
+                          className="bg-indigo-50 text-indigo-700 font-medium py-2 px-5 rounded-full text-sm shadow-md transition duration-200 hover:bg-indigo-100"
+                        >
+                          {service}
+                        </span>
+                      ))}
                   </div>
                 </SectionCard>
               )}
@@ -423,6 +458,14 @@ function ProfileOne({ profile, loading, error }) {
                   </p>
                 </div>
               </SectionCard>
+
+              <VCardDownloadButton
+                user={profile}
+                bgColor="bg-white-900"
+                textColor="text-indigo-700"
+                hoverColor="hover:bg-white-800"
+                className="fixed bottom-6 right-6 z-50"
+              />
             </div>
           </div>
         </div>
