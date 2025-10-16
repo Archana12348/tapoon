@@ -11,45 +11,87 @@ const VCardDownloadButton = ({
 }) => {
   if (!user) return null; // prevent errors if user is undefined
 
-  const generateVCard = (user) => {
+  const generateVCard = (profile) => {
     const escapeText = (text) =>
       text ? text.replace(/,/g, "\\,").replace(/;/g, "\\;") : "";
 
     const vcfLines = [
       "BEGIN:VCARD",
       "VERSION:3.0",
-      `FN:${escapeText(user.name || "")}`,
-      `N:${escapeText(user.name || "")}`,
-      `ORG:${escapeText(user.company_name || "")}`,
-      `TITLE:${escapeText(user.job_title || "")}`,
-      `EMAIL;TYPE=INTERNET:${escapeText(user.email || "")}`,
-      `TEL;TYPE=CELL:${escapeText(user.phone || "")}`,
-      `TEL;TYPE=WHATSAPP:${escapeText(user.whatsapp_number || "")}`,
-      `URL:${escapeText(user.website_url || "")}`,
+      `FN:${escapeText(profile.name || "")}`,
+      `N:${escapeText(profile.name || "")}`,
+      `ORG:${escapeText(profile.company_name || "")}`,
+      `TITLE:${escapeText(profile.job_title || "")}`,
+      `EMAIL;TYPE=INTERNET:${escapeText(profile.email || "")}`,
+      `TEL;TYPE=CELL:${escapeText(profile.phone || "")}`,
+      `TEL;TYPE=WHATSAPP:${escapeText(profile.whatsapp_number || "")}`,
+      `URL:${escapeText(profile.website_url || "")}`,
     ];
 
-    if (user.linkedin_url)
-      vcfLines.push(`URL;TYPE=LinkedIn:${escapeText(user.linkedin_url)}`);
-    if (user.instagram_url)
-      vcfLines.push(`URL;TYPE=Instagram:${escapeText(user.instagram_url)}`);
-    if (user.facebook_url)
-      vcfLines.push(`URL;TYPE=Facebook:${escapeText(user.facebook_url)}`);
-    if (user.youtube_url)
-      vcfLines.push(`URL;TYPE=YouTube:${escapeText(user.youtube_url)}`);
-    if (user.snapchat_url)
-      vcfLines.push(`URL;TYPE=Snapchat:${escapeText(user.snapchat_url)}`);
-    if (user.custom_url)
-      vcfLines.push(`URL;TYPE=Custom:${escapeText(user.custom_url)}`);
-    if (user.vcard_url)
-      vcfLines.push(`URL;TYPE=VCARD:${escapeText(user.vcard_url)}`);
+    // --- Social Links ---
+    if (profile.linkedin_url)
+      vcfLines.push(`URL;TYPE=LinkedIn:${escapeText(profile.linkedin_url)}`);
+    if (profile.instagram_url)
+      vcfLines.push(`URL;TYPE=Instagram:${escapeText(profile.instagram_url)}`);
+    if (profile.facebook_url)
+      vcfLines.push(`URL;TYPE=Facebook:${escapeText(profile.facebook_url)}`);
+    if (profile.youtube_url)
+      vcfLines.push(`URL;TYPE=YouTube:${escapeText(profile.youtube_url)}`);
+    if (profile.snapchat_url)
+      vcfLines.push(`URL;TYPE=Snapchat:${escapeText(profile.snapchat_url)}`);
+    if (profile.custom_url)
+      vcfLines.push(`URL;TYPE=Custom:${escapeText(profile.custom_url)}`);
+    if (profile.twitter_url)
+      vcfLines.push(`URL;TYPE=Twitter:${escapeText(profile.twitter_url)}`);
+    if (profile.tiktok_url)
+      vcfLines.push(`URL;TYPE=Tiktok:${escapeText(profile.tiktok_url)}`);
+    if (profile.github_url)
+      vcfLines.push(`URL;TYPE=Github:${escapeText(profile.github_url)}`);
+    if (profile.behance_url)
+      vcfLines.push(`URL;TYPE=Behance:${escapeText(profile.behance_url)}`);
+    if (profile.dribbble_url)
+      vcfLines.push(`URL;TYPE=Dribbble:${escapeText(profile.dribbble_url)}`);
+    if (profile.pinterest_url)
+      vcfLines.push(`URL;TYPE=Pinterest:${escapeText(profile.pinterest_url)}`);
+    if (profile.threads_url)
+      vcfLines.push(`URL;TYPE=Threads:${escapeText(profile.threads_url)}`);
 
-    if (user.address)
-      vcfLines.push(`ADR;TYPE=HOME:;;${escapeText(user.address)}`);
-    if (user.note) vcfLines.push(`NOTE:${escapeText(user.note)}`);
-    if (user.role) vcfLines.push(`ROLE:${escapeText(user.role)}`);
-    if (user.categories)
-      vcfLines.push(`CATEGORIES:${user.categories.map(escapeText).join(",")}`);
-    if (user.photo) vcfLines.push(`PHOTO;VALUE=URI:${user.photo}`);
+    // --- Address ---
+    if (profile.area || profile.city || profile.state || profile.country) {
+      // Build the address string first, with clean commas
+      const cleanAddress = [
+        profile.area,
+        profile.city,
+        profile.state,
+        profile.country,
+      ]
+        .filter(Boolean)
+        .join(", ")
+        .replace(/\\,/g, ", ");
+
+      // ⚠️ Don't escape commas again
+      vcfLines.push(`ADR;TYPE=HOME:;;${cleanAddress}`);
+    }
+
+    // --- Additional Data ---
+    if (profile.bio) vcfLines.push(`NOTE:${escapeText(profile.bio)}`);
+    if (profile.headline)
+      vcfLines.push(`TITLE:${escapeText(profile.headline)}`);
+    if (profile.industry) vcfLines.push(`ROLE:${escapeText(profile.industry)}`);
+    if (profile.skills && profile.skills.length)
+      vcfLines.push(`CATEGORIES:${profile.skills.map(escapeText).join(",")}`);
+    if (profile.vcard_url)
+      vcfLines.push(`URL;TYPE=VCARD:${escapeText(profile.vcard_url)}`);
+    if (profile.pdf_resume_url)
+      vcfLines.push(`URL;TYPE=RESUME:${escapeText(profile.pdf_resume_url)}`);
+    if (profile.qr_code_url)
+      vcfLines.push(`PHOTO;VALUE=URI:${escapeText(profile.qr_code_url)}`);
+    if (profile.avatar)
+      vcfLines.push(`PHOTO;VALUE=URI:${escapeText(profile.avatar)}`);
+    if (profile.seo_title)
+      vcfLines.push(`TITLE:${escapeText(profile.seo_title)}`);
+    if (profile.seo_description)
+      vcfLines.push(`NOTE:${escapeText(profile.seo_description)}`);
 
     vcfLines.push("END:VCARD");
     return vcfLines.join("\r\n");

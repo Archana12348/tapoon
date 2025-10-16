@@ -6,6 +6,7 @@ import HowItWorksSection from "../common/working/Working";
 import HowItWorksSeections from "../sections/howitworks";
 import TestimonialsSection from "../sections/testimonialsSection";
 import CTASection from "../sections/cta";
+import ForEveryone from "../sections/Foreveryone";
 
 export default function MainLayout({ children }) {
   const location = useLocation();
@@ -32,6 +33,7 @@ export default function MainLayout({ children }) {
             subtitle="Experience top-quality products with 100% accuracy, seamless usage, and trusted reliability."
           />
           <CTASection />
+          <ForEveryone />
           {/* <FeaturedProducts />
           <TopSellerCarousel />
           <BestSellerSection />

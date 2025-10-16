@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchUserProfile } from "../../services/Auth/profile";
 import { useParams } from "react-router-dom";
-import SocialMediaLinks from "./socialmedia";
 import { format } from "date-fns";
-import {
-  Whatsapp,
-  CheckCircle,
-  Mail,
-  Phone,
-  Link, // Using the lucide-react Link icon for custom links now
-} from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa"; // Importing WhatsApp icon from react-icons
 import TemplateOne from "../../features/profiletemplate/profileone";
 import TemplateTwo from "../../features/profiletemplate/Profiletwo";
 import TemplateThree from "../../features/profiletemplate/Profilethree";
@@ -27,7 +18,7 @@ export default function UserProfilePage() {
     const getProfile = async () => {
       try {
         // console.log("Fetching user profile...", slug);
-        const res = await fetchUserProfile("srk");
+        const res = await fetchUserProfile("abheydhall");
         console.log("User Profile Data:", res.data);
         setProfile(res.data);
       } catch (err) {
