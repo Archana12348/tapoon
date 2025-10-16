@@ -23,6 +23,9 @@ import CancelPage from "../components/common/paymentprocess/CancelPage";
 import MultiStepProfileForm from "../features/profile/MultiStepProfileForm";
 import Template from "../pages/users/dashboarddummp";
 import FailurePage from "../components/common/paymentprocess/CancelPage";
+import OrderDetails from "../pages/users/orderdetails";
+import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
+import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
 
 export default function App() {
   return (
@@ -105,6 +108,24 @@ export default function App() {
           element={
             <MainLayout>
               <SignIn />
+            </MainLayout>
+          }
+        />
+        {/* Forgot Password */}
+        <Route
+          path="/forgot-password"
+          element={
+            <MainLayout>
+              <ForgotPasswordPage />
+            </MainLayout>
+          }
+        />
+        {/* Reset Password */}
+        <Route
+          path="/reset-password"
+          element={
+            <MainLayout>
+              <ResetPasswordPage />
             </MainLayout>
           }
         />
@@ -204,7 +225,7 @@ export default function App() {
           path="/orders"
           element={
             <MainLayout>
-              <Orders />
+              <OrderDetails />
             </MainLayout>
           }
         />

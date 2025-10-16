@@ -197,7 +197,7 @@ export default function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="text-sky-900 md:hidden"
+            className="text-sky-900 lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             <Menu className="h-5 w-5" />
@@ -207,7 +207,7 @@ export default function Header() {
 
       {/* ---------- Mobile Menu ---------- */}
       {mobileMenuOpen && (
-        <div className="border-t border-sky-200 bg-gradient-to-r from-sky-100 to-white md:hidden">
+        <div className="border-t border-sky-200 bg-gradient-to-r from-sky-100 to-white lg:hidden">
           <nav className="container mx-auto flex flex-col gap-4 px-4 py-4">
             <Link to="/" className="text-sm text-sky-900 hover:text-sky-600">
               Home

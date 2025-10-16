@@ -209,7 +209,6 @@ const CartDrawer = ({ isOpen, onClose }) => {
   const cartItems = useSelector((state) => state.cart.items);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 
-  // 🧮 Calculate total price
   const totalPrice = cartItems.reduce((acc, item) => {
     const regularPrice = Number(item.regular_price) || 0;
     const salePrice = Number(item.sale_price) || 0;
@@ -217,14 +216,12 @@ const CartDrawer = ({ isOpen, onClose }) => {
     return acc + finalPrice * item.quantity;
   }, 0);
 
-  // ✅ Close on ESC key
   useEffect(() => {
     const handleEsc = (e) => e.key === "Escape" && onClose();
     if (isOpen) document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [isOpen, onClose]);
 
-  // ✅ Disable body scroll when drawer open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
   }, [isOpen]);
@@ -280,7 +277,6 @@ const CartDrawer = ({ isOpen, onClose }) => {
 
   return createPortal(
     <>
-      {/* Overlay */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-[1000]"
@@ -290,13 +286,12 @@ const CartDrawer = ({ isOpen, onClose }) => {
         />
       )}
 
-      {/* Drawer */}
       <div
         role="dialog"
         aria-modal="true"
-        className={`fixed top-0 right-0 h-screen w-[430px] bg-white z-[1001] shadow-lg transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-screen bg-white z-[1001] shadow-lg transition-transform duration-300
+          ${isOpen ? "translate-x-0" : "translate-x-full"}
+          w-full sm:w-80 md:w-96 lg:w-[430px]`}
       >
         <div className="flex flex-col h-full overflow-y-auto">
           {/* Header */}
@@ -329,10 +324,8 @@ const CartDrawer = ({ isOpen, onClose }) => {
                     />
 
                     <div className="flex-1 text-sm">
-                      {/* Product Name */}
                       <h4 className="font-semibold">{productName}</h4>
 
-                      {/* Color, Pack, Material, Type, Smart Card */}
                       {item.color && (
                         <p className="text-gray-500 capitalize">
                           Color: {item.color}
@@ -359,17 +352,14 @@ const CartDrawer = ({ isOpen, onClose }) => {
                         </p>
                       )}
 
-                      {/* ✅ Price Section */}
+                      {/* Price & Quantity */}
                       <div className="flex justify-between items-center mt-2">
                         <div>
                           {hasDiscount ? (
                             <div className="flex flex-col">
-                              {/* Sale Price */}
                               <span className="text-sky-600 font-semibold text-lg">
                                 ₹{(salePrice * quantity).toFixed(2)}
                               </span>
-
-                              {/* Regular Price (struck out) */}
                               <span className="text-gray-400 line-through text-xs">
                                 ₹{(regularPrice * quantity).toFixed(2)}
                               </span>
@@ -381,7 +371,6 @@ const CartDrawer = ({ isOpen, onClose }) => {
                           )}
                         </div>
 
-                        {/* Quantity Controls */}
                         <div className="flex items-center gap-2 border rounded-2xl px-2 py-1 bg-gray-100">
                           <button
                             className="text-lg px-2"
@@ -400,7 +389,6 @@ const CartDrawer = ({ isOpen, onClose }) => {
                       </div>
                     </div>
 
-                    {/* Remove Item */}
                     <button
                       className="self-start mt-2"
                       onClick={() => handleRemoveItem(item.id)}
