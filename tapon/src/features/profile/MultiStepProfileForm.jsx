@@ -8,7 +8,8 @@ import {
   fetchProfile,
   updateProfile,
 } from "./profileSlice";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 import StepBasicInfo from "./steps/StepBasicInfo";
 import StepContact from "./steps/StepContact";
@@ -21,6 +22,7 @@ import StepCompanyDetails from "./steps/StepCompany";
 
 export default function MultiStepProfileForm() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
   const isEditMode = Boolean(id);
 
@@ -35,6 +37,21 @@ export default function MultiStepProfileForm() {
       dispatch(fetchProfile(id));
     }
   }, [dispatch, id, isEditMode]);
+
+  // Redirect on success with SweetAlert2
+  useEffect(() => {
+    if (submitted && status === "succeeded") {
+      Swal.fire({
+        icon: "success",
+        title: isEditMode ? "Profile updated!" : "Profile created!",
+        text: "Redirecting to home...",
+        timer: 2000,
+        showConfirmButton: false,
+      }).then(() => {
+        navigate("/"); // redirect after popup
+      });
+    }
+  }, [submitted, status, isEditMode, navigate]);
 
   // Safe error rendering function
   const renderError = (err) => {
@@ -51,7 +68,6 @@ export default function MultiStepProfileForm() {
         return Object.values(err.errors).flat().join(", ");
     }
 
-    // If it's an object with status/success/message
     if (err.status && err.success !== undefined && err.message)
       return err.message;
 
@@ -61,7 +77,6 @@ export default function MultiStepProfileForm() {
   const handleChange = (eOrName, maybeValue) => {
     let name, value;
 
-    // Case 1: called from normal <input onChange={handleChange}>
     if (typeof eOrName === "object" && eOrName.target) {
       const { target } = eOrName;
       const { type, checked, files } = target;
@@ -73,9 +88,7 @@ export default function MultiStepProfileForm() {
           : type === "checkbox"
           ? checked
           : target.value;
-    }
-    // Case 2: called manually, e.g. handleChange("avatar", file)
-    else {
+    } else {
       name = eOrName;
       value = maybeValue;
     }
@@ -95,15 +108,7 @@ export default function MultiStepProfileForm() {
     setSubmitted(true);
 
     if (isEditMode) {
-      // Ensure the ID from URL or fetched data is included
       const profileId = data?.id;
-      console.log(
-        "Submitting updated profile with ID:",
-        profileId,
-        "and data:",
-        data
-      );
-
       dispatch(
         updateProfile({
           id: profileId,
@@ -207,15 +212,6 @@ export default function MultiStepProfileForm() {
       {/* Status */}
       {status === "loading" && (
         <p className="text-blue-500 text-center mt-2">Processing...</p>
-      )}
-
-      {/* Success */}
-      {submitted && status === "succeeded" && (
-        <p className="text-green-600 text-center mt-2">
-          {isEditMode
-            ? "Profile updated successfully!"
-            : "Profile created successfully!"}
-        </p>
       )}
 
       {/* Error */}

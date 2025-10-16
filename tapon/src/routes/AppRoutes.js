@@ -181,10 +181,24 @@ export default function App() {
         />
 
         {/* Success Page */}
-        <Route path="/checkout-success" element={<SuccessPage />} />
+        <Route
+          path="/success"
+          element={
+            <MainLayout>
+              <SuccessPage />
+            </MainLayout>
+          }
+        />
 
         {/* Cancel Page */}
-        <Route path="/checkout-cancel" element={<FailurePage />} />
+        <Route
+          path="/cancel"
+          element={
+            <MainLayout>
+              <CancelPage />
+            </MainLayout>
+          }
+        />
 
         {/* Delivery and Return */}
         <Route
@@ -235,14 +249,16 @@ export default function App() {
           }
         />
         {/* Profile */}
-        <Route
+        {/* <Route
           path="/profile/template/:slug"
           element={
             <MainLayout>
               <Template />
             </MainLayout>
           }
-        />
+        /> */}
+        {/* Profile */}
+        <Route path="/profile/template/:id" element={<Template />} />
 
         <Route
           path="/profile/create"

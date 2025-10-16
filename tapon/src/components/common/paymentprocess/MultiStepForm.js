@@ -177,8 +177,14 @@ export default function MultiStepForm() {
 
       setLoading(true);
 
+<<<<<<< HEAD
+      const payload = {
+        amount: Number(totalPrice ?? 0),
+        currency: "aed", // 🇦🇪 Dubai Dirham
+=======
       // Build payload in the exact format you want
       const payload = {
+>>>>>>> f23eb9ebcbd63cf391f575662a86f46ffeaa0246
         nfc_cards: cart.map((item) => ({
           nfc_card_id: item.id,
           quantity: Number(item.quantity ?? 1),
@@ -190,8 +196,12 @@ export default function MultiStepForm() {
         })),
       };
 
+<<<<<<< HEAD
+      console.log("Checkout payload:", payload);
+=======
       console.log("Checkout payload JSON:", JSON.stringify(payload, null, 2));
       debugger;
+>>>>>>> f23eb9ebcbd63cf391f575662a86f46ffeaa0246
 
       const data = await fetchUserCart(payload);
 
@@ -208,6 +218,8 @@ export default function MultiStepForm() {
     }
   };
 
+<<<<<<< HEAD
+=======
   // ✅ Unified total calculation (same logic as CartStep)
   const calculateTotal = () => {
     return cart.reduce((acc, item) => {
@@ -218,11 +230,12 @@ export default function MultiStepForm() {
     }, 0);
   };
   const totalAmount = calculateTotal();
+>>>>>>> f23eb9ebcbd63cf391f575662a86f46ffeaa0246
   // ✅ Currency Formatter for AED
   const formatCurrency = (num) =>
-    new Intl.NumberFormat("en-IN", {
+    new Intl.NumberFormat("en-AE", {
       style: "currency",
-      currency: "INR",
+      currency: "AED",
       minimumFractionDigits: 2,
     }).format(Number(num ?? 0));
 
@@ -269,14 +282,22 @@ export default function MultiStepForm() {
           )}
         </div>
 
+<<<<<<< HEAD
+        {/* Total Summary */}
+=======
         {/* ✅ Total Summary (Same logic as CartStep) */}
+>>>>>>> f23eb9ebcbd63cf391f575662a86f46ffeaa0246
         {cart.length > 0 && (
           <div className="mt-6 text-right border-t pt-3">
             <span className="text-gray-600 text-sm mr-2">
               {cart.reduce((sum, i) => sum + Number(i.quantity ?? 1), 0)} items
             </span>
             <span className="font-semibold text-lg text-blue-600">
+<<<<<<< HEAD
+              {formatCurrency(totalPrice)}
+=======
               {formatCurrency(totalAmount)}
+>>>>>>> f23eb9ebcbd63cf391f575662a86f46ffeaa0246
             </span>
           </div>
         )}
