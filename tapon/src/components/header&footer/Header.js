@@ -58,7 +58,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo Section */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-8 ml-4">
           <Link to="/" className="flex items-center gap-2">
             <div className="flex items-center mr-4 md:mr-10">
               <img
@@ -70,7 +70,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Menu */}
-          <nav className="hidden items-center gap-6 md:flex">
+          <nav className="hidden items-center gap-6 lg:flex ml-32">
             <Link
               to="/"
               className="text-lg text-sky-900 transition-colors hover:text-sky-600"
@@ -199,7 +199,7 @@ export default function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="text-sky-900 md:hidden"
+            className="text-sky-900 lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             <Menu className="h-5 w-5" />
@@ -209,7 +209,7 @@ export default function Header() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="border-t border-sky-200 bg-gradient-to-r from-sky-100 to-white md:hidden">
+        <div className="border-t border-sky-200 bg-gradient-to-r from-sky-100 to-white lg:hidden">
           <nav className="container mx-auto flex flex-col gap-4 px-4 py-4">
             <Link to="/" className="text-sm text-sky-900 hover:text-sky-600">
               Home
@@ -270,9 +270,60 @@ export default function Header() {
             >
               Contact Us
             </Link>
-            <Button className="bg-sky-600 text-white hover:bg-sky-700">
-              SignUp / SignIn
-            </Button>
+
+            {/* ✅ Mobile Auth / User Section */}
+            {/* ✅ Mobile Auth / User Section */}
+            {user ? (
+              <div className="flex flex-col gap-1 border-t border-sky-200 pt-2 mt-2">
+                {/* User button */}
+                <button
+                  className="w-full bg-sky-600 text-white hover:bg-sky-700 py-2 px-4 text-center rounded-md flex items-center justify-center gap-1"
+                  onClick={() => setOpen((prev) => !prev)}
+                >
+                  <User className="h-4 w-4" /> {user.name}
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-300 ${
+                      open ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown items */}
+                {open && (
+                  <div className="flex flex-col gap-1 mt-1 overflow-hidden animate-fadeIn">
+                    <Link
+                      to={`/profile/${user.name}`}
+                      className="text-sm text-sky-800 hover:text-sky-600 pl-4 py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <Link
+                      to="/orders"
+                      className="text-sm text-sky-800 hover:text-sky-600 pl-4 py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Orders
+                    </Link>
+                    <button
+                      className="text-sm text-red-600 hover:bg-red-100 pl-4 py-1 text-left"
+                      onClick={() => {
+                        logout();
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link to="/sign-in">
+                <Button className="bg-sky-600 text-white hover:bg-sky-700 w-full">
+                  SignUp / SignIn
+                </Button>
+              </Link>
+            )}
           </nav>
         </div>
       )}

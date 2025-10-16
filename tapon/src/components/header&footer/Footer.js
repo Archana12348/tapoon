@@ -1,8 +1,30 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { Facebook, Twitter, Instagram, Linkedin, Mail } from "lucide-react";
-import logo from "../../assests/images/logo.jpeg";
 import { Link } from "react-router-dom";
 
 export function Footer() {
+  const [menuData, setMenuData] = useState([]);
+  const [settings, setSettings] = useState({});
+
+  useEffect(() => {
+    const fetchFooterData = async () => {
+      try {
+        const response = await axios.get(
+          "https://nfc.premierwebtechservices.com/api/menu"
+        );
+        if (response.data.status) {
+          setMenuData(response.data.data || []);
+          setSettings(response.data.settings || {});
+        }
+      } catch (error) {
+        console.error("Error fetching footer data:", error);
+      }
+    };
+
+    fetchFooterData();
+  }, []);
+
   return (
     <>
       {/* Upper Subscribe Section */}
@@ -38,7 +60,9 @@ export function Footer() {
             style={{ marginLeft: "20%" }}
           >
             <h3 className="text-xl font-semibold">Need help?</h3>
-            <p className="text-lg font-medium my-2">971581770786</p>
+            <p className="text-lg font-medium my-2">
+              {settings?.phone || "971581770786"}
+            </p>
             <p className="text-sm">We are available 10:00 am – 6:00 pm</p>
           </div>
         </div>
@@ -52,75 +76,83 @@ export function Footer() {
             <div className="space-y-4">
               <div className="flex lg:ml-[-26px] md:ml-[-25px]">
                 <img
-                  src={logo}
+                  src={settings?.logo || "https://via.placeholder.com/150"}
                   alt="Logo"
-                  className="h-10 w-[115px] md:h-12 md:w-40 object-contain"
+                  className="h-10 w-[115px] md:h-12 md:w-48 object-contain"
                 />
               </div>
 
               <p className="text-sm text-gray-800">
                 Digital solutions to simplify your networking. Connect and share
                 your profile instantly.
-                <a
-                  href="mailto:support@fcard.com"
+                <Link
+                  to={`mailto:${settings?.email || "support@fcard.com"}`}
                   className="flex items-center gap-2 hover:text-blue-400 transition-colors"
+                  target="_blank"
                 >
-                  <Mail className="h-4 w-4" /> support@fcard.com
-                </a>
+                  <Mail className="h-4 w-4" />{" "}
+                  {settings?.email || "support@fcard.com"}
+                </Link>
               </p>
 
               <div className="flex gap-4 mt-2">
-                <a href="#" className="text-gray-400 hover:text-blue-400">
-                  <Facebook className="h-5 w-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-blue-400">
-                  <Twitter className="h-5 w-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-blue-400">
-                  <Instagram className="h-5 w-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-blue-400">
-                  <Linkedin className="h-5 w-5" />
-                </a>
+                {settings?.facebook_url && (
+                  <Link
+                    to={settings.facebook_url}
+                    target="_blank"
+                    className="text-gray-400 hover:text-blue-600"
+                  >
+                    <Facebook className="h-5 w-5" />
+                  </Link>
+                )}
+                {settings?.twitter_url && (
+                  <Link
+                    to={settings.twitter_url}
+                    target="_blank"
+                    className="text-gray-400 hover:text-blue-500"
+                  >
+                    <Twitter className="h-5 w-5" />
+                  </Link>
+                )}
+                {settings?.instagram_url && (
+                  <Link
+                    to={settings.instagram_url}
+                    target="_blank"
+                    className="text-gray-400 hover:text-pink-500"
+                  >
+                    <Instagram className="h-5 w-5" />
+                  </Link>
+                )}
+                {settings?.linkedin_url && (
+                  <Link
+                    to={settings.linkedin_url}
+                    target="_blank"
+                    className="text-gray-400 hover:text-blue-700"
+                  >
+                    <Linkedin className="h-5 w-5" />
+                  </Link>
+                )}
               </div>
             </div>
 
-            {/* Products */}
+            {/* Products (from API) */}
             <div>
               <h3 className="mb-4 font-semibold">Products</h3>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-sky-900 transition-colors hover:text-sky-600"
-                  >
-                    Business Cards
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-sky-900 transition-colors hover:text-sky-600"
-                  >
-                    Smart Standees
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-sky-900 transition-colors hover:text-sky-600"
-                  >
-                    Review Cards
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-sky-900 transition-colors hover:text-sky-600"
-                  >
-                    Bundle Packs
-                  </a>
-                </li>
+                {menuData && menuData.length > 0 ? (
+                  menuData.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        to={`/products/${item.slug}`}
+                        className="text-sm text-sky-900 transition-colors hover:text-sky-600"
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-400 text-sm">Loading...</li>
+                )}
               </ul>
             </div>
 
@@ -144,21 +176,21 @@ export function Footer() {
                     Contact
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     to="/blog"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     Blog
                   </Link>
-                </li>
+                </li> */}
                 <li>
-                  <a
-                    href="/frequently-asked-questions"
+                  <Link
+                    to="/frequently-asked-questions"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     FAQ
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -176,20 +208,20 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <a
-                    href="/privacy-policy"
+                  <Link
+                    to="/privacy-policy"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     Privacy Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/terms-and-conditions"
+                  <Link
+                    to="/terms-and-conditions"
                     className="text-sm text-sky-900 transition-colors hover:text-sky-600"
                   >
                     Terms of Service
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -208,13 +240,13 @@ export function Footer() {
               <img src="/icons/wallet.svg" alt="Wallet" className="h-5" />
             </div>
             <div className="flex items-center space-x-2 mt-2 md:mt-0">
-              <a href="/privacy-policy" className="hover:underline">
+              <Link to="/privacy-policy" className="hover:underline">
                 Privacy Policy
-              </a>
+              </Link>
               <span>|</span>
-              <a href="/terms-and-conditions" className="hover:underline">
+              <Link to="/terms-and-conditions" className="hover:underline">
                 Terms and Conditions
-              </a>
+              </Link>
               <span>|</span>
               <Link to="/delivery&return" className="hover:underline">
                 Delivery and Returns Policy

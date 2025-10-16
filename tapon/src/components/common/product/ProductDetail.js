@@ -482,7 +482,6 @@ export default function SingleProductPage() {
     if (quantity < stock) setQuantity(quantity + 1);
   };
 
-  // ✅ UPDATED handleAdd: ensures null for unselected options
   const handleAdd = async () => {
     setLoadingAdd(true);
 
@@ -499,8 +498,6 @@ export default function SingleProductPage() {
     try {
       dispatch(addToCart(itemToAdd));
       console.log(itemToAdd);
-      debugger;
-      // Short delay for UX feedback
       setTimeout(() => {
         setLoadingAdd(false);
       }, 800);
@@ -511,8 +508,8 @@ export default function SingleProductPage() {
   };
 
   return (
-    <div className="">
-      <div className="container mx-auto px-4 py-10 flex flex-col items-center ">
+    <div>
+      <div className="container mx-auto px-4 py-10 flex flex-col items-center">
         <div className="flex flex-col lg:flex-row gap-10 max-w-6xl w-full">
           {/* Left Section - Image Gallery */}
           <div className="lg:w-1/2">
@@ -523,7 +520,12 @@ export default function SingleProductPage() {
                 className="w-full h-[450px] object-cover"
               />
             </div>
-            <div className="flex gap-2 mt-4 w-full sm:w-auto overflow-x-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 snap-x snap-mandatory pb-2">
+
+            {/* ✅ Smooth Horizontal Scroll for Multiple Images */}
+            <div
+              className="flex gap-2 mt-4 w-full sm:w-auto overflow-x-auto custom-scrollbar snap-x snap-mandatory pb-2"
+              style={{ WebkitOverflowScrolling: "touch" }}
+            >
               {galleryImages.map(
                 (img, idx) =>
                   img && (
@@ -532,10 +534,10 @@ export default function SingleProductPage() {
                       src={img}
                       alt={`${product.name}-${idx}`}
                       onClick={() => setSelectedImage(img)}
-                      className={`min-w-[90px] h-24 object-cover rounded-lg cursor-pointer border-2 snap-start ${
+                      className={`min-w-[90px] h-24 object-cover rounded-lg cursor-pointer border-2 snap-start transition-transform duration-150 ease-in-out ${
                         selectedImage === img
-                          ? "border-black"
-                          : "border-gray-300 hover:border-black"
+                          ? "border-sky-600 scale-105"
+                          : "border-gray-300 hover:border-sky-400"
                       }`}
                     />
                   )
@@ -586,7 +588,7 @@ export default function SingleProductPage() {
               )}
             </div>
 
-            {/* Colors */}
+            {/* Variants */}
             {product.nfc_colors?.length > 0 && (
               <div className="mt-3">
                 <h3 className="text-lg font-semibold mb-2">Available Colors</h3>
@@ -596,12 +598,11 @@ export default function SingleProductPage() {
                       key={idx}
                       type="button"
                       onClick={() => setSelectedColor(color)}
-                      className={`border rounded-[40px] py-[10px] px-[20px] tracking-[1px] leading-[1] text-center cursor-pointer relative transition-[border] duration-150 ease-in-out mt-[7px] mr-[5px] mb-[2px] capitalize
-            ${
-              selectedColor === color
-                ? "bg-sky-600 border-sky-600 text-white"
-                : "bg-transparent border-[#04cefa] text-[#04cefa]"
-            }`}
+                      className={`border rounded-[40px] py-[10px] px-[20px] capitalize transition-all ${
+                        selectedColor === color
+                          ? "bg-sky-600 border-sky-600 text-white"
+                          : "bg-transparent border-[#04cefa] text-[#04cefa]"
+                      }`}
                     >
                       {color}
                     </button>
@@ -610,7 +611,6 @@ export default function SingleProductPage() {
               </div>
             )}
 
-            {/* Packs */}
             {product.packs?.length > 0 && (
               <div className="mt-3">
                 <h3 className="text-lg font-semibold mb-2">Available Packs</h3>
@@ -620,12 +620,11 @@ export default function SingleProductPage() {
                       key={idx}
                       type="button"
                       onClick={() => setSelectedPack(pack)}
-                      className={`border rounded-[40px] py-[10px] px-[20px] tracking-[1px] leading-[1] text-center cursor-pointer relative transition-[border] duration-150 ease-in-out mt-[7px] mr-[5px] mb-[2px] capitalize
-            ${
-              selectedPack === pack
-                ? "bg-sky-600 border-sky-600 text-white"
-                : "bg-transparent border-[#04cefa] text-[#04cefa]"
-            }`}
+                      className={`border rounded-[40px] py-[10px] px-[20px] capitalize transition-all ${
+                        selectedPack === pack
+                          ? "bg-sky-600 border-sky-600 text-white"
+                          : "bg-transparent border-[#04cefa] text-[#04cefa]"
+                      }`}
                     >
                       {pack}
                     </button>
@@ -634,7 +633,6 @@ export default function SingleProductPage() {
               </div>
             )}
 
-            {/* Material */}
             {product.card_material?.length > 0 && (
               <div className="mt-3">
                 <h3 className="text-lg font-semibold mb-2">Material</h3>
@@ -644,12 +642,11 @@ export default function SingleProductPage() {
                       key={idx}
                       type="button"
                       onClick={() => setSelectedMaterial(mat)}
-                      className={`border rounded-[40px] py-[10px] px-[20px] tracking-[1px] leading-[1] text-center cursor-pointer relative transition-[border] duration-150 ease-in-out mt-[7px] mr-[5px] mb-[2px] capitalize
-          ${
-            selectedMaterial === mat
-              ? "bg-sky-600 border-sky-600 text-white"
-              : "bg-transparent border-[#04cefa] text-[#04cefa]"
-          }`}
+                      className={`border rounded-[40px] py-[10px] px-[20px] capitalize transition-all ${
+                        selectedMaterial === mat
+                          ? "bg-sky-600 border-sky-600 text-white"
+                          : "bg-transparent border-[#04cefa] text-[#04cefa]"
+                      }`}
                     >
                       {mat}
                     </button>
@@ -658,7 +655,6 @@ export default function SingleProductPage() {
               </div>
             )}
 
-            {/* Type */}
             {product.type?.length > 0 && (
               <div className="mt-3">
                 <h3 className="text-lg font-semibold mb-2">Type</h3>
@@ -668,12 +664,11 @@ export default function SingleProductPage() {
                       key={idx}
                       type="button"
                       onClick={() => setSelectedType(t)}
-                      className={`border rounded-[40px] py-[10px] px-[20px] tracking-[1px] leading-[1] text-center cursor-pointer relative transition-[border] duration-150 ease-in-out mt-[7px] mr-[5px] mb-[2px] capitalize
-          ${
-            selectedType === t
-              ? "bg-sky-600 border-sky-600 text-white"
-              : "bg-transparent border-[#04cefa] text-[#04cefa]"
-          }`}
+                      className={`border rounded-[40px] py-[10px] px-[20px] capitalize transition-all ${
+                        selectedType === t
+                          ? "bg-sky-600 border-sky-600 text-white"
+                          : "bg-transparent border-[#04cefa] text-[#04cefa]"
+                      }`}
                     >
                       {t}
                     </button>
@@ -682,7 +677,6 @@ export default function SingleProductPage() {
               </div>
             )}
 
-            {/* Smart Cards */}
             {product.smart_cards?.length > 0 && (
               <div className="mt-3">
                 <h3 className="text-lg font-semibold mb-2">Smart Cards</h3>
@@ -692,12 +686,11 @@ export default function SingleProductPage() {
                       key={idx}
                       type="button"
                       onClick={() => setSelectedSmartCard(card)}
-                      className={`border rounded-[40px] py-[10px] px-[20px] tracking-[1px] leading-[1] text-center cursor-pointer relative transition-[border] duration-150 ease-in-out mt-[7px] mr-[5px] mb-[2px] capitalize
-          ${
-            selectedSmartCard === card
-              ? "bg-sky-600 border-sky-600 text-white"
-              : "bg-transparent border-[#04cefa] text-[#04cefa]"
-          }`}
+                      className={`border rounded-[40px] py-[10px] px-[20px] capitalize transition-all ${
+                        selectedSmartCard === card
+                          ? "bg-sky-600 border-sky-600 text-white"
+                          : "bg-transparent border-[#04cefa] text-[#04cefa]"
+                      }`}
                     >
                       {card}
                     </button>
@@ -706,7 +699,7 @@ export default function SingleProductPage() {
               </div>
             )}
 
-            {/* Quantity & Add to Cart Row */}
+            {/* Quantity & Add to Cart */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-6">
               <div className="flex items-center gap-3">
                 <span className="font-semibold text-gray-700">Quantity:</span>
@@ -774,45 +767,49 @@ export default function SingleProductPage() {
           </div>
         </div>
 
-        {/* Description Section */}
+        {/* ✅ Responsive Description Section */}
         {product.description && (
           <div className="mt-12 border-t pt-8 max-w-6xl w-full">
             <h2 className="text-2xl font-bold mb-4 text-gray-900">
               Description
             </h2>
             <div
-              className="text-gray-700 leading-relaxed"
+              className="text-gray-700 leading-relaxed prose prose-sky max-w-none overflow-x-auto scrollbar-hide"
               dangerouslySetInnerHTML={{ __html: product.description }}
             />
           </div>
         )}
 
-        {/* Product Details Section - Formatted */}
-        <div className="mt-6 border-t pt-6 max-w-6xl w-full space-y-2 text-gray-700 text-sm">
+        {/* ✅ Improved Product Details Layout */}
+        <div className="mt-8 border-t pt-6 max-w-6xl w-full">
           <h2 className="text-2xl font-bold mb-4 text-gray-900">
-            Product Detail
+            Product Details
           </h2>
-          <p>
-            <strong>SKU:</strong> {product.sku || "-"}
-          </p>
-          <p>
-            <strong>Category:</strong>{" "}
-            {product.nfc_product_categories?.length > 0
-              ? product.nfc_product_categories.map((cat) => cat.name).join(", ")
-              : "-"}
-          </p>
-          <p>
-            <strong>Brand:</strong> {product.brand?.brand_name || "-"}
-          </p>
-          <p>
-            <strong>Offer:</strong>{" "}
-            {product.offers?.length > 0
-              ? product.offers.map((offer) => offer.title).join(", ")
-              : "-"}
-          </p>
-          <p>
-            <strong>Customizable:</strong> {product.is_customizable || "-"}
-          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700 text-sm">
+            <p>
+              <strong>SKU:</strong> {product.sku || "-"}
+            </p>
+            <p>
+              <strong>Category:</strong>{" "}
+              {product.nfc_product_categories?.length > 0
+                ? product.nfc_product_categories
+                    .map((cat) => cat.name)
+                    .join(", ")
+                : "-"}
+            </p>
+            <p>
+              <strong>Brand:</strong> {product.brand?.brand_name || "-"}
+            </p>
+            <p>
+              <strong>Offer:</strong>{" "}
+              {product.offers?.length > 0
+                ? product.offers.map((offer) => offer.title).join(", ")
+                : "-"}
+            </p>
+            <p>
+              <strong>Customizable:</strong> {product.is_customizable || "-"}
+            </p>
+          </div>
         </div>
       </div>
     </div>

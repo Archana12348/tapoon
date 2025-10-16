@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../../components/ui/Button";
 import img from "../../assests/images/card/card4.png";
+
 // ForgotPasswordPage.jsx
 // Single-file responsive React component using Tailwind CSS
 // Usage: place this component in your React app (e.g. src/pages/ForgotPasswordPage.jsx)
@@ -31,20 +32,26 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      // Replace the URL below with your real API endpoint
-      const res = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const res = await fetch(
+        "https://nfc.premierwebtechservices.com/api/password/email",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
+      console.log("response", res);
+      debugger;
+
+      const data = await res.json();
 
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.message || "Failed to request password reset.");
+        throw new Error(data.message || "Failed to request password reset.");
       }
 
       setMessage(
-        "If this email is registered, we've sent password reset instructions. Check your inbox."
+        data.message ||
+          "If this email is registered, we've sent password reset instructions. Check your inbox."
       );
       setEmail("");
     } catch (err) {
@@ -146,14 +153,6 @@ export default function ForgotPasswordPage() {
             </form>
 
             <div className="mt-6 text-center text-sm text-gray-500 space-y-2">
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={loading}
-                className="block w-full text-sky-600 font-semibold hover:underline disabled:opacity-50"
-              >
-                Resend Email
-              </button>
               <Link
                 to="/sign-in"
                 className="block text-sky-600 font-semibold hover:underline"
