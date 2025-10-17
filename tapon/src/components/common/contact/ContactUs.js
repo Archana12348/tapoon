@@ -1,24 +1,19 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import Button from "../../ui/Button";
-
-// Agar aapke paas Button component nahi hai to normal button use karein
-// import { Button } from "@/components/ui/button";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "", // phone field add kiya
+    phone: "",
     subject: "",
     message: "",
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Yahan API ya backend call kar sakte ho
-  };
+  const [loading, setLoading] = useState(false);
+  const [responseMessage, setResponseMessage] = useState("");
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -27,14 +22,48 @@ export default function ContactSection() {
     }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setResponseMessage("");
+
+    try {
+      const response = await axios.post(
+        "https://nfc.premierwebtechservices.com/api/contact",
+        formData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log(response);
+      debugger;
+      if (response.data.success) {
+        setResponseMessage("✅ Message sent successfully!");
+        setTimeout(() => {
+          setResponseMessage("");
+        }, 2000);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+        });
+      } else {
+        setResponseMessage("❌ Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting contact form:", error);
+      setResponseMessage("⚠️ Failed to send message. Try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <section id="contact" className="py-20 md:py-16 ">
+    <section id="contact" className="py-20 md:py-16">
       <div className="container mx-auto px-4">
-        {/* Heading */}
         <div className="mb-16 text-center">
-          {/* <div className="mb-4 inline-block rounded-full bg-cyan-900 px-4 py-2 text-sm text-cyan-400">
-            Get In Touch
-          </div> */}
           <h2 className="mb-4 text-4xl font-bold text-black md:text-5xl">
             Contact Us
           </h2>
@@ -47,8 +76,7 @@ export default function ContactSection() {
         <div className="grid gap-12 lg:grid-cols-2">
           {/* Left Section */}
           <div className="space-y-8">
-            {/* Contact Info */}
-            <div className="rounded-2xl border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md p-8">
+            <div className="rounded-2xl border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 shadow-md p-8">
               <h3 className="mb-6 text-2xl font-bold text-black">
                 Get in touch
               </h3>
@@ -86,7 +114,7 @@ export default function ContactSection() {
             </div>
 
             {/* Business Hours */}
-            <div className="rounded-2xl border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md p-8">
+            <div className="rounded-2xl border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 shadow-md p-8">
               <h3 className="mb-4 text-xl font-bold text-black">
                 Business Hours
               </h3>
@@ -99,69 +127,31 @@ export default function ContactSection() {
           </div>
 
           {/* Right Section - Contact Form */}
-          <div className="rounded-2xl border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md p-8">
+          <div className="rounded-2xl border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 shadow-md p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-sky-900">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  placeholder="Your name"
-                  className="w-full rounded-lg border border-cyan-900/20 bg-slate-900/50 px-4 py-3 text-white placeholder-white focus:ring-2 focus:ring-cyan-700/50"
-                />
-              </div>
-              {/* Email */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-sky-900">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  placeholder="your@email.com"
-                  className="w-full rounded-lg border border-cyan-900/20 bg-slate-900/50 px-4 py-3 text-white placeholder-white focus:ring-2 focus:ring-cyan-700/50"
-                />
-              </div>
-              {/* Phone Number */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-sky-900">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                  placeholder="+91 9876543210"
-                  className="w-full rounded-lg border border-cyan-900/20 bg-slate-900/50 px-4 py-3 text-white placeholder-white focus:ring-2 focus:ring-cyan-700/50"
-                />
-              </div>
-              {/* Subject */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-sky-900">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                  placeholder="How can we help?"
-                  className="w-full rounded-lg border border-cyan-900/20 bg-slate-900/50 px-4 py-3 text-white placeholder-white focus:ring-2 focus:ring-cyan-700/50"
-                />
-              </div>
-              {/* Message */}
+              {["name", "email", "phone", "subject"].map((field) => (
+                <div key={field}>
+                  <label className="mb-2 block text-sm font-medium text-sky-900">
+                    {field.charAt(0).toUpperCase() + field.slice(1)}
+                  </label>
+                  <input
+                    type={
+                      field === "email"
+                        ? "email"
+                        : field === "phone"
+                        ? "tel"
+                        : "text"
+                    }
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleChange}
+                    required
+                    placeholder={`Your ${field}`}
+                    className="w-full rounded-lg border border-cyan-900/20 bg-slate-900/50 px-4 py-3 text-white placeholder-white focus:ring-2 focus:ring-cyan-700/50"
+                  />
+                </div>
+              ))}
+
               <div>
                 <label className="mb-2 block text-sm font-medium text-sky-900">
                   Message
@@ -176,13 +166,21 @@ export default function ContactSection() {
                   className="w-full rounded-lg border border-cyan-900/20 bg-slate-900/50 px-4 py-3 text-white placeholder-white focus:ring-2 focus:ring-cyan-700/50"
                 />
               </div>
-              {/* Submit Button */}
+
               <Button
                 type="submit"
+                disabled={loading}
                 className="flex w-full items-center justify-center rounded-lg bg-cyan-600 px-6 py-3 text-white font-semibold hover:bg-cyan-700 transition"
               >
-                Send Message <Send className="ml-2 h-5 w-5" />
+                {loading ? "Sending..." : "Send Message"}
+                <Send className="ml-2 h-5 w-5" />
               </Button>
+
+              {responseMessage && (
+                <p className="text-center mt-4 font-medium text-sky-900">
+                  {responseMessage}
+                </p>
+              )}
             </form>
           </div>
         </div>
