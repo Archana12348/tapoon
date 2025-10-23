@@ -16,10 +16,10 @@ import TermsAndConditions from "../components/sections/termandconditions";
 import PrivacyPolicy from "../components/sections/privacy-policy";
 import SignUp from "../pages/auth/SignUp";
 import SignIn from "../pages/auth/SignIn";
-import Orders from "../pages/users/orders";
+// import Orders from "../pages/users/orders";
 import Dashboard from "../pages/users/dashboards";
 import SuccessPage from "../components/common/paymentprocess/SuccessPage";
-import CancelPage from "../components/common/paymentprocess/CancelPage";
+// import CancelPage from "../components/common/paymentprocess/CancelPage";
 import MultiStepProfileForm from "../features/profile/MultiStepProfileForm";
 import Template from "../pages/users/dashboarddummp";
 import FailurePage from "../components/common/paymentprocess/CancelPage";
@@ -181,24 +181,10 @@ export default function App() {
         />
 
         {/* Success Page */}
-        <Route
-          path="/success"
-          element={
-            <MainLayout>
-              <SuccessPage />
-            </MainLayout>
-          }
-        />
+        <Route path="/checkout-success" element={<SuccessPage />} />
 
         {/* Cancel Page */}
-        <Route
-          path="/cancel"
-          element={
-            <MainLayout>
-              <CancelPage />
-            </MainLayout>
-          }
-        />
+        <Route path="/checkout-cancel" element={<FailurePage />} />
 
         {/* Delivery and Return */}
         <Route

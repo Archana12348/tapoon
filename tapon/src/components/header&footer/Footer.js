@@ -28,10 +28,10 @@ export function Footer() {
   return (
     <>
       {/* Upper Subscribe Section */}
-      <div className="w-full py-12" style={{ backgroundColor: "#0086c4" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-8">
-          {/* Left: Newsletter */}
-          <div>
+      {/* <div className="w-full py-12" style={{ backgroundColor: "#0086c4" }}> */}
+      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-8"> */}
+      {/* Left: Newsletter */}
+      {/* <div>
             <h2 className="text-2xl font-semibold mb-2 text-white">
               Get our emails for info on
               <br />
@@ -52,10 +52,10 @@ export function Footer() {
               By subscribing you agree to our Terms & Conditions and Privacy
               Policy
             </p>
-          </div>
+          </div> */}
 
-          {/* Right: Help */}
-          <div
+      {/* Right: Help */}
+      {/* <div
             className="md:text-left text-white"
             style={{ marginLeft: "20%" }}
           >
@@ -64,9 +64,9 @@ export function Footer() {
               {settings?.phone || "971581770786"}
             </p>
             <p className="text-sm">We are available 10:00 am – 6:00 pm</p>
-          </div>
-        </div>
-      </div>
+          </div> */}
+      {/* </div> */}
+      {/* </div> */}
 
       {/* Footer Section */}
       <footer className="sticky top-0 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md py-12">

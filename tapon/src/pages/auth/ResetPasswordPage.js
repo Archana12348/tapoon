@@ -129,7 +129,7 @@ const ResetPasswordPage = () => {
         {/* Header */}
         <div className="flex items-center justify-center mb-4">
           <KeyRound className="h-8 w-8 text-sky-600 mr-2" />
-          <span className="text-2xl font-bold text-sky-700">NFC</span>
+          <span className="text-2xl font-bold text-sky-700">Tapoon</span>
         </div>
 
         <h2 className="text-2xl font-semibold text-sky-900 text-center mb-2">
