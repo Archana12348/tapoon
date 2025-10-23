@@ -9,8 +9,6 @@ export default function StepPreview({
   isEditMode,
   submitted,
 }) {
-  console.log("Preview Data:", data);
-
   // Helper to safely render errors from backend
   const renderError = (err) => {
     if (!err) return null;

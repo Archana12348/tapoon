@@ -12,14 +12,14 @@ export default function UserProfilePage() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { id } = useParams(); // 👈 gets '1', '2', etc. from the route
+  const { slug } = useParams(); // 👈 gets '1', '2', etc. from the route
 
   useEffect(() => {
     const getProfile = async () => {
       try {
         // console.log("Fetching user profile...", slug);
-        const res = await fetchUserProfile("abheydhall");
-        console.log("User Profile Data:", res.data);
+        const res = await fetchUserProfile(slug);
+        console.log("User Profile Data:", res.data.theme_color.id);
         setProfile(res.data);
       } catch (err) {
         setError(
@@ -30,7 +30,7 @@ export default function UserProfilePage() {
       }
     };
     getProfile();
-  }, [id]);
+  }, [slug]);
 
   // Loading/Error States
   if (loading)
@@ -77,9 +77,10 @@ export default function UserProfilePage() {
     3: TemplateThree,
     4: TemplateFour,
   };
+  const theme_color = profile.theme_color.id ?? 1;
 
   // Convert to number and pick the component
-  const SelectedTemplate = templates[Number(id)] || TemplateOne;
+  const SelectedTemplate = templates[theme_color] || TemplateOne;
 
   return <SelectedTemplate profile={profile} loading={loading} error={error} />;
 

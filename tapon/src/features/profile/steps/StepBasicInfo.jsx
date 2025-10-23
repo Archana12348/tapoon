@@ -6,7 +6,6 @@ export default function StepBasicInfo({
   handleNext,
   loading,
 }) {
-  console.log("StepBasicInfo data:", data);
   // Auto-generate slug when username changes
   useEffect(() => {
     if (data.username) {

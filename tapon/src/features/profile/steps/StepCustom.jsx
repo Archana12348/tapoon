@@ -1,5 +1,3 @@
-import React, { useState, useEffect } from "react";
-
 function StepCustom({ data, handleBack, handleNext, handleChange }) {
   return (
     <>
@@ -10,7 +8,7 @@ function StepCustom({ data, handleBack, handleNext, handleChange }) {
           <div className="flex flex-col">
             <label className="text-sm font-medium mb-1">NFC Card ID</label>
             <input
-              type="text"
+              type="number"
               name="nfc_card_id"
               value={data.nfc_card_id}
               onChange={handleChange}

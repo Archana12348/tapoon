@@ -249,16 +249,9 @@ export default function App() {
           }
         />
         {/* Profile */}
-        {/* <Route
-          path="/profile/template/:slug"
-          element={
-            <MainLayout>
-              <Template />
-            </MainLayout>
-          }
-        /> */}
+        <Route path="/profile/template/:slug" element={<Template />} />
         {/* Profile */}
-        <Route path="/profile/template/:id" element={<Template />} />
+        {/* <Route path="/profile/template/:id" element={<Template />} /> */}
 
         <Route
           path="/profile/create"

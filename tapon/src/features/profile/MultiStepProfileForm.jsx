@@ -38,42 +38,87 @@ export default function MultiStepProfileForm() {
     }
   }, [dispatch, id, isEditMode]);
 
-  // Redirect on success with SweetAlert2
+  // Handle backend response
   useEffect(() => {
-    if (submitted && status === "succeeded") {
-      Swal.fire({
-        icon: "success",
-        title: isEditMode ? "Profile updated!" : "Profile created!",
-        text: "Redirecting to home...",
-        timer: 2000,
-        showConfirmButton: false,
-      }).then(() => {
-        navigate("/"); // redirect after popup
-      });
+    if (!submitted) return;
+    console.log("Full backend response:", profile.response); // <-- full response
+    console.log("Profile data in state:", data); // <-- merged profile data
+    debugger;
+    // Success response from backend
+    if (status === "succeeded") {
+      if (profile.response?.success) {
+        Swal.fire({
+          icon: "success",
+          title: isEditMode ? "Profile updated!" : "Profile created!",
+          text: "Redirecting to home...",
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          navigate("/");
+        });
+      } else {
+        // Backend returned failure (success=0)
+        let errMessages = "Something went wrong";
+
+        if (profile.response?.message) {
+          errMessages = profile.response.message;
+        } else if (Array.isArray(profile.response?.errors)) {
+          errMessages = profile.response.errors
+            .map((err) => err.message || JSON.stringify(err))
+            .join("\n");
+        }
+
+        Swal.fire({
+          icon: "error",
+          title: "Failed to save profile",
+          text: errMessages,
+        });
+
+        // Keep user form data intact
+        setSubmitted(false);
+      }
     }
-  }, [submitted, status, isEditMode, navigate]);
+
+    // Rejected API call
+    if (status === "failed") {
+      let errMessages = "Something went wrong";
+
+      if (error?.message) {
+        errMessages = error.message;
+      } else if (Array.isArray(error?.errors)) {
+        errMessages = error.errors
+          .map((err) => err.message || JSON.stringify(err))
+          .join("\n");
+      } else if (typeof error?.errors === "object") {
+        errMessages = Object.values(error.errors).flat().join("\n");
+      }
+
+      Swal.fire({
+        icon: "error",
+        title: "Failed to save profile",
+        text: errMessages,
+      });
+
+      // Keep user form data intact
+      setSubmitted(false);
+    }
+  }, [submitted, status, data, error, isEditMode, navigate]);
 
   // Safe error rendering function
   const renderError = (err) => {
     if (!err) return null;
-
     if (typeof err === "string") return err;
-
     if (err.message) return err.message;
-
     if (err.errors) {
       if (typeof err.errors === "string") return err.errors;
       if (Array.isArray(err.errors)) return err.errors.join(", ");
       if (typeof err.errors === "object")
         return Object.values(err.errors).flat().join(", ");
     }
-
-    if (err.status && err.success !== undefined && err.message)
-      return err.message;
-
     return "An unexpected error occurred";
   };
 
+  // Form field change handlers
   const handleChange = (eOrName, maybeValue) => {
     let name, value;
 
@@ -103,6 +148,7 @@ export default function MultiStepProfileForm() {
   const handleNext = () => dispatch(nextStep());
   const handleBack = () => step > 1 && dispatch(prevStep());
 
+  // Submit form
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
@@ -120,6 +166,7 @@ export default function MultiStepProfileForm() {
     }
   };
 
+  // Render each step
   const renderStep = () => {
     switch (step) {
       case 1:

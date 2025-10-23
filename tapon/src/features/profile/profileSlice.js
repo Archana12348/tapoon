@@ -72,19 +72,18 @@ export const submitProfile = createAsyncThunk(
         }
       }
 
-      console.log("profile data", profileData);
+      // console.log("profile data", profileData);
 
-      console.log("FormData contents before submission:");
-      for (const pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
-      }
-      // Debug
-      console.log("FormData being sent:");
-      for (const [k, v] of formData.entries()) {
-        console.log(`${k}:`, v);
-      }
+      // console.log("FormData contents before submission:");
+      // for (const pair of formData.entries()) {
+      //   console.log(`${pair[0]}:`, pair[1]);
+      // }
+      // // Debug
+      // console.log("FormData being sent:");
+      // for (const [k, v] of formData.entries()) {
+      //   console.log(`${k}:`, v);
+      // }
 
-      debugger;
       const response = await axios.post(
         "https://nfc.premierwebtechservices.com/api/user-profiles",
         formData,
@@ -195,6 +194,8 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+// ----------------- INITIAL STATE -----------------
+
 const initialState = {
   step: 1,
   data: {
@@ -243,7 +244,18 @@ const initialState = {
   },
   status: "idle",
   error: null,
+  response: null, // <-- store full backend response
 };
+
+// ----------------- HELPER -----------------
+
+const mergeData = (state, payload) => {
+  if (payload?.data && typeof payload.data === "object") {
+    state.data = { ...state.data, ...payload.data };
+  }
+};
+
+// ----------------- SLICE -----------------
 
 const profileSlice = createSlice({
   name: "profile",
@@ -261,47 +273,59 @@ const profileSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // ✅ Create
+      // Create Profile
       .addCase(submitProfile.pending, (state) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(submitProfile.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.data = action.payload;
-      })
-      .addCase(submitProfile.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
+        state.response = action.payload;
+        console.log("action.payload", state.response);
+        debugger;
+        if (action.payload?.data) mergeData(state, action.payload);
       })
 
-      // ✅ Fetch
+      .addCase(submitProfile.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || action.error;
+
+        // Store the full backend response (if any)
+        state.response = action.payload || null;
+
+        console.log("Rejected action payload (error):", state.error);
+        console.log("Rejected full backend response:", state.response);
+        debugger;
+      })
+
+      // Fetch Profile
       .addCase(fetchProfile.pending, (state) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(fetchProfile.fulfilled, (state, action) => {
-        console.log(
-          "Fetch profile fulfilled with sssss data:",
-          action.payload.data
-        );
         state.status = "succeeded";
-        state.data = { ...state.data, ...action.payload.data };
+        state.response = action.payload;
+        if (action.payload?.data) mergeData(state, action.payload);
       })
       .addCase(fetchProfile.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.error = action.payload || action.error;
       })
 
-      // ✅ Update
+      // Update Profile
       .addCase(updateProfile.pending, (state) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.data = action.payload;
+        state.response = action.payload;
+        if (action.payload?.data) mergeData(state, action.payload);
       })
       .addCase(updateProfile.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.error = action.payload || action.error;
       });
   },
 });
