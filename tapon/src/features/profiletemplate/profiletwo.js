@@ -240,7 +240,7 @@ const ProfileTwo = (props) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-black-700 dark:text-black-200 text-sm">
                   {/* Address Section */}
-                  <div className="bg-black-50 dark:bg-yellow-600 rounded-xl p-4 shadow-inner">
+                  <div className="bg-yellow-600 dark:bg-yellow-400 rounded-xl p-4 shadow-inner">
                     <h4 className="font-semibold text-black mb-3 flex items-center justify-center gap-2">
                       <FaMapMarkerAlt className="text-black" /> Address
                     </h4>
@@ -257,7 +257,7 @@ const ProfileTwo = (props) => {
                   </div>
 
                   {/* Contact Section */}
-                  <div className="bg-yellow-50 dark:bg-yellow-600 rounded-xl p-4 shadow-inner">
+                  <div className="bg-yellow-600 dark:bg-yellow-400 rounded-xl p-4 shadow-inner">
                     <h4 className="font-semibold text-black mb-3 flex items-center justify-center gap-2">
                       <FaPhone className="text-black rotate-90" /> Contact
                     </h4>
@@ -311,7 +311,7 @@ const ProfileTwo = (props) => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-700 dark:text-gray-200 text-sm">
                   {/* Company Name */}
                   {user.company_name && (
-                    <div className="bg-yellow-50 dark:bg-yellow-600 rounded-xl p-4 shadow-inner text-center">
+                    <div className="bg-yellow-600 dark:bg-yellow-400 rounded-xl p-4 shadow-inner text-center">
                       <h4 className="font-semibold text-black mb-2">Company</h4>
                       <p className="font-medium text-black">
                         {user.company_name}
@@ -321,7 +321,7 @@ const ProfileTwo = (props) => {
 
                   {/* Website */}
                   {user.website_url && (
-                    <div className="bg-yellow-50 dark:bg-yellow-600 rounded-xl p-4 shadow-inner text-center">
+                    <div className="bg-yellow-600 dark:bg-yellow-400 rounded-xl p-4 shadow-inner text-center">
                       <h4 className="font-semibold text-black mb-2">Website</h4>
                       <a
                         href={user.website_url}
@@ -336,7 +336,7 @@ const ProfileTwo = (props) => {
 
                   {/* Industry */}
                   {user.industry && (
-                    <div className="bg-yellow-50 dark:bg-yellow-600 rounded-xl p-4 shadow-inner text-center">
+                    <div className="bg-yellow-600 dark:bg-yellow-400 rounded-xl p-4 shadow-inner text-center">
                       <h4 className="font-semibold text-black mb-2">
                         Industry
                       </h4>
@@ -437,7 +437,7 @@ const ProfileTwo = (props) => {
                   <div className="bg-gradient-to-r from-black-400 to-black-600 text-white ">
                     <FaCogs className="text-xl" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 tracking-wide">
+                  <h3 className="text-xl font-bold text-gray-100 dark:text-gray-100 tracking-wide">
                     Additional Info
                   </h3>
                 </div>

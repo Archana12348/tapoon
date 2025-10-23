@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ShoppingCart, Menu, User, ChevronDown } from "lucide-react";
+import { ShoppingCart, Menu, Search, User, ChevronDown } from "lucide-react";
 import Button from "../ui/Button";
 import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
@@ -15,7 +15,6 @@ export default function Header() {
   const [showProductsMenu, setShowProductsMenu] = useState(false);
   const hoverTimeoutRef = useRef(null);
   const [open, setOpen] = useState(false);
-
   const totalQuantity = useSelector((state) => state.cart.totalQuantity || 0);
 
   // ✅ State for Cart Drawer
@@ -29,16 +28,22 @@ export default function Header() {
         );
         const result = await res.json();
 
-        if (result.status && result.data) setCategories(result.data);
-        if (result.settings?.logo) setSiteLogo(result.settings.logo);
+        if (result.status && result.data) {
+          setCategories(result.data);
+        }
+
+        if (result.settings && result.settings.logo) {
+          setSiteLogo(result.settings.logo);
+        }
       } catch (error) {
         console.error("Error fetching menu data:", error);
       }
     };
+
     fetchMenuData();
   }, []);
 
-  // ✅ Hover delay for desktop Products dropdown
+  // Handle delayed hover for Products dropdown
   const handleMouseEnter = () => {
     clearTimeout(hoverTimeoutRef.current);
     hoverTimeoutRef.current = setTimeout(() => setShowProductsMenu(true), 300);
@@ -52,8 +57,8 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-sky-200 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* ---------- Logo Section ---------- */}
-        <div className="flex items-center gap-8">
+        {/* Logo Section */}
+        <div className="flex items-center gap-8 ml-4">
           <Link to="/" className="flex items-center gap-2">
             <div className="flex items-center mr-4 md:mr-10">
               <img
@@ -64,15 +69,14 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* ---------- Desktop Menu ---------- */}
-          <nav className="hidden items-center gap-6 md:flex">
+          {/* Desktop Menu */}
+          <nav className="hidden items-center gap-6 lg:flex ml-32">
             <Link
               to="/"
               className="text-lg text-sky-900 transition-colors hover:text-sky-600"
             >
               Home
             </Link>
-
             <Link
               to="/aboutUs"
               className="text-lg text-sky-900 transition-colors hover:text-sky-600"
@@ -89,7 +93,6 @@ export default function Header() {
               <span className="text-lg text-sky-900 hover:text-sky-600 cursor-pointer">
                 Products
               </span>
-
               {showProductsMenu && (
                 <div className="absolute bg-white border border-sky-200 rounded-md shadow-lg mt-4 z-50 min-w-[250px] transition-opacity duration-300 ease-in-out">
                   {categories.length > 0 ? (
@@ -117,7 +120,6 @@ export default function Header() {
             >
               For Corporate
             </Link>
-
             <Link
               to="/contactus"
               className="text-lg text-sky-900 transition-colors hover:text-sky-600"
@@ -127,7 +129,7 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* ---------- Actions (Cart + User) ---------- */}
+        {/* Action Buttons */}
         <div className="flex items-center gap-4">
           {/* 🛒 Shopping Cart Button */}
           <div className="relative">
@@ -141,13 +143,13 @@ export default function Header() {
             </Button>
 
             {totalQuantity > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="absolute -top-0 -right-0 bg-red-600 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
                 {totalQuantity}
               </span>
             )}
           </div>
 
-          {/* 👤 User Section */}
+          {/* Auth / User Dropdown */}
           {user ? (
             <div className="relative">
               <Button
@@ -193,7 +195,7 @@ export default function Header() {
             </Link>
           )}
 
-          {/* 📱 Mobile Menu Toggle */}
+          {/* Mobile Menu Toggle */}
           <Button
             variant="ghost"
             size="icon"
@@ -205,7 +207,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* ---------- Mobile Menu ---------- */}
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="border-t border-sky-200 bg-gradient-to-r from-sky-100 to-white lg:hidden">
           <nav className="container mx-auto flex flex-col gap-4 px-4 py-4">
@@ -269,9 +271,59 @@ export default function Header() {
               Contact Us
             </Link>
 
-            <Button className="bg-sky-600 text-white hover:bg-sky-700">
-              SignUp / SignIn
-            </Button>
+            {/* ✅ Mobile Auth / User Section */}
+            {/* ✅ Mobile Auth / User Section */}
+            {user ? (
+              <div className="flex flex-col gap-1 border-t border-sky-200 pt-2 mt-2">
+                {/* User button */}
+                <button
+                  className="w-full bg-sky-600 text-white hover:bg-sky-700 py-2 px-4 text-center rounded-md flex items-center justify-center gap-1"
+                  onClick={() => setOpen((prev) => !prev)}
+                >
+                  <User className="h-4 w-4" /> {user.name}
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-300 ${
+                      open ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown items */}
+                {open && (
+                  <div className="flex flex-col gap-1 mt-1 overflow-hidden animate-fadeIn">
+                    <Link
+                      to={`/profile/${user.name}`}
+                      className="text-sm text-sky-800 hover:text-sky-600 pl-4 py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <Link
+                      to="/orders"
+                      className="text-sm text-sky-800 hover:text-sky-600 pl-4 py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Orders
+                    </Link>
+                    <button
+                      className="text-sm text-red-600 hover:bg-red-100 pl-4 py-1 text-left"
+                      onClick={() => {
+                        logout();
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link to="/sign-in">
+                <Button className="bg-sky-600 text-white hover:bg-sky-700 w-full">
+                  SignUp / SignIn
+                </Button>
+              </Link>
+            )}
           </nav>
         </div>
       )}

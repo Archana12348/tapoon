@@ -24,6 +24,14 @@ export function CTASection() {
                 type="button"
                 variant="outline"
                 className="!border-sky-700 !text-sky-600 hover:!bg-sky-600 hover:!text-white bg-transparent"
+                onClick={() => navigate("/corporate")}
+              >
+                Bulk Order
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="!border-sky-700 !text-sky-600 hover:!bg-sky-600 hover:!text-white bg-transparent"
                 onClick={() => navigate("/contactus")}
               >
                 Contact Sales
