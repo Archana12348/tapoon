@@ -121,7 +121,7 @@
 //                         {/* ✅ Price Section */}
 //                         <div className="flex justify-between items-center mt-2">
 //                           <span className="font-semibold text-lg">
-//                             ₹{(item.sale_price * item.quantity).toFixed(2)}
+//                             AED{(item.sale_price * item.quantity).toFixed(2)}
 //                           </span>
 //                           <div className="flex items-center gap-2 border rounded-2xl px-2 py-1 bg-gray-100">
 //                             <button
@@ -164,7 +164,7 @@
 //                 <div className="flex justify-between mb-4">
 //                   <span>{totalQuantity} items</span>
 //                   <span className="font-bold text-red-600">
-//                     ₹{totalPrice.toFixed(2)}
+//                     AED{totalPrice.toFixed(2)}
 //                   </span>
 //                 </div>
 
@@ -358,15 +358,15 @@ const CartDrawer = ({ isOpen, onClose }) => {
                           {hasDiscount ? (
                             <div className="flex flex-col">
                               <span className="text-sky-600 font-semibold text-lg">
-                                ₹{(salePrice * quantity).toFixed(2)}
+                                AED{(salePrice * quantity).toFixed(2)}
                               </span>
                               <span className="text-gray-400 line-through text-xs">
-                                ₹{(regularPrice * quantity).toFixed(2)}
+                                AED{(regularPrice * quantity).toFixed(2)}
                               </span>
                             </div>
                           ) : (
                             <span className="font-semibold text-lg">
-                              ₹{(regularPrice * quantity).toFixed(2)}
+                              AED{(regularPrice * quantity).toFixed(2)}
                             </span>
                           )}
                         </div>
@@ -411,7 +411,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
               <div className="flex justify-between mb-4">
                 <span>{totalQuantity} items</span>
                 <span className="font-bold text-sky-600">
-                  ₹{totalPrice.toFixed(2)}
+                  AED{totalPrice.toFixed(2)}
                 </span>
               </div>
 

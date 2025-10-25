@@ -232,7 +232,7 @@ function ProfileOne({ profile, loading, error }) {
                   )}
 
                   {/* Gallery */}
-                  {profile.gallery && profile.gallery.length > 0 ? (
+                  {/* {profile.gallery && profile.gallery.length > 0 ? (
                     <div className="space-y-2">
                       {profile.gallery.map((image, index) => (
                         <div
@@ -249,10 +249,10 @@ function ProfileOne({ profile, loading, error }) {
                     </div>
                   ) : (
                     <p className="text-gray-500">No images in gallery.</p>
-                  )}
+                  )} */}
 
                   {/* QR Code URL */}
-                  {profile.qr_code_url && (
+                  {/* {profile.qr_code_url && (
                     <div className="flex items-center space-x-3 text-gray-700 hover:text-indigo-600 transition duration-200">
                       <Link className="w-6 h-6 text-indigo-500 mr-4" />
                       <a
@@ -264,7 +264,7 @@ function ProfileOne({ profile, loading, error }) {
                         QR Code
                       </a>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </SectionCard>
 

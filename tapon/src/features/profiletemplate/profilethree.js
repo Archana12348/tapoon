@@ -367,7 +367,7 @@ export default function DoctorProfile({ profile }) {
       )}
 
       {/* QR Code Card */}
-      {userData.qr_code_url && (
+      {/* {userData.qr_code_url && (
         <div className="pt-8 flex justify-center px-4 bg-cyan-50">
           <div className=" rounded-2xl p-6 w-full max-w-md">
             <h3 className="text-lg text-cyan-800 font-bold mb-6 text-center flex items-center justify-center gap-2">
@@ -375,7 +375,7 @@ export default function DoctorProfile({ profile }) {
             </h3>
 
             <div className="flex flex-col items-center gap-4">
-              {/* QR Code Image */}
+      
               <a
                 href={userData.qr_code_url}
                 target="_blank"
@@ -389,7 +389,7 @@ export default function DoctorProfile({ profile }) {
                 />
               </a>
 
-              {/* Download Button */}
+         
               <a
                 href={userData.qr_code_url}
                 download="qr_code.png"
@@ -401,7 +401,7 @@ export default function DoctorProfile({ profile }) {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* SEO / Title–Description Card */}
       {(userData.seo_title || userData.seo_description) && (

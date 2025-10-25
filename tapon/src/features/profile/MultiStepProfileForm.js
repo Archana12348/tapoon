@@ -27,114 +27,98 @@ export default function MultiStepProfileForm() {
   const isEditMode = Boolean(id);
 
   const profile = useSelector((state) => state.profile);
-  const { step, data, status } = profile;
+  const { step, data, status, error } = profile;
 
   const [submitted, setSubmitted] = useState(false);
-  const [backendErrors, setBackendErrors] = useState({}); // ✅ Store backend errors
 
-  // ✅ Fetch existing profile if editing
+  // Fetch existing profile if editing
   useEffect(() => {
     if (isEditMode) {
       dispatch(fetchProfile(id));
     }
   }, [dispatch, id, isEditMode]);
 
-  // ✅ Handle backend success/failure response
+  // Handle backend response
   useEffect(() => {
     if (!submitted) return;
+    console.log("Full backend response:", profile.response); // <-- full response
+    console.log("Profile data in state:", data); // <-- merged profile data
+    debugger;
+    // Success response from backend
+    if (status === "succeeded") {
+      if (profile.response?.success) {
+        Swal.fire({
+          icon: "success",
+          title: isEditMode ? "Profile updated!" : "Profile created!",
+          text: "Redirecting to home...",
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          navigate("/");
+        });
+      } else {
+        // Backend returned failure (success=0)
+        let errMessages = "Something went wrong";
 
-    const backendRes = data;
-
-    if (status === "succeeded" && backendRes?.success) {
-      Swal.fire({
-        toast: true,
-        position: "top-end",
-        icon: "success",
-        title:
-          backendRes?.message ||
-          (isEditMode ? "Profile updated!" : "Profile created!"),
-        showConfirmButton: false,
-        timer: 2500,
-        timerProgressBar: true,
-      }).then(() => {
-        navigate("/");
-      });
-      setBackendErrors({}); // clear previous errors
-    } else if (
-      status === "failed" ||
-      backendRes?.success === false ||
-      backendRes?.success === 0 ||
-      backendRes?.status >= 400
-    ) {
-      // ✅ Collect all backend error messages
-      let messages = [];
-
-      if (backendRes.message) messages.push(backendRes.message);
-      console.log("backend meggage", backendRes);
-      debugger;
-      // let messages = []; // existing messages array
-
-      if (backendRes.errors) {
-        if (Array.isArray(backendRes.errors)) {
-          // If errors is an array, push all items
-          messages.push(...backendRes.errors);
-        } else if (typeof backendRes.errors === "object") {
-          // If errors is an object, push each field's messages
-          Object.entries(backendRes.errors).forEach(([field, errs]) => {
-            if (Array.isArray(errs)) {
-              errs.forEach((msg) => messages.push(`${field}: ${msg}`));
-            } else if (typeof errs === "string") {
-              messages.push(`${field}: ${errs}`);
-            }
-          });
-        } else if (typeof backendRes.errors === "string") {
-          messages.push(backendRes.errors);
+        if (profile.response?.message) {
+          errMessages = profile.response.message;
+        } else if (Array.isArray(profile.response?.errors)) {
+          errMessages = profile.response.errors
+            .map((err) => err.message || JSON.stringify(err))
+            .join("\n");
         }
+
+        Swal.fire({
+          icon: "error",
+          title: "Failed to save profile",
+          text: errMessages,
+        });
+
+        // Keep user form data intact
+        setSubmitted(false);
       }
+    }
 
-      // Now messages array contains all backend validation messages
-      console.log("messagejdkfhj", messages.errors);
-      debugger;
+    // Rejected API call
+    if (status === "failed") {
+      let errMessages = "Something went wrong";
 
-      // Remove duplicates
-      messages = [...new Set(messages)];
+      if (error?.message) {
+        errMessages = error.message;
+      } else if (Array.isArray(error?.errors)) {
+        errMessages = error.errors
+          .map((err) => err.message || JSON.stringify(err))
+          .join("\n");
+      } else if (typeof error?.errors === "object") {
+        errMessages = Object.values(error.errors).flat().join("\n");
+      }
 
       Swal.fire({
         icon: "error",
-        title: "Validation Error",
-        html: `<ul style="text-align:left; margin-left:10px;">${messages
-          .map((msg) => `<li>${msg}</li>`)
-          .join("")}</ul>`,
-        confirmButtonColor: "#d33",
+        title: "Failed to save profile",
+        text: errMessages,
       });
-    }
-  }, [submitted, status, data, isEditMode, navigate]);
 
-  // ✅ Robust error parser (Laravel compatible)
+      // Keep user form data intact
+      setSubmitted(false);
+    }
+  }, [submitted, status, data, error, isEditMode, navigate]);
+
+  // Safe error rendering function
   const renderError = (err) => {
-    if (!err) return "Unknown error occurred.";
-
-    const messages = [];
-
-    if (err.message && typeof err.message === "string") {
-      messages.push(err.message);
+    if (!err) return null;
+    if (typeof err === "string") return err;
+    if (err.message) return err.message;
+    if (err.errors) {
+      if (typeof err.errors === "string") return err.errors;
+      if (Array.isArray(err.errors)) return err.errors.join(", ");
+      if (typeof err.errors === "object")
+        return Object.values(err.errors).flat().join(", ");
     }
-
-    if (err.errors && typeof err.errors === "object") {
-      Object.entries(err.errors).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          value.forEach((msg) => messages.push(msg));
-        } else if (typeof value === "string") {
-          messages.push(value);
-        }
-      });
-    }
-
-    const uniqueMessages = [...new Set(messages)];
-    return uniqueMessages.join("\n");
+    return "An unexpected error occurred";
   };
 
-  // ✅ Handle input change
+  // Form field change handlers
   const handleChange = (eOrName, maybeValue) => {
     let name, value;
 
@@ -157,16 +141,14 @@ export default function MultiStepProfileForm() {
     dispatch(updateField({ [name]: value }));
   };
 
-  // ✅ Handle file change
   const handleFileChange = (name, files) => {
     dispatch(updateField({ [name]: files }));
   };
 
-  // ✅ Navigation handlers
   const handleNext = () => dispatch(nextStep());
   const handleBack = () => step > 1 && dispatch(prevStep());
 
-  // ✅ Submit handler
+  // Submit form
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
@@ -184,32 +166,72 @@ export default function MultiStepProfileForm() {
     }
   };
 
-  // ✅ Step renderer with backend errors
+  // Render each step
   const renderStep = () => {
-    const stepProps = {
-      data,
-      handleChange,
-      handleFileChange,
-      handleNext,
-      handleBack,
-      backendErrors, // ✅ pass errors to step
-    };
-
     switch (step) {
       case 1:
-        return <StepBasicInfo {...stepProps} />;
+        return (
+          <StepBasicInfo
+            data={data}
+            handleChange={handleChange}
+            handleNext={handleNext}
+          />
+        );
       case 2:
-        return <StepContact {...stepProps} />;
+        return (
+          <StepContact
+            data={data}
+            handleChange={handleChange}
+            handleNext={handleNext}
+            handleBack={handleBack}
+          />
+        );
       case 3:
-        return <StepGallery {...stepProps} />;
+        return (
+          <StepGallery
+            data={data}
+            handleChange={handleChange}
+            handleFileChange={handleFileChange}
+            handleNext={handleNext}
+            handleBack={handleBack}
+          />
+        );
       case 4:
-        return <StepCompanyDetails {...stepProps} />;
+        return (
+          <StepCompanyDetails
+            data={data}
+            handleChange={handleChange}
+            handleBack={handleBack}
+            handleNext={handleNext}
+          />
+        );
       case 5:
-        return <CustomLink {...stepProps} />;
+        return (
+          <CustomLink
+            data={data}
+            handleChange={handleChange}
+            handleBack={handleBack}
+            handleNext={handleNext}
+          />
+        );
       case 6:
-        return <SocialMedia {...stepProps} />;
+        return (
+          <SocialMedia
+            data={data}
+            handleChange={handleChange}
+            handleBack={handleBack}
+            handleNext={handleNext}
+          />
+        );
       case 7:
-        return <StepSeo {...stepProps} />;
+        return (
+          <StepSeo
+            data={data}
+            handleChange={handleChange}
+            handleBack={handleBack}
+            handleNext={handleNext}
+          />
+        );
       case 8:
         return (
           <StepPreview
@@ -217,6 +239,7 @@ export default function MultiStepProfileForm() {
             handleSubmit={handleSubmit}
             handleBack={handleBack}
             status={status}
+            error={error}
             isEditMode={isEditMode}
           />
         );
@@ -236,6 +259,13 @@ export default function MultiStepProfileForm() {
       {/* Status */}
       {status === "loading" && (
         <p className="text-blue-500 text-center mt-2">Processing...</p>
+      )}
+
+      {/* Error */}
+      {submitted && error && (
+        <p className="text-red-500 text-center mt-2">
+          Error: {renderError(error)}
+        </p>
       )}
     </div>
   );

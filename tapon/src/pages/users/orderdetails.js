@@ -82,7 +82,7 @@ const OrderDetails = () => {
               <strong>Payment Type:</strong> {order.payment_type}
             </p>
             <p>
-              <strong>Total Amount:</strong> ₹{order.total_amount}
+              <strong>Total Amount:</strong> AED{order.total_amount}
             </p>
             <p>
               <strong>Order Status:</strong> {order.order_status}
@@ -176,13 +176,13 @@ const OrderDetails = () => {
                         {item.smart_card}
                       </td>
                       <td className="py-2 px-4 border text-center">
-                        ₹{item.price}
+                        AED{item.price}
                       </td>
                       <td className="py-2 px-4 border text-center">
                         {item.quantity}
                       </td>
                       <td className="py-2 px-4 border text-center">
-                        ₹{item.sub_total}
+                        AED{item.sub_total}
                       </td>
                       <td className="py-2 px-4 border text-center">
                         {item.status}

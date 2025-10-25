@@ -45,7 +45,7 @@ export default function CartStep() {
   const formatCurrency = (num) =>
     new Intl.NumberFormat("en-IN", {
       style: "currency",
-      currency: "INR",
+      currency: "AED",
     }).format(Number(num ?? 0));
 
   return (
