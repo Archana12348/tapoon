@@ -1,11 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const images = [
-  "/images/slider/slider1.webp",
-  "/images/slider/slider2.webp",
-  "/images/slider/slider3.webp",
-  "/images/slider/slider4.webp",
-];
+const images = ["/images/slider/banner1.jpg", "/images/slider/banner2.jpg"];
 
 export default function Slider() {
   const [current, setCurrent] = useState(0);

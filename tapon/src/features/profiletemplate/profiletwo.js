@@ -349,7 +349,7 @@ const ProfileTwo = (props) => {
           )}
 
           {/* QR Code Card */}
-          {user.qr_code_url && (
+          {/* {user.qr_code_url && (
             <div className="mt-8 flex justify-center px-4">
               <div className=" rounded-2xl p-6 w-full max-w-md">
                 <h3 className="text-lg font-semibold text-black-600 mb-6 text-center flex items-center justify-center gap-2">
@@ -357,7 +357,7 @@ const ProfileTwo = (props) => {
                 </h3>
 
                 <div className="flex flex-col items-center gap-4">
-                  {/* QR Code Image */}
+                
                   <a
                     href={user.qr_code_url}
                     target="_blank"
@@ -371,7 +371,7 @@ const ProfileTwo = (props) => {
                     />
                   </a>
 
-                  {/* Download Button */}
+              
                   <a
                     href={user.qr_code_url}
                     download="qr_code.png"
@@ -383,7 +383,7 @@ const ProfileTwo = (props) => {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
           {/* SEO / Title–Description Card */}
           {(user.seo_title || user.seo_description) && (
             <div className="mt-10 flex justify-center px-4">
@@ -393,14 +393,14 @@ const ProfileTwo = (props) => {
                   <div className="bg-gradient-to-r from-black-400 to-black-600 text-white p-3">
                     <span className="font-bold text-lg">🔍</span>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 tracking-wide">
+                  <h3 className="text-xl font-bold text-gray-100 dark:text-gray-100 tracking-wide">
                     SEO Information
                   </h3>
                 </div>
 
                 {/* Title */}
                 {user.seo_title && (
-                  <div className="bg-yellow-50 dark:bg-yellow-600 rounded-xl p-4 shadow-inner mb-4 text-center">
+                  <div className="bg-yellow-600 dark:bg-yellow-600 rounded-xl p-4 shadow-inner mb-4 text-center">
                     <h4 className="font-semibold text-black mb-2 text-lg">
                       Title
                     </h4>
@@ -412,7 +412,7 @@ const ProfileTwo = (props) => {
 
                 {/* Description */}
                 {user.seo_description && (
-                  <div className="bg-yellow-50 dark:bg-yellow-600 rounded-xl p-4 shadow-inner text-center">
+                  <div className="bg-yellow-600 dark:bg-yellow-600 rounded-xl p-4 shadow-inner text-center">
                     <h4 className="font-semibold text-black mb-2 text-lg">
                       Description
                     </h4>

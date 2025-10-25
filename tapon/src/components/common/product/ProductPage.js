@@ -80,11 +80,11 @@
 //                 {product.name}
 //               </h2>
 //               <p className="mt-2 text-red-600 font-bold text-xl">
-//                 ₹{discountedPrice.toFixed(2)}
+//                 AED{discountedPrice.toFixed(2)}
 //               </p>
 //               {discount > 0 && (
 //                 <p className="text-gray-500 line-through">
-//                   ₹{salePrice.toFixed(2)}
+//                   AED{salePrice.toFixed(2)}
 //                 </p>
 //               )}
 //             </motion.div>
@@ -177,11 +177,11 @@ export default function ProductPage() {
 
               <div className="mt-2 text-center">
                 <p className="text-red-600 font-bold text-xl">
-                  ₹{salePrice.toFixed(2)}
+                  AED{salePrice.toFixed(2)}
                 </p>
                 {hasDiscount && (
                   <p className="text-gray-500 line-through text-sm">
-                    ₹{regularPrice.toFixed(2)}
+                    AED{regularPrice.toFixed(2)}
                   </p>
                 )}
               </div>

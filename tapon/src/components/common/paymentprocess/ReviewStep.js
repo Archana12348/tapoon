@@ -35,7 +35,7 @@ export default function ReviewStep({ cart }) {
               {item.name} × {item.quantity}
             </span>
             <span>
-              ₹{((item.sale_price ?? 0) * (item.quantity ?? 1)).toFixed(2)}
+              AED{((item.sale_price ?? 0) * (item.quantity ?? 1)).toFixed(2)}
             </span>
           </div>
         ))}
@@ -43,7 +43,7 @@ export default function ReviewStep({ cart }) {
 
       <div className="mt-4 border-t pt-4 flex justify-between font-semibold">
         <span>Total:</span>
-        <span>₹{subtotal.toFixed(2)}</span>
+        <span>AED{subtotal.toFixed(2)}</span>
       </div>
     </div>
   );

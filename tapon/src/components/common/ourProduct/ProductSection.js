@@ -130,11 +130,11 @@ export function ProductsSection() {
                       </h3>
 
                       <div className="mb-3 flex items-center gap-2 text-xl font-bold text-cyan-400 sm:text-2xl">
-                        ₹{product.sale_price}
+                        AED{product.sale_price}
                         {product.regular_price &&
                           product.sale_price !== product.regular_price && (
                             <span className="text-sm text-gray-500 line-through">
-                              ₹{product.regular_price}
+                              AED{product.regular_price}
                             </span>
                           )}
                       </div>

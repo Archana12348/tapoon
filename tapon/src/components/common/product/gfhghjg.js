@@ -92,11 +92,11 @@ export default function ProductPage() {
                 {product.name || "Unnamed Product"}
               </h2>
               <p className="mt-2 text-red-600 font-bold text-xl">
-                ₹{discountedPrice.toFixed(2)}
+                AED{discountedPrice.toFixed(2)}
               </p>
               {discount > 0 && (
                 <p className="text-gray-500 line-through">
-                  ₹{salePrice.toFixed(2)}
+                  AED{salePrice.toFixed(2)}
                 </p>
               )}
             </div>
@@ -541,14 +541,14 @@ const ProductPage = () => {
           {hasDiscount ? (
             <div className="flex items-center gap-3 mt-2">
               <span className="text-lg text-gray-500 line-through">
-                ₹{basePrice}
+                AED{basePrice}
               </span>
               <span className="text-2xl font-bold text-black">
-                ₹{totalPrice}
+                AED{totalPrice}
               </span>
             </div>
           ) : (
-            <p className="text-2xl font-bold text-black mt-2">₹{totalPrice}</p>
+            <p className="text-2xl font-bold text-black mt-2">AED{totalPrice}</p>
           )}
           <p className="text-sm text-gray-500">Inclusive of all taxes</p>
 

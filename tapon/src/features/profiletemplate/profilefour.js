@@ -71,7 +71,7 @@ export default function FitnessProfile({ profile }) {
   // Helper component for a section wrapper
   const SectionCard = ({ title, children, className = "" }) => (
     <div
-      className={`bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 border border-gray-100 ${className}`}
+      className={`bg-gray-800 p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 border border-gray-100 ${className}`}
     >
       <h2 className="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-2 mb-6">
         {title}
@@ -81,7 +81,7 @@ export default function FitnessProfile({ profile }) {
   );
 
   return (
-    <section className="bg-white dark:bg-gray-900 text-gray-800 dark:text-white mt-2 font-sans pb-10">
+    <section className=" bg-gray-900 text-gray-800 dark:text-white mt-2 font-sans pb-10">
       {/* Banner */}
       <div className="relative">
         <img
@@ -119,11 +119,11 @@ export default function FitnessProfile({ profile }) {
       {/* Bio Card */}
       {user.bio && (
         <div className="mt-8 flex justify-center px-4">
-          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-full max-w-3xl">
+          <div className="bg-gray-800 dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-full max-w-3xl hover:shadow-green-200 dark:hover:shadow-green-800 transition-all duration-300">
             <h3 className="text-lg font-semibold text-green-600 mb-3 text-center">
               Bio
             </h3>
-            <p className="text-gray-700 dark:text-gray-200 text-sm leading-relaxed text-center whitespace-pre-line">
+            <p className=" text-gray-200 text-sm leading-relaxed text-center whitespace-pre-line">
               {user.bio}
             </p>
           </div>
@@ -132,12 +132,12 @@ export default function FitnessProfile({ profile }) {
       {/* Bio Card */}
       {user.about && (
         <div className="mt-8 flex justify-center px-4">
-          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-full max-w-3xl">
+          <div className="bg-gray-800 dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-full max-w-3xl hover:shadow-green-200 dark:hover:shadow-green-800 transition-all duration-300">
             <h3 className="text-lg font-semibold text-green-600 mb-3 text-center">
               About
             </h3>
             <p
-              className="text-gray-700 dark:text-gray-200 text-sm leading-relaxed text-center whitespace-pre-line"
+              className="text-gray-200 text-sm leading-relaxed text-center whitespace-pre-line"
               dangerouslySetInnerHTML={{
                 __html: user.about || "<p>No bio available.</p>",
               }}
@@ -149,7 +149,7 @@ export default function FitnessProfile({ profile }) {
       {/* Address Card */}
       {/* {(user.area || user.city || user.state || user.country) && (
         <div className="mt-8 flex justify-center px-4">
-          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-5 w-full max-w-md">
+          <div className="bg-gray-800 dark:bg-gray-800 shadow-lg rounded-2xl p-5 w-full max-w-md">
             <h3 className="text-lg font-semibold text-green-600 mb-3 text-center">
               Address
             </h3>
@@ -213,7 +213,7 @@ export default function FitnessProfile({ profile }) {
       )}
 
       {/* Gallery */}
-      {user.gallery?.length > 0 && (
+      {/* {user.gallery?.length > 0 && (
         <div className="mt-8 px-4 text-center">
           <h3 className="text-green-700 font-semibold mb-2">Gallery</h3>
           <div className="flex flex-wrap justify-center gap-3">
@@ -229,7 +229,7 @@ export default function FitnessProfile({ profile }) {
               ))}
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Social Links */}
       <div className="mt-8 flex flex-wrap justify-center gap-3 px-4">
@@ -258,7 +258,7 @@ export default function FitnessProfile({ profile }) {
         user.phone ||
         user.whatsapp_number) && (
         <div className="mt-8 flex justify-center px-4">
-          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-full max-w-3xl">
+          <div className="bg-gray-800 dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-full max-w-3xl hover:shadow-green-200 dark:hover:shadow-green-800 transition-all duration-300">
             <h3 className="text-lg font-semibold text-green-600 mb-6 text-center flex items-center justify-center gap-2">
               <FaMapMarkerAlt className="text-green-500" />
               Business Info
@@ -266,17 +266,15 @@ export default function FitnessProfile({ profile }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-200 text-sm">
               {/* Address Section */}
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 shadow-inner">
+              <div className="bg-gray-900 rounded-xl p-4 shadow-inner">
                 <h4 className="font-semibold text-green-600 mb-3 flex items-center justify-center gap-2">
                   <FaMapMarkerAlt className="text-green-500" /> Address
                 </h4>
                 <div className="text-center leading-relaxed">
                   {user.area && (
-                    <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {user.area}
-                    </p>
+                    <p className="font-medium text-gray-100">{user.area}</p>
                   )}
-                  <p className="text-gray-600 dark:text-gray-300">
+                  <p className="text-gray-300">
                     {[user.city, user.state, user.country]
                       .filter(Boolean)
                       .join(", ")}
@@ -285,7 +283,7 @@ export default function FitnessProfile({ profile }) {
               </div>
 
               {/* Contact Section */}
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 shadow-inner">
+              <div className="bg-gray-900 rounded-xl p-4 shadow-inner ">
                 <h4 className="font-semibold text-green-600 mb-3 flex items-center justify-center gap-2">
                   <FaPhone className="text-green-500 rotate-90" /> Contact
                 </h4>
@@ -296,7 +294,7 @@ export default function FitnessProfile({ profile }) {
                       className="flex items-center gap-2 hover:text-green-600 transition"
                     >
                       <FaEnvelope className="text-green-500" />
-                      <span>{user.email}</span>
+                      <span className="text-white">{user.email}</span>
                     </a>
                   )}
                   {user.phone && (
@@ -305,7 +303,7 @@ export default function FitnessProfile({ profile }) {
                       className="flex items-center gap-2 hover:text-green-600 transition"
                     >
                       <FaPhone className="text-green-500 rotate-90" />
-                      <span>{user.phone}</span>
+                      <span className="text-white">{user.phone}</span>
                     </a>
                   )}
                   {user.whatsapp_number && (
@@ -316,7 +314,7 @@ export default function FitnessProfile({ profile }) {
                       className="flex items-center gap-2 hover:text-green-600 transition"
                     >
                       <FaWhatsapp className="text-green-500 w-4 h-6" />
-                      <span>{user.whatsapp_number}</span>
+                      <span className="text-white">{user.whatsapp_number}</span>
                     </a>
                   )}
                 </div>
@@ -328,18 +326,18 @@ export default function FitnessProfile({ profile }) {
 
       {/* Company Info Card */}
       {(user.company_name || user.website_url || user.industry) && (
-        <div className="mt-8 flex justify-center px-4">
-          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-full max-w-3xl">
-            <h3 className="text-lg font-semibold text-green-600 mb-6 text-center flex items-center justify-center gap-2">
+        <div className="mt-8 flex justify-center px-4 ">
+          <div className="bg-gray-800 dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-full max-w-3xl hover:shadow-green-200 dark:hover:shadow-green-800 transition-all duration-300">
+            <h3 className="text-lg font-semibold text-green-600 mb-6 text-center flex items-center justify-center gap-2 ">
               🏢 Company Info
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-700 dark:text-gray-200 text-sm">
               {/* Company Name */}
               {user.company_name && (
-                <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 shadow-inner text-center">
+                <div className="bg-gray-900 rounded-xl p-4 shadow-inner text-center">
                   <h4 className="font-semibold text-green-600 mb-2">Company</h4>
-                  <p className="font-medium text-gray-900 dark:text-gray-100">
+                  <p className="font-medium text-gray-100">
                     {user.company_name}
                   </p>
                 </div>
@@ -347,7 +345,7 @@ export default function FitnessProfile({ profile }) {
 
               {/* Website */}
               {user.website_url && (
-                <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 shadow-inner text-center">
+                <div className="bg-gray-900 rounded-xl p-4 shadow-inner text-center">
                   <h4 className="font-semibold text-green-600 mb-2">Website</h4>
                   <a
                     href={user.website_url}
@@ -362,13 +360,11 @@ export default function FitnessProfile({ profile }) {
 
               {/* Industry */}
               {user.industry && (
-                <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 shadow-inner text-center">
+                <div className="bg-gray-900 rounded-xl p-4 shadow-inner text-center">
                   <h4 className="font-semibold text-green-600 mb-2">
                     Industry
                   </h4>
-                  <p className="font-medium text-gray-900 dark:text-gray-100">
-                    {user.industry}
-                  </p>
+                  <p className="font-medium text-gray-100">{user.industry}</p>
                 </div>
               )}
             </div>
@@ -377,15 +373,15 @@ export default function FitnessProfile({ profile }) {
       )}
 
       {/* QR Code Card */}
-      {user.qr_code_url && (
+      {/* {user.qr_code_url && (
         <div className="mt-8 flex justify-center px-4">
-          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-gray-800 dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold text-green-600 mb-6 text-center flex items-center justify-center gap-2">
               <FaQrcode className="text-green-500" /> QR Code
             </h3>
 
             <div className="flex flex-col items-center gap-4">
-              {/* QR Code Image */}
+         
               <a
                 href={user.qr_code_url}
                 target="_blank"
@@ -399,7 +395,7 @@ export default function FitnessProfile({ profile }) {
                 />
               </a>
 
-              {/* Download Button */}
+           
               <a
                 href={user.qr_code_url}
                 download="qr_code.png"
@@ -411,28 +407,28 @@ export default function FitnessProfile({ profile }) {
             </div>
           </div>
         </div>
-      )}
+      )} */}
       {/* SEO / Title–Description Card */}
       {(user.seo_title || user.seo_description) && (
         <div className="mt-10 flex justify-center px-4">
-          <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-6 w-full max-w-md border border-gray-100 dark:border-gray-700 hover:shadow-green-200 dark:hover:shadow-green-800 transition-all duration-300">
+          <div className="bg-gray-800 dark:bg-gray-800 shadow-2xl rounded-2xl p-6 w-full max-w-md   hover:shadow-green-200 dark:hover:shadow-green-800 transition-all duration-300">
             {/* Card Heading */}
             <div className="flex items-center justify-center gap-3 mb-5">
               <div className="bg-gradient-to-r from-green-400 to-green-600 text-white p-3 rounded-full shadow-md">
                 <span className="font-bold text-lg">🔍</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 tracking-wide">
+              <h3 className="text-xl font-bold text-gray-100 tracking-wide">
                 SEO Information
               </h3>
             </div>
 
             {/* Title */}
             {user.seo_title && (
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 shadow-inner mb-4 text-center">
+              <div className="bg-gray-900 rounded-xl p-4 shadow-inner mb-4 text-center">
                 <h4 className="font-semibold text-green-600 mb-2 text-lg">
                   Title
                 </h4>
-                <p className="font-medium text-gray-900 dark:text-gray-100 break-words">
+                <p className="font-medium text-gray-100 break-words">
                   {user.seo_title}
                 </p>
               </div>
@@ -440,11 +436,11 @@ export default function FitnessProfile({ profile }) {
 
             {/* Description */}
             {user.seo_description && (
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 shadow-inner text-center">
+              <div className="bg-gray-900 rounded-xl p-4 shadow-inner text-center">
                 <h4 className="font-semibold text-green-600 mb-2 text-lg">
                   Description
                 </h4>
-                <p className="font-medium text-gray-900 dark:text-gray-100 break-words">
+                <p className="font-medium text-gray-100 break-words">
                   {user.seo_description}
                 </p>
               </div>
@@ -459,13 +455,13 @@ export default function FitnessProfile({ profile }) {
         user.dark_mode_enabled !== undefined ||
         user.custom_theme_color) && (
         <div className="mt-10 flex justify-center px-4">
-          <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl rounded-2xl p-6 w-full max-w-md border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-green-200 dark:hover:shadow-green-800">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 shadow-2xl rounded-2xl p-6 w-full max-w-md  transition-all duration-300 hover:shadow-green-200 dark:hover:shadow-green-800">
             {/* Header */}
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="bg-gradient-to-r from-green-400 to-green-600 text-white p-3 rounded-full shadow-md">
                 <FaCogs className="text-xl" />
               </div>
-              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 tracking-wide">
+              <h3 className="text-xl font-bold text-gray-100 tracking-wide">
                 Additional Info
               </h3>
             </div>

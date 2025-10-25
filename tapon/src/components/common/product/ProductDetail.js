@@ -156,11 +156,11 @@
 //             <div className="flex items-center gap-3 mt-2">
 //               {product.regular_price > product.sale_price && (
 //                 <span className="text-gray-400 text-lg line-through">
-//                   ₹{Number(product.regular_price).toFixed(2)}
+//                   AED{Number(product.regular_price).toFixed(2)}
 //                 </span>
 //               )}
 //               <span className="text-3xl font-semibold text-sky-600">
-//                 ₹{Number(product.sale_price).toFixed(2)}
+//                 AED{Number(product.sale_price).toFixed(2)}
 //               </span>
 //               {product.regular_price > product.sale_price && (
 //                 <span className="bg-sky-100 text-sky-600 px-2 py-1 rounded text-sm font-medium">
@@ -570,11 +570,11 @@ export default function SingleProductPage() {
             <div className="flex items-center gap-3 mt-2">
               {product.regular_price > product.sale_price && (
                 <span className="text-gray-400 text-lg line-through">
-                  ₹{Number(product.regular_price).toFixed(2)}
+                  AED{Number(product.regular_price).toFixed(2)}
                 </span>
               )}
               <span className="text-3xl font-semibold text-sky-600">
-                ₹{Number(product.sale_price).toFixed(2)}
+                AED{Number(product.sale_price).toFixed(2)}
               </span>
               {product.regular_price > product.sale_price && (
                 <span className="bg-sky-100 text-sky-600 px-2 py-1 rounded text-sm font-medium">

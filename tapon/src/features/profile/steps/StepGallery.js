@@ -356,7 +356,7 @@ export default function StepGallery({
         {renderDropzone("Avatar", avatarPreview, handleAvatarUpload)}
         {renderDropzone("Cover Image", coverPreview, handleCoverUpload)}
 
-        <div>
+        {/* <div>
           <label className="block text-sky-800 mb-2">Gallery Images</label>
           <div
             onDragOver={(e) => e.preventDefault()}
@@ -404,7 +404,7 @@ export default function StepGallery({
               ))}
             </div>
           )}
-        </div>
+        </div> */}
       </div>
 
       <div className="flex justify-between mt-6">

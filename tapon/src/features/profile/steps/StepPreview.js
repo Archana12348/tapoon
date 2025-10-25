@@ -392,7 +392,7 @@ export default function StepPreview({
           Company Details
         </h1>
         <p>
-          <strong>Company:</strong> {data.company}
+          <strong>Company:</strong> {data.company_name}
         </p>
         <p>
           <strong>Job Title:</strong> {data.job_title}
@@ -404,10 +404,12 @@ export default function StepPreview({
           <strong>Profile Type:</strong> {data.profile_type}
         </p>
         <p>
-          <strong>Skills:</strong> {data.skills?.join(", ")}
+          <strong>Skills:</strong>{" "}
+          {(Array.isArray(data.skills) ? data.skills : []).join(", ")}
         </p>
         <p>
-          <strong>Services:</strong> {data.services?.join(", ")}
+          <strong>Services:</strong>{" "}
+          {(Array.isArray(data.services) ? data.services : []).join(", ")}
         </p>
       </div>
 
@@ -420,11 +422,11 @@ export default function StepPreview({
           <strong>NFC Card ID:</strong> {data?.nfc_card_id}
         </p>
         <p>
-          <strong>QR Code:</strong> {data?.qr_code_url}
+          <strong>QR Code URL:</strong> {data?.qr_code_url}
         </p>
-        <p>
+        {/* <p>
           <strong>VCard ID:</strong> {data?.vcard_id}
-        </p>
+        </p> */}
         <p>
           <strong>PDF Resume URL:</strong> {data?.pdf_resume_url}
         </p>
@@ -527,7 +529,7 @@ export default function StepPreview({
         )}
 
         {/* Row 3: Gallery */}
-        {data.gallery &&
+        {/* {data.gallery &&
           Array.isArray(data.gallery) &&
           data.gallery.length > 0 && (
             <div>
@@ -547,7 +549,7 @@ export default function StepPreview({
                 ))}
               </div>
             </div>
-          )}
+          )} */}
       </div>
 
       {/* --- Navigation Buttons --- */}
