@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 import Button from "../../ui/Button";
 import { Check } from "lucide-react";
 import { useDispatch } from "react-redux";
@@ -77,132 +72,110 @@ export function ProductsSection() {
           </p>
         </div>
 
-        {/* Swiper Slider */}
-        <div className="relative flex items-center">
-          {/* Custom Navigation Buttons */}
-          <button className="swiper-button-prev-custom hidden lg:block absolute -left-8 top-[36%] z-10 text-black text-3xl">
-            &#10094;
-          </button>
-          <button className="swiper-button-next-custom hidden lg:block absolute -right-8 top-[36%] z-10 text-black text-3xl">
-            &#10095;
-          </button>
-
-          <Swiper
-            modules={[Navigation, Pagination]}
-            navigation={{
-              nextEl: ".swiper-button-next-custom",
-              prevEl: ".swiper-button-prev-custom",
-            }}
-            pagination={{ clickable: true }}
-            spaceBetween={20}
-            breakpoints={{
-              0: { slidesPerView: 1 },
-              480: { slidesPerView: 1 },
-              768: { slidesPerView: 2 },
-              1024: { slidesPerView: 3 },
-            }}
-            style={{ paddingBottom: "40px" }}
-          >
+        {/* ✅ Product Grid (No Swiper) */}
+        <div className="flex justify-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.length > 0 ? (
               products.map((product) => (
-                <SwiperSlide key={product.id}>
-                  <div className="group relative overflow-hidden rounded-2xl border border-cyan-900/20 backdrop-blur-sm transition-all hover:border-cyan-700/50">
-                    {/* Discount Badge */}
-                    {product.discount && (
-                      <div className="absolute right-4 top-4 z-10 rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white">
-                        {product.discount}% OFF
-                      </div>
-                    )}
-
-                    {/* Product Image */}
-                    <div className="aspect-[16/9] overflow-hidden bg-slate-900">
-                      <img
-                        src={product.card_image}
-                        alt={product.name}
-                        className="h-full w-full object-contain transition-transform group-hover:scale-105"
-                      />
+                <div
+                  key={product.id}
+                  className="group relative overflow-hidden rounded-2xl border border-cyan-900/20 backdrop-blur-sm transition-all hover:border-cyan-700/50 shadow-lg"
+                >
+                  {/* Discount Badge */}
+                  {product.discount && (
+                    <div className="absolute right-4 top-4 z-10 rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white">
+                      {product.discount}% OFF
                     </div>
+                  )}
 
-                    {/* Product Info */}
-                    <div className="p-4 sm:p-5 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md">
-                      <h3 className="mb-1 text-lg font-bold text-black">
-                        {product.name}
-                      </h3>
-
-                      <div className="mb-3 flex items-center gap-2 text-xl font-bold text-cyan-400 sm:text-2xl">
-                        AED{product.sale_price}
-                        {product.regular_price &&
-                          product.sale_price !== product.regular_price && (
-                            <span className="text-sm text-gray-500 line-through">
-                              AED{product.regular_price}
-                            </span>
-                          )}
-                      </div>
-
-                      <ul className="mb-4 space-y-1 text-gray-800">
-                        {product.nfc_colors?.length > 0 && (
-                          <li className="flex items-center gap-2 text-sm">
-                            <Check className="h-4 w-4 text-gray-500" />
-                            Colors: {product.nfc_colors.join(", ")}
-                          </li>
-                        )}
-                        {product.packs?.length > 0 && (
-                          <li className="flex items-center gap-2 text-sm">
-                            <Check className="h-4 w-4 text-gray-500" />
-                            Packs: {product.packs.join(", ")}
-                          </li>
-                        )}
-                        {product.card_material?.length > 0 && (
-                          <li className="flex items-center gap-2 text-sm">
-                            <Check className="h-4 w-4 text-gray-500" />
-                            Material: {product.card_material.join(", ")}
-                          </li>
-                        )}
-                      </ul>
-
-                      <Button
-                        className="w-full text-white"
-                        onClick={() => handleAddToCart(product)}
-                        disabled={loadingProduct === product.id}
-                      >
-                        {loadingProduct === product.id ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <svg
-                              className="animate-spin h-5 w-5 text-white"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 01-8 8z"
-                              ></path>
-                            </svg>
-                            Adding...
-                          </span>
-                        ) : (
-                          "Add to Cart"
-                        )}
-                      </Button>
-                    </div>
+                  {/* Product Image */}
+                  <div className="aspect-[16/9] overflow-hidden bg-slate-900">
+                    <img
+                      src={product.card_image}
+                      alt={product.name}
+                      className="h-full w-full object-contain transition-transform group-hover:scale-105"
+                    />
                   </div>
-                </SwiperSlide>
+
+                  {/* Product Info */}
+                  <div className="p-4 sm:p-5 bg-gradient-to-r from-sky-200 via-white to-sky-100 backdrop-blur-lg shadow-md">
+                    <h3 className="mb-1 text-lg font-bold text-black">
+                      {product.name}
+                    </h3>
+
+                    <div className="mb-3 flex items-center gap-2 text-xl font-bold text-cyan-400 sm:text-2xl">
+                      AED{product.sale_price}
+                      {product.regular_price &&
+                        product.sale_price !== product.regular_price && (
+                          <span className="text-sm text-gray-500 line-through">
+                            AED{product.regular_price}
+                          </span>
+                        )}
+                    </div>
+
+                    <ul className="mb-4 space-y-1 text-gray-800">
+                      {product.nfc_colors?.length > 0 && (
+                        <li className="flex items-center gap-2 text-sm">
+                          <Check className="h-4 w-4 text-gray-500" />
+                          Colors: {product.nfc_colors.join(", ")}
+                        </li>
+                      )}
+                      {product.packs?.length > 0 && (
+                        <li className="flex items-center gap-2 text-sm">
+                          <Check className="h-4 w-4 text-gray-500" />
+                          Packs: {product.packs.join(", ")}
+                        </li>
+                      )}
+                      {product.card_material?.length > 0 && (
+                        <li className="flex items-center gap-2 text-sm">
+                          <Check className="h-4 w-4 text-gray-500" />
+                          Material: {product.card_material.join(", ")}
+                        </li>
+                      )}
+                    </ul>
+
+                    <Button
+                      className="w-full text-white"
+                      onClick={() => handleAddToCart(product)}
+                      disabled={loadingProduct === product.id}
+                    >
+                      {loadingProduct === product.id ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <svg
+                            className="animate-spin h-5 w-5 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 01-8 8z"
+                            ></path>
+                          </svg>
+                          Adding...
+                        </span>
+                      ) : (
+                        "Add to Cart"
+                      )}
+                    </Button>
+                  </div>
+                </div>
               ))
             ) : (
               <p className="text-center text-gray-500 w-full py-10">
                 Loading products...
               </p>
             )}
-          </Swiper>
+          </div>
         </div>
       </div>
     </section>

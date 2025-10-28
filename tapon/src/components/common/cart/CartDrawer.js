@@ -201,6 +201,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { removeFromCart, updateQuantity } from "../../../redux/cartSlice";
 import Button from "../../ui/Button";
 import { createPortal } from "react-dom";
+import Swal from "sweetalert2";
 
 const CartDrawer = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
@@ -358,20 +359,27 @@ const CartDrawer = ({ isOpen, onClose }) => {
                           {hasDiscount ? (
                             <div className="flex flex-col">
                               <span className="text-sky-600 font-semibold text-lg">
-                                AED{(salePrice * quantity).toFixed(2)}
+                                AED
+                                {(salePrice * Number(item.pack || 1)).toFixed(
+                                  2
+                                )}
                               </span>
                               <span className="text-gray-400 line-through text-xs">
-                                AED{(regularPrice * quantity).toFixed(2)}
+                                AED
+                                {(salePrice * Number(item.pack || 1)).toFixed(
+                                  2
+                                )}
                               </span>
                             </div>
                           ) : (
                             <span className="font-semibold text-lg">
-                              AED{(regularPrice * quantity).toFixed(2)}
+                              AED
+                              {(salePrice * Number(item.pack || 1)).toFixed(2)}
                             </span>
                           )}
                         </div>
 
-                        <div className="flex items-center gap-2 border rounded-2xl px-2 py-1 bg-gray-100">
+                        {/* <div className="flex items-center gap-2 border rounded-2xl px-2 py-1 bg-gray-100">
                           <button
                             className="text-lg px-2"
                             onClick={() => handleDecrease(item.id)}
@@ -385,7 +393,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
                           >
                             +
                           </button>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
 

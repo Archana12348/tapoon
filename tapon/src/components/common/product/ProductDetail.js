@@ -418,6 +418,7 @@ import { FaStar } from "react-icons/fa";
 import Button from "../../ui/Button";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/cartSlice";
+import Swal from "sweetalert2";
 
 export default function SingleProductPage() {
   const { slug } = useParams();
@@ -497,7 +498,13 @@ export default function SingleProductPage() {
 
     try {
       dispatch(addToCart(itemToAdd));
-      console.log(itemToAdd);
+      Swal.fire({
+        icon: "success",
+        title: "Added to Cart!",
+        text: `${product.name} has been added successfully.`,
+        timer: 1200,
+        showConfirmButton: false,
+      });
       setTimeout(() => {
         setLoadingAdd(false);
       }, 800);
