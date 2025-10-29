@@ -101,16 +101,16 @@ const testimonials = [
     name: "Sarah Johnson",
     role: "Marketing Director",
     company: "TechCorp Inc.",
-    image: "/professional-woman-headshot.png",
+    image: "/1.png",
     content:
       "These NFC cards have completely transformed how we network at events. The instant sharing is a game-changer, and our team loves the professional look.",
-    rating: 5,
+    rating: 4.5,
   },
   {
     name: "Michael Chen",
     role: "Entrepreneur",
     company: "StartupHub",
-    image: "/professional-asian-man-headshot.png",
+    image: "/2.png",
     content:
       "I've tried many digital business card solutions, but this is by far the best. The quality is exceptional and the technology works flawlessly every time.",
     rating: 5,
@@ -119,25 +119,25 @@ const testimonials = [
     name: "Emily Rodriguez",
     role: "Sales Manager",
     company: "Global Solutions",
-    image: "/latina-professional-headshot.png",
+    image: "/3.png",
     content:
       "Our sales team has seen a 40% increase in follow-up connections since switching to NFC cards. The analytics dashboard is incredibly useful too.",
-    rating: 5,
+    rating: 4.25,
   },
   {
     name: "David Park",
     role: "Creative Director",
     company: "Design Studio",
-    image: "/creative-professional-headshot.png",
+    image: "/4.png",
     content:
       "The customization options are fantastic. We were able to create cards that perfectly match our brand identity. Clients are always impressed.",
-    rating: 5,
+    rating: 4.5,
   },
   {
-    name: "Lisa Thompson",
+    name: "Larry Thompson",
     role: "CEO",
     company: "Innovation Labs",
-    image: "/professional-woman-ceo-headshot.png",
+    image: "/5.png",
     content:
       "Sustainable, professional, and incredibly effective. These cards represent our commitment to innovation and environmental responsibility.",
     rating: 5,
@@ -146,7 +146,7 @@ const testimonials = [
     name: "James Wilson",
     role: "Real Estate Agent",
     company: "Premier Properties",
-    image: "/professional-realtor-headshot.png",
+    image: "/t2.png",
     content:
       "My clients love the wow factor of tapping my card. It's a great conversation starter and makes me stand out from other agents.",
     rating: 5,

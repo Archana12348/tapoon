@@ -8,7 +8,7 @@ export function TestimonialCard({ testimonial }) {
 
       <div className="relative mb-6 flex items-center gap-4">
         <img
-          src={testimonial.image || "/placeholder.svg"}
+          src={`/testimonials/${testimonial.image || "placeholder.svg"}`}
           alt={testimonial.name}
           className="h-16 w-16 rounded-full border-2 border-cyan-700"
         />
@@ -20,9 +20,30 @@ export function TestimonialCard({ testimonial }) {
       </div>
 
       <div className="mb-4 flex gap-1">
-        {[...Array(testimonial.rating)].map((_, i) => (
-          <Star key={i} className="h-5 w-5 fill-orange-400 text-orange-400" />
-        ))}
+        {[...Array(5)].map((_, i) => {
+          const rating = testimonial.rating || 0;
+          const starValue = i + 1;
+          const diff = rating - i;
+
+          let fillPercentage = 0;
+          if (diff >= 1) fillPercentage = 100; // full
+          else if (diff > 0) fillPercentage = diff * 100; // partial (e.g. 0.5 => 50%)
+
+          return (
+            <div key={i} className="relative h-5 w-5">
+              {/* Empty Star */}
+              <Star className="absolute h-5 w-5 text-gray-300" />
+
+              {/* Filled Portion */}
+              <div
+                className="absolute top-0 left-0 overflow-hidden"
+                style={{ width: `${fillPercentage}%` }}
+              >
+                <Star className="h-5 w-5 fill-orange-400 text-orange-400" />
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <p className="text-pretty leading-relaxed text-black-300">

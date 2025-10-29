@@ -45,9 +45,18 @@ export function ProductsSection() {
       Swal.fire({
         icon: "success",
         title: "Added to Cart!",
-        text: `${product.name} has been added successfully.`,
-        timer: 1200,
+        html: `<span class="font-semibold text-lg">${product.name}</span> has been added successfully.`,
+        timer: 1500,
         showConfirmButton: false,
+        timerProgressBar: true,
+        background:
+          "linear-gradient(135deg, #e0f2fe 0%, #ffffff 50%, #e0f2fe 100%)",
+        customClass: {
+          popup: "shadow-md rounded-xl p-6 flex flex-col items-center",
+          icon: "text-green-500 text-5xl",
+          title: "text-xl font-bold mt-2 text-gray-800",
+          htmlContainer: "mt-1 text-center text-gray-700",
+        },
       });
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -74,12 +83,18 @@ export function ProductsSection() {
 
         {/* ✅ Product Grid (No Swiper) */}
         <div className="flex justify-center">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.length > 0 ? (
-              products.map((product) => (
+          {products.length > 0 ? (
+            <div
+              className={
+                products.length <= 2
+                  ? "flex justify-center flex-wrap gap-8"
+                  : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+              }
+            >
+              {products.map((product) => (
                 <div
                   key={product.id}
-                  className="group relative overflow-hidden rounded-2xl border border-cyan-900/20 backdrop-blur-sm transition-all hover:border-cyan-700/50 shadow-lg"
+                  className="group relative overflow-hidden rounded-2xl border border-cyan-900/20 backdrop-blur-sm transition-all hover:border-cyan-700/50 shadow-lg w-[380px] sm:w-[420px] lg:w-[440px]"
                 >
                   {/* Discount Badge */}
                   {product.discount && (
@@ -169,13 +184,13 @@ export function ProductsSection() {
                     </Button>
                   </div>
                 </div>
-              ))
-            ) : (
-              <p className="text-center text-gray-500 w-full py-10">
-                Loading products...
-              </p>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-gray-500 w-full py-10">
+              Loading products...
+            </p>
+          )}
         </div>
       </div>
     </section>

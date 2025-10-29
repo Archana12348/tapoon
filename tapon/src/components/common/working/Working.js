@@ -190,7 +190,7 @@ export function HowItWorksSection() {
             loop
             controlsList="nodownload"
           >
-            <source src="/video/videoplayback.mp4" type="video/mp4" />
+            <source src="/video/vedios.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>

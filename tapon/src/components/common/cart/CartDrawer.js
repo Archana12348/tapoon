@@ -352,6 +352,11 @@ const CartDrawer = ({ isOpen, onClose }) => {
                           Smart Card: {item.smart_card}
                         </p>
                       )}
+                      {item.quantity && (
+                        <p className="text-gray-500 capitalize">
+                          Quantity : {item.quantity}
+                        </p>
+                      )}
 
                       {/* Price & Quantity */}
                       <div className="flex justify-between items-center mt-2">
@@ -360,21 +365,26 @@ const CartDrawer = ({ isOpen, onClose }) => {
                             <div className="flex flex-col">
                               <span className="text-sky-600 font-semibold text-lg">
                                 AED
-                                {(salePrice * Number(item.pack || 1)).toFixed(
-                                  2
-                                )}
+                                {(
+                                  salePrice *
+                                  Number(item.quantity || item.pack || 1)
+                                ).toFixed(2)}
                               </span>
                               <span className="text-gray-400 line-through text-xs">
                                 AED
-                                {(salePrice * Number(item.pack || 1)).toFixed(
-                                  2
-                                )}
+                                {(
+                                  salePrice *
+                                  Number(item.quantity || item.pack || 1)
+                                ).toFixed(2)}
                               </span>
                             </div>
                           ) : (
                             <span className="font-semibold text-lg">
                               AED
-                              {(salePrice * Number(item.pack || 1)).toFixed(2)}
+                              {(
+                                salePrice *
+                                Number(item.quantity || item.pack || 1)
+                              ).toFixed(2)}
                             </span>
                           )}
                         </div>
