@@ -86,12 +86,14 @@ export function Footer() {
                 Digital solutions to simplify your networking. Connect and share
                 your profile instantly.
                 <Link
-                  to={`mailto:${settings?.email || "support@fcard.com"}`}
+                  to={`mailto:${
+                    settings?.email || "taponnsolutions@gmail.com"
+                  }`}
                   className="flex items-center gap-2 hover:text-blue-400 transition-colors"
                   target="_blank"
                 >
                   <Mail className="h-4 w-4" />{" "}
-                  {settings?.email || "support@fcard.com"}
+                  {settings?.email || "taponnsolutions@gmail.com"}
                 </Link>
               </p>
 
