@@ -37,6 +37,11 @@ const cartSlice = createSlice({
       if (existing) {
         console.log(`Product exists. Increasing quantity by ${qtyToAdd}`);
         existing.quantity += qtyToAdd;
+        existing.pack = product.pack || existing.pack;
+        existing.color = product.color || existing.color;
+        existing.material = product.material || existing.material;
+        existing.type = product.type || existing.type;
+        existing.smart_card = product.smart_card || existing.smart_card;
       } else {
         console.log("New product. Adding to cart.");
         state.items.push({ ...product, quantity: qtyToAdd });

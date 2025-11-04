@@ -6,7 +6,6 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((req) => {
-  console.log("Sending request:", req.url, req.withCredentials);
   return req;
 });
 

@@ -13,18 +13,19 @@ export default function CartStep() {
     (state) => state.cart
   );
 
-  // Log cart data whenever it changes
   useEffect(() => {
     console.log("Cart Data:", { items, totalPrice, totalQuantity });
   }, [items, totalPrice, totalQuantity]);
 
   const handleDecrease = (item) => {
+    if (item.pack) return; // ❌ No decrease for pack items
     const newQty = Math.max(Number(item.quantity ?? 1) - 1, 0);
     dispatch(updateQuantity({ ...item, quantity: newQty }));
     console.log("Decreased Item:", { ...item, quantity: newQty });
   };
 
   const handleIncrease = (item) => {
+    if (item.pack) return; // ❌ No increase for pack items
     const newQty = Number(item.quantity ?? 1) + 1;
     dispatch(updateQuantity({ ...item, quantity: newQty }));
     console.log("Increased Item:", { ...item, quantity: newQty });
@@ -75,26 +76,39 @@ export default function CartStep() {
                   <p className="text-gray-500 text-sm">
                     {formatCurrency(item.sale_price ?? item.price ?? 0)}
                   </p>
+                  {/* ✅ Pack / Quantity display */}
+                  <p className="text-xs text-gray-400 mt-1">
+                    {item.pack
+                      ? `Pack of ${item.pack}`
+                      : `Quantity: ${item.quantity ?? 1}`}
+                  </p>
                 </div>
               </div>
 
               {/* Actions */}
               <div className="flex items-center gap-3">
-                <div className="flex items-center border rounded-lg">
-                  <button
-                    onClick={() => handleDecrease(item)}
-                    className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-l-lg"
-                  >
-                    −
-                  </button>
-                  <span className="px-3 py-1">{item.quantity ?? 1}</span>
-                  <button
-                    onClick={() => handleIncrease(item)}
-                    className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-r-lg"
-                  >
-                    +
-                  </button>
-                </div>
+                {/* ✅ Disable +/- for pack items */}
+                {item.pack ? (
+                  <div className="px-3 py-1 bg-gray-100 rounded-lg text-gray-600 text-sm">
+                    {item.pack} Pack
+                  </div>
+                ) : (
+                  <div className="flex items-center border rounded-lg">
+                    <button
+                      onClick={() => handleDecrease(item)}
+                      className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-l-lg"
+                    >
+                      −
+                    </button>
+                    <span className="px-3 py-1">{item.quantity ?? 1}</span>
+                    <button
+                      onClick={() => handleIncrease(item)}
+                      className="px-2 py-1 text-gray-600 hover:bg-gray-100 rounded-r-lg"
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
 
                 <button
                   onClick={() => handleRemove(item)}
@@ -110,14 +124,31 @@ export default function CartStep() {
           <div className="flex justify-between items-center mt-4 border-t pt-3">
             <button
               onClick={() => dispatch(clearCart())}
-              className="text-sm text-red-600 hover:underline"
+              className="text-sm bg-gradient-to-r from-red-500 to-rose-500 text-white px-5 py-1.5 rounded-full shadow-sm hover:from-red-600 hover:to-rose-600 transition-all duration-200"
             >
               Clear Cart
             </button>
+
             <div className="text-right">
-              <div className="text-sm text-gray-500">{totalQuantity} items</div>
+              <div className="text-sm text-gray-500">
+                {items
+                  .map((i) =>
+                    i.pack ? `${i.pack} Pack` : `${i.quantity ?? 1} Qty`
+                  )
+                  .join(" + ")}
+              </div>
+              {/* 💰 Total price */}
               <div className="font-semibold text-lg text-blue-600">
-                Total: {formatCurrency(totalPrice)}
+                Total:{" "}
+                {formatCurrency(
+                  items.reduce(
+                    (sum, i) =>
+                      sum +
+                      (Number(i.sale_price) || 0) *
+                        (Number(i.pack) || Number(i.quantity) || 1),
+                    0
+                  )
+                )}
               </div>
             </div>
           </div>

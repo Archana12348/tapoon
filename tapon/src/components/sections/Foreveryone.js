@@ -31,7 +31,7 @@ export default function EveryOneCards() {
                 <img
                   src={card.image}
                   alt={card.title}
-                  className="w-full h-80 object-contain mb-4"
+                  className="w-full bg-[#A1DCEA] h-80 object-contain mb-4"
                 />
                 <div className="px-6 pb-6">
                   <h3 className="text-xl font-semibold mb-2 text-gray-900">

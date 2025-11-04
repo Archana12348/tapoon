@@ -172,7 +172,7 @@ export default function App() {
 
         {/* MultiStep Page */}
         <Route
-          path="/cart"
+          path="/checkout"
           element={
             <MainLayout>
               <MultiStepForm />

@@ -214,7 +214,10 @@ const CartDrawer = ({ isOpen, onClose }) => {
     const regularPrice = Number(item.regular_price) || 0;
     const salePrice = Number(item.sale_price) || 0;
     const finalPrice = salePrice < regularPrice ? salePrice : regularPrice;
-    return acc + finalPrice * item.quantity;
+    return (
+      acc +
+      finalPrice * (item.pack ? Number(item.pack) : Number(item.quantity || 1))
+    );
   }, 0);
 
   useEffect(() => {
@@ -315,6 +318,13 @@ const CartDrawer = ({ isOpen, onClose }) => {
                 const regularPrice = Number(item.regular_price) || 0;
                 const salePrice = Number(item.sale_price) || 0;
                 const hasDiscount = salePrice < regularPrice;
+                console.log(
+                  "Product Name:",
+                  (
+                    salePrice *
+                    (item.pack ? Number(item.pack) : Number(item.quantity || 1))
+                  ).toFixed(2)
+                );
 
                 return (
                   <div key={item.id} className="flex gap-4 border-b pb-3">
@@ -332,11 +342,6 @@ const CartDrawer = ({ isOpen, onClose }) => {
                           Color: {item.color}
                         </p>
                       )}
-                      {item.pack && (
-                        <p className="text-gray-500 capitalize">
-                          Pack: {item.pack}
-                        </p>
-                      )}
                       {item.material && (
                         <p className="text-gray-500 capitalize">
                           Material: {item.material}
@@ -352,9 +357,13 @@ const CartDrawer = ({ isOpen, onClose }) => {
                           Smart Card: {item.smart_card}
                         </p>
                       )}
-                      {item.quantity && (
+                      {item.pack ? (
                         <p className="text-gray-500 capitalize">
-                          Quantity : {item.quantity}
+                          Pack: {item.pack}
+                        </p>
+                      ) : (
+                        <p className="text-gray-500 capitalize">
+                          Quantity: {item.quantity}
                         </p>
                       )}
 
@@ -367,14 +376,18 @@ const CartDrawer = ({ isOpen, onClose }) => {
                                 AED
                                 {(
                                   salePrice *
-                                  Number(item.quantity || item.pack || 1)
+                                  (item.pack
+                                    ? Number(item.pack)
+                                    : Number(item.quantity || 1))
                                 ).toFixed(2)}
                               </span>
                               <span className="text-gray-400 line-through text-xs">
                                 AED
                                 {(
-                                  salePrice *
-                                  Number(item.quantity || item.pack || 1)
+                                  regularPrice *
+                                  (item.pack
+                                    ? Number(item.pack)
+                                    : Number(item.quantity || 1))
                                 ).toFixed(2)}
                               </span>
                             </div>
@@ -383,7 +396,9 @@ const CartDrawer = ({ isOpen, onClose }) => {
                               AED
                               {(
                                 salePrice *
-                                Number(item.quantity || item.pack || 1)
+                                (item.pack
+                                  ? Number(item.pack)
+                                  : Number(item.quantity || 1))
                               ).toFixed(2)}
                             </span>
                           )}
@@ -438,7 +453,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
                   className="w-full text-white py-2 rounded font-semibold"
                   onClick={() => {
                     onClose();
-                    navigate("/cart");
+                    navigate("/checkout");
                   }}
                 >
                   VIEW CART
