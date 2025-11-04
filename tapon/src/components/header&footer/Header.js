@@ -133,14 +133,12 @@ export default function Header() {
         <div className="flex items-center gap-4">
           {/* 🛒 Shopping Cart Button */}
           <div className="relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-sky-900 hover:text-sky-600 dark:text-white"
+            <button
               onClick={() => setIsCartOpen(true)} // ✅ open drawer
+              className="px-4 py-2 rounded-2xl font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-sky-600 text-white hover:bg-sky-700 focus:ring-sky-500 dark:bg-sky-500 dark:hover:bg-sky-600 hidden md:flex items-center gap-1"
             >
-              <ShoppingCart className="h-5 w-5" />
-            </Button>
+              <ShoppingCart className="h-5 w-5 text-lg text-white transition-colors hover:text-sky-100" />
+            </button>
 
             {totalQuantity > 0 && (
               <span className="absolute -top-0 -right-0 bg-red-600 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
